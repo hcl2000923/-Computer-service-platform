@@ -1,10 +1,8 @@
 <<<<<<< HEAD
 
 
-adf
-
-dfadfadffdaf
+adffdaf
 
 =======
-sfsadf算得上是hdjf
+sfsadf
 >>>>>>> dev
