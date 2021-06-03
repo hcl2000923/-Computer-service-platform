@@ -1,0 +1,13 @@
+server:
+  port: 80
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8000/eureka
+zuul:
+  #清空敏感头配置
+  sensitiveHeaders:
+  routes:
+    default:
+      path: /**
+      serviceId: shop-index
