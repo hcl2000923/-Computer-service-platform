@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="shop-common" />
-        <module name="pc-service (1)" />
         <module name="shop-eureka" />
         <module name="shop-index" />
-        <module name="pc-service (2)" />
         <module name="shop-zuul" />
-        <module name="pc-service (3)" />
+      </profile>
+      <profile name="Annotation profile for PCService" enabled="true">
+        <sourceOutputDir name="../shop-index/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../shop-index/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
         <module name="shop-config" />
       </profile>
     </annotationProcessing>
@@ -22,9 +24,6 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="pc-service (1)" options="-parameters" />
-      <module name="pc-service (2)" options="-parameters" />
-      <module name="pc-service (3)" options="-parameters" />
       <module name="shop-config" options="-parameters" />
       <module name="shop-eureka" options="-parameters" />
       <module name="shop-index" options="-parameters" />

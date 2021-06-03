@@ -11,6 +11,9 @@
     <modules>
         <module>shop-zuul</module>
         <module>shop-common</module>
+        <module>shop-config</module>
+        <module>shop-index</module>
+        <module>shop-eureka</module>
     </modules>
 
 
