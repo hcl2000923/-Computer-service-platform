@@ -5,9 +5,9 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/hcl0923/512zuul  #\u914D\u7F6E\u6587\u4EF6\u6240\u5728\u4ED3\u5E93
+          uri: https://github.com/Computer-service-platform/-Computer-service-platform  #\u914D\u7F6E\u6587\u4EF6\u6240\u5728\u4ED3\u5E93
           default-label: master    #\u914D\u7F6E\u6587\u4EF6\u5206\u652F
-          search-paths: config  #\u914D\u7F6E\u6587\u4EF6\u6240\u5728\u6839\u76EE\u5F55
+          search-paths: shop-pc/config  #\u914D\u7F6E\u6587\u4EF6\u6240\u5728\u6839\u76EE\u5F55
 
 server:
   port: 8888
