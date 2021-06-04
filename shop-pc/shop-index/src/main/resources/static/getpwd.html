@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>忘记密码</title>
+<link href="css/style.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body class="member">
+
+	<div class="w1185">
+    	<div class="logo"><a href="index.html"></a></div>
+        <div class="font-d">欢迎登陆</div>
+        <div class="s_r"><img src="images/tel.jpg"/></div>
+        <div class="clear"></div>
+    </div>
+
+<div class="reg">
+	<div class="w1185">
+    	<div class="left">
+        	<p><b>免费注册</b></p>
+            <form action="#" class="form">
+                <ul>
+                     <li><span><font>*</font> 用户名：</span><input type="text" name="nickName" class="txt"/></li>
+                     <li><span><font>*</font> tel：</span><input type="password" name="tel" class="txt"/></li>
+                     <li><span><font>*</font> 请设置密码：</span><input type="password" name="pwd" class="txt"/></li>
+                     <li><span><font>*</font> 请确认密码：</span><input type="password" name="pwd1" class="txt"/></li>
+                     <li class="li03"><span><font>*</font> 验证码：</span><input type="number" name="code" class="txt txt2"/><img id="img" src="Code.jsp" height="50px" width="100px"/><a href="javascript:loadImage()">看不清?换一张</a></li>
+                     <li class="li02"><input type="button" value="立即注册" class="sub" onclick="update()"/></li>
+                </ul>
+            </form>
+        </div>
+        <div class="right">密码已找回？<a href="login.html">登录</a></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="#">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a href="#">人才招聘</a>|<a href="#">站点地图</a>
+   
+    <p>网络文化经营许可证：粤网文[2015]0295-065号<br />© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
+</div>
+<script>
+function loadImage(){
+	document.getElementById("img").src="Code.jsp?"+Math.random();
+}
+function update(){
+	var nickName=$.trim($('li input[name="nickName"]').val());
+	var tel=$.trim($('li input[name="tel"]').val());
+	var pwd=$.trim($('li input[name="pwd"]').val());
+	var pwd1=$.trim($('li input[name="pwd1"]').val());
+	var code=$.trim($('li input[name="code"]').val());
+	if (nickName == "") {
+		alert("请输入用户名...");
+		return;
+	}
+	if ( tel == "") {
+		alert("请输入电话...");
+		return;
+	}
+	if (pwd == ""||pwd1 == "") {
+		alert("请输入密码...");
+		return;
+	}
+	if (pwd != pwd1) {
+		alert("请确定密码是否一致...");
+		return;
+	}
+	if (code == "") {
+		alert("请输入验证码...");
+		return;
+	}
+	$.post("member.action",{op:"updatePwd",nickName:nickName,tel:tel,pwd:pwd,code:code},function(result){
+	    if(result==1){
+	    	alert("密码已修改");
+	    	window.location.href="login.html";
+	    }else if(result==2){
+	    	alert("验证码有误！");
+	    }else{
+	    	alert('验证码为空或者用户名与身份证有误或者密码不合法（最低7位长度）！！')
+	    }
+	},'text');
+}
+</script>
+</body>
+</html>

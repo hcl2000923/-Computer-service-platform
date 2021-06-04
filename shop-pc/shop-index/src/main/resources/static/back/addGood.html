@@ -1,0 +1,70 @@
+<meta charset="UTF-8">
+<style>
+.yc_add li {
+	width:350px;
+	margin-top: 20px;
+}
+
+.yc_add li label {
+	display: inline-block;
+	text-align:right;
+	width: 150px;
+}
+.yc_add li input {
+	width: 200px;
+}
+</style>
+<div class="yc_good">
+<form id="yc_addgood">
+	<ul class="yc_add">
+
+		<li><label>配件分类：</label><input id="tno" class="easyui-textbox" type="text"/></li>
+		<li><label>配件品牌名：</label><input id="gname1" class="easyui-textbox" type="text"/></li>
+		<li><label>评分：</label><input id="point" class="easyui-textbox" type="text"/></li>
+		<li><label>配件图片：</label><input id="pices" type="file" name="pics" multiple="multiple"/></li>
+		
+		<li><label></label><input class="easyui-linkbutton" onclick="add()" value="添加商品"></li>
+		
+	</ul>
+</form>
+</div>
+<!-- 引入ajaxFileUpload -->
+<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+<script>
+	$('#tno').combobox({
+		url:'../GoodTypeServlet.action?op=find',//从url取得数据
+		valueField:'tno',
+		textField:'tname',
+		onLoadSuccess:function(r){ //在加载远程数据成功的时候触发。
+			$("#tno").combobox("select",r[0].tno); //选择指定第一个
+		}
+	});
+	function add(){
+		//获取所有元素值
+		var tno=$('#tno').val();
+		var gname1=$('#gname1').val();
+		var point=$('#point').val();
+		$.ajaxFileUpload({
+			url:'../goodInfo.action',
+			secureuri:false,
+			fileElementId:'pices',
+			dataType:'json',
+			data:{
+				gname:gname1,
+				tno:tno,
+				point:point
+			},
+			success:function(data){
+				if(data>0){
+					//清空文本框
+					$.messager.show({
+						title:"温馨提示",
+						msg:'商品添加成功',
+						timeout:5000,
+						showType:'slide'
+					});
+				}
+			}
+		});
+	}
+</script>

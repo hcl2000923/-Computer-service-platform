@@ -1,0 +1,166 @@
+<meta charset="UTF-8" />
+<style>
+	#findorder{
+		width:100%;
+	}
+</style>
+<div id='c'><br/>
+	<label>订单详情编号:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="itemno" />
+	<label>品牌编号:</label><input type="number" name="gno" />
+	<label>具体配置编号:&nbsp;&nbsp;</label><input type="number" name="sizeno" /><br/>
+	<label>用户编号:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="mno" />
+	<label>收货人:&nbsp;&nbsp;&nbsp;</label><input type="text" name="receiver" />
+	<label>电话:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="tel" name="tel" /><br/>
+	<label>地址(省-市-县-镇):</label><input type="text" name="addr" />
+	<label>购买方式:</label><input type="text" name="buyWay" />
+	
+	<label>邮编码:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="pCode" /><br/>
+	
+	<label>发货日期(理论):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="date" name="sdate" />
+	<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;购买日期:</label><input type="date" name="odate" />
+	<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;收货日期(理论):</label><input type="date" name="rdate" /><br/>
+	<label>多状态标记(1正常备注/2备注地址/3备注电话/4备注收件人):</label><input type="number" name="updateStatus" />
+	<label>订单状态(1签收/2未签收):</label><input type="number" name="status" />
+	<a style="background-color: silver;" class="easyui-linkbutton" data-options="plain:true" href="javascript:find()">查询</a><br/>
+	<table id="findorder"></table>
+</div>
+<script type="text/javascript">
+	var day1 = new Date();
+	day1.setTime(day1.getTime());
+	var s1 = day1.getFullYear()+"-"+(day1.getMonth()+1)+"-"+day1.getDate();
+	//加载数据
+	$('#findorder').datagrid({
+		url:'../order.action?op=findPage',
+		pagination:true,//分页工具条
+		pageList:[1,3,5,10,14,20],//每页显示数组的设置
+		pageSize:3,//自动给你讲pagesize以及第几页request传过去   叫rows 和page
+		toolbar:[{iconCls:'icon-reload',
+			handler:function(){
+				$('#findorder').datagrid('reload');//根据url重新到admin.action中传op=find取得数据
+			}	
+		},'-',{iconCls:'icon-add',
+			handler:function(){
+				alert('添加');
+			}	
+		}],
+		columns:[[
+			{field:'itemno',title:'订单详情编号',width:'10%',align:'right'},
+			{field:'gno',title:'品牌编号',width:'10%',align:'right'},
+			{field:'sizeno',title:'配件配置编号',width:'10%',align:'right'},
+			{field:'ono',title:'购买编号',width:'10%',align:'right'},
+			{field:'size',title:'配件名',width:'20%',align:'center'},
+			{field:'num',title:'数目',width:'8%',align:'right'},
+			{field:'money',title:'金额',width:'7%',align:'right'},
+			{field:'descr',title:'备注',width:'20%',align:'center'},
+			
+			{field:'mno',title:'用户编号',width:'8%'},
+			{field:'nickName',title:'购买人',width:'10%',align:'right'},
+			{field:'receiver',title:'收货人',width:'10%',align:'right'},
+			{field:'tel',title:'电话号码',width:'12%',align:'right'},
+			{field:'buyWay',title:'购买方式',width:'7%',align:'right'},
+			{field:'detailAddr',title:'地址',width:'20%',align:'center'},
+			{field:'pCode',title:'邮编码',width:'6%',align:'right'},
+			{field:'updateStatus',title:'多状态标记(1正常备注/2备注地址3备注电话4备注收件人)',width:'20%',align:'right'},
+			{field:'status',title:'订单状态(1签收/2未签收)',width:'17%',align:'right'},
+			{field:'odate',title:'购买日期',width:'10%',align:'right'},
+			{field:'sdate',title:'发货日期(理论)',width:'10%',align:'right'},
+			{field:'rdate',title:'收货日期(理论)',width:'10%',align:'right'},
+
+			{field:'aa',title:'操作',width:'37%',align:'center',formatter:function(value,row,index){
+				return '<a href="javascript:setRdate('+row.itemno+')">设置收货日期</a>'
+				+'<a href="javascript:setGet('+row.itemno+')">|签收</a>'
+				+'<a href="javascript:updateAddr('+row.itemno+')">|修改地址</a>'
+				+'<a href="javascript:updateTel('+row.itemno+')">|修改电话</a>'
+				+'<a href="javascript:updateGetMan('+row.itemno+')">|修改收件人</a>'
+				+'<a href="javascript:del('+row.itemno+')">|删除</a>';
+			}}
+		]]
+	});
+	function del(itemno){
+		$.post("../order.action",{op:"del",itemno:itemno},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	//重置地址
+	function updateAddr(itemno){
+		var addr=prompt("请输入新的地址::");
+		$.post("../order.action",{op:"updateAddr",itemno:itemno,descr:addr},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	function updateTel(itemno){
+		var tel = prompt("请输入新的电话:");
+		$.post("../order.action",{op:"tel",itemno:itemno,descr:tel},function(result){
+	        if(result==1){
+	        	alert("设置成功");
+	        }else{
+	        	alert("设置失败");
+	        }
+	    });		
+	}
+	function updateGetMan(itemno){
+		var man = prompt("请输入收件人姓名:");
+		$.post("../order.action",{op:"receiver",itemno:itemno,descr:man},function(result){
+	        if(result==1){
+	        	alert("设置成功");
+	        }else{
+	        	alert("设置失败");
+	        }
+	    });	
+	}
+	//设置签收
+	function setGet(itemno){
+		$.post("../order.action",{op:"doGain",itemno:itemno,rdate:s1},function(result){
+	        if(result==1){
+	        	alert("签收成功");
+	        }else{
+	        	alert("签收失败");//签收同时要进行设置收货日期
+	        }
+	    });
+	}
+	//设置到货时间
+	function setRdate(itemno){
+		var date = prompt("请输入收货日期:",s1);
+		$.post("../order.action",{op:"date",itemno:itemno,rdate:date},function(result){
+	        if(result==1){
+	        	alert("设置成功");
+	        }else{
+	        	alert("设置失败");
+	        }
+	    });
+	}
+	function find(){
+		var itemno=$('#c input[name="itemno"]').val();
+		var gno=$('#c input[name="gno"]').val();
+		var sizeno=$('#c input[name="sizeno"]').val();
+		var mno=$('#c input[name="mno"]').val();
+		var receiver=$('#c input[name="receiver"]').val();
+		var tel=$('#c input[name="tel"]').val();
+		var addr=$('#c input[name="addr"]').val();
+		var buyWay=$('#c input[name="buyWay"]').val();
+		var pCode=$('#c input[name="pCode"]').val();
+		var sdate=$('#c input[name="sdate"]').val();
+		var odate=$('#c input[name="odate"]').val();
+		var rdate=$('#c input[name="rdate"]').val();
+		var updateStatus=$('#c input[name="updateStatus"]').val();
+		var status=$('#c input[name="status"]').val();
+		if(updateStatus==2){
+			$('#findorder').datagrid('reload',{itemno:itemno,gno:gno,sizeno:sizeno,mno:mno,receiver:receiver,tel:tel,descr:addr,buyWay:buyWay,pCode:pCode,sdate:sdate,odate:odate,rdate:rdate,updateStatus:updateStatus,status:status});
+		}else if(updateStatus==3){
+			$('#findorder').datagrid('reload',{itemno:itemno,gno:gno,sizeno:sizeno,mno:mno,receiver:receiver,descr:tel,addr:addr,buyWay:buyWay,pCode:pCode,sdate:sdate,odate:odate,rdate:rdate,updateStatus:updateStatus,status:status});
+		}else if(updateStatus==4){
+			$('#findorder').datagrid('reload',{itemno:itemno,gno:gno,sizeno:sizeno,mno:mno,descr:receiver,tel:tel,addr:addr,buyWay:buyWay,pCode:pCode,sdate:sdate,odate:odate,rdate:rdate,updateStatus:updateStatus,status:status});
+		}else{
+			$('#findorder').datagrid('reload',{itemno:itemno,gno:gno,sizeno:sizeno,mno:mno,receiver:receiver,tel:tel,addr:addr,buyWay:buyWay,pCode:pCode,sdate:sdate,odate:odate,rdate:rdate,updateStatus:updateStatus,status:status});
+
+		}
+	}
+</script>

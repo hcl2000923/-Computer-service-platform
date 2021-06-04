@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title>网站后台登陆</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Custom Theme files -->
+		<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
+		<link href="css/snow.css" rel="stylesheet" type="text/css" media="all">
+		<link href="css/style.css" rel="stylesheet" type="text/css" media="all">
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<!-- //Custom Theme files -->
+	</head>
+
+	<body>
+		<div class="snow-container">
+			<div class="snow foreground"></div>
+			<div class="snow foreground layered"></div>
+			<div class="snow middleground"></div>
+			<div class="snow middleground layered"></div>
+			<div class="snow background"></div>
+			<div class="snow background layered"></div>
+		</div>
+		<h1 style="height: 200px"></h1>
+		<h1>管理员登陆</h1>
+		<div class="main-agileits">
+			<!--form-stars-here-->
+			<div class="form-w3-agile">
+				<h2 class="sub-agileits-w3layouts">登录系统</h2>
+				<form action="" method="post">
+					<input type="text" name="user" id="account" placeholder="账号" required>
+					<input type="password" name="Password" id="pwd" placeholder="密码" required>
+					<div class="submit-w3l"><input type="button" onclick="checkLogin()" id="sub_btn" value="登录"></div>
+				</form>
+			</div>
+		</div>
+		<!--//form-ends-here-->
+		<!-- copyright -->
+		<div class="copyright w3-agile">
+			<p>© 2020版权所有JM
+				<a href="../index.html" title="bootstrapmb">网站入口</a>
+			</p>
+		</div>
+		<!-- //copyright -->
+		<script type="text/javascript">
+		function checkLogin() {
+			var account = $.trim($("#account").val());
+			var pwd = $.trim($("#pwd").val());
+			
+			if (account == "") {
+				alert("请输入账号...");
+				return;
+			}
+			
+			if (pwd == "") {
+				alert("请输入密码...");
+				return;
+			}
+			//发送ajax请求  参数类型名称必须和javaBean对象中的一致
+			$.post('admin.action',{op:'login',aname:account,pwd:pwd},function(data){//使用id号取出来
+				if(data>0){
+					window.location.href="index.html";
+				}else{
+					alert('用户名或密码错误！！')
+				}
+			},'text');//不需要在这里得到data的json数据  没有session处理
+		}
+		
+		</script>
+	</body>
+
+</html>

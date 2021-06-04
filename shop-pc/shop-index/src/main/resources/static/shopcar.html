@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>我的购物车</title>
+<link href="css/style.css" type="text/css" rel="stylesheet" />
+<script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+
+</head>
+<body class="index">
+<div class="top_ad"><div class="w1200"><a href="#" id="close"></a></div></div>
+<div id="yc_login">
+<div class="top">
+	<div class="w1200">
+		<div class="left">您好，欢迎光临易易城！
+			<div v-if="onlogin"><em>[{{user.nickName}}]&nbsp;&nbsp;&nbsp;</em><a href="javascript:void(0)" @click="out()">[注销]</a>
+			</div>
+			<div v-if="outlogin">
+				<a href="login.html">[登录]</a> <a href="reg.html">[注册]</a>
+			</div>
+		</div>
+        <div class="right"><a href="member.html">我的会员中心</a>|<a href="#">服务中心</a>|<a href="#">在线客服</a>|<a href="shopcar.html">购物车<b>{{goodsCount}}</b>件</a></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="head">
+	<div class="w1200">
+    	<div class="logo"><a href="index.html"></a></div>
+        <div class="s_r">
+        	<dl>
+            	<dt><a href="shopcar.html">购物车<span>{{goodsCount}}</span></a></dt>
+                <dd>客服电话：<b>400-0139-038</b></dd>
+            </dl>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="w1200">
+	<div class="position"><a href="index.html">首页</a> > <a href="javascript:void(0)">购物车</a></div>
+    
+    <div class="shopcar">
+    	<div class="shop_lc"><span class="sp01">我的购物车</span><span class="sp02">填写提交信息表单</span><span class="sp03">在线支付</span></div>
+      	<dl>
+        	<dt><span>我的购物车</span></dt>
+            <dd id="shopcar">
+            	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr class="tr_t">
+                    <td width="4%"><input id="all" type="checkbox" checked="checked"/></td>
+                    <td width="4%">全选</td>
+                    <td width="35%">商品</td>
+                    <td width="26%">单价</td>
+                    <td width="6%">数量</td>
+                    <td width="14%">小计</td>
+                    <td width="11%">操作</td>
+                  </tr>
+                  <tr class="tr_c" v-for="(item,index) in carts">
+                    <td><input class="qwe" type="checkbox" checked :index="index"/></td>
+                    <td colspan="2">
+                    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="15%"><img :src="item.showPic"/></td>
+                            <td width="85%"><a :href="'product_show.html#'+item.sizeno" class="title">{{item.gname}}-{{item.size}}</a></td>
+                          </tr>
+                        </table>
+                    </td>
+                    <td class="price">￥ {{item.price}}</td>
+                    <td><span class="jian"><a href="javascript:void(0)" @click="lost(index)">-</a></span><input style="height: 30px;width: 30px" :index="index" class="up" type="text" v-model="item.num"/><span class="jia"><a href="javascript:void(0)" @click="add(index)">+</a></span></td>
+                    <td class="price">￥ {{money[index]}}</td>
+                    <td><a href="javascript:void(0)" @click="delGoods(index,this)">删除</a></td>
+                  </tr>
+                  <tr class="tr_d">
+                    <td colspan="7">
+                    	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td width="75%"><span class="del"><a href="javascript:void(0)" @click="delAll()">删除选中商品</a></span></td>
+                            <td width="11%">已选商品  <strong>{{count}}</strong>件</td>
+                            <td width="14%" class="all_price">合计：<font>￥{{totalPrice}}</font></td>
+                          </tr>
+                        </table>
+                    </td>
+                  </tr>
+                </table>
+              
+                <div class="clear"></div>
+   		  </dd>
+        </dl>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="go_tb">
+         <tr>
+           <td width="20%"><a href="product.html" class="go_buy">继续购物</a></td>
+           <td width="63%">&nbsp;</td>
+           <td width="17%" align="right"><a href="javascript:void(0)" @click="goInfo()" class="code">结 算</a></td>
+         </tr>
+        </table>
+        <div class="clear"></div>
+    </div>
+</div>
+</div>
+<!--footer-->
+<div class="footer">
+	<div class="f_bz">
+    	<div class="w1200">
+            <dl class="dl01">
+                <dt>正品保证</dt>
+                <dd>正品护航  购物无忧</dd>
+            </dl>
+            <dl class="dl02">
+                <dt>你消费 我买单</dt>
+                <dd>返现购物商城</dd>
+            </dl>
+            <dl class="dl03">
+                <dt>品类丰富</dt>
+                <dd>品类齐全 轻松购物</dd>
+            </dl>
+            <dl class="dl04">
+                <dt>特色服务体验</dt>
+                <dd>为您呈现不一样的服务</dd>
+            </dl>
+            <div class="clear"></div>
+        </div>
+    </div>
+	<div class="f_nav">
+    	<div class="w1200">
+            <dl>
+                <dt>新手指南</dt>
+                <dd>
+                    <a href="#">注册新用户</a>
+                    <a href="#">商品订购流程</a>
+                    <a href="#">会员注册协议</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>付款方式</dt>
+                <dd>
+                    <a href="#">支付宝支付</a>
+                    <a href="#">网上银行支付</a>
+                    <a href="#">货到付款</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>常见问题</dt>
+                <dd>
+                    <a href="#">订单状态</a>
+                    <a href="#">发票说明</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>售后服务</dt>
+                <dd>
+                    <a href="#">退换货政策</a>
+                    <a href="#">退换货流程</a>
+                    <a href="#">退款说明</a>
+                    <a href="#">退换货申请</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>客服中心</dt>
+                <dd>
+                    <a href="#">常见问题</a>
+                    <a href="#">联系客服</a>
+                    <a href="#">投诉与建议</a>
+                </dd>
+            </dl>
+            <div class="ewm"><img src="images/home/ico35.png"/></div>
+            <div class="ewm"><img src="images/home/ico38.png"/></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="w1200">
+        <div class="bottom">
+            <a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="#">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a href="#">人才招聘</a>|<a href="#">站点地图</a>
+           
+            <p>网络文化经营许可证：粤网文[2015]0295-065号<br />© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
+            <p class="p02"><img src="images/home/ico25.jpg"/><img src="images/home/ico26.jpg"/><img src="images/home/ico27.jpg"/><img src="images/home/ico36.jpg"/><img src="images/home/ico37.jpg"/></p>
+        </div>
+    </div>
+</div>
+<!--float_right-->
+<div class="float">
+	<ul>
+    	<li><a href="#" class="a01"></a></li>
+        <li><a href="#" class="a02"></a></li>
+        <li><a href="#" class="a03"></a></li>
+        <li><a href="#" class="a04"></a></li>
+    </ul>
+</div>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/qs.js"></script>
+<script type="text/javascript">
+let yc_login=new Vue({
+	el:"#yc_login",//对应div的id,即这个vue的作用域
+	data:{
+		onlogin:false,
+		outlogin:true,
+		user:{},
+		carts:[],
+		goodsCount:0,
+		totalPrice:0,//总价格
+		status:[],//是否被选择
+		money:[],
+		count:0
+	},
+	mounted:function(){//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
+		axios({
+			url:'member.action?op=check',
+			method:'get'
+		}).then(result=>{
+			if(result.data.member){//说明登录了
+				this.onlogin=true;
+				this.outlogin=false;
+				this.user=result.data.member;
+				if(result.data.carts){
+					this.carts=result.data.carts;
+					this.goodsCount=result.data.carts.length;
+					this.carts.forEach((item,index)=>{
+						this.status.push(1);//加载进来默认复选框被选中的
+						var mon=item.num*item.price;
+						this.money.push(mon);
+						this.totalPrice+=mon;
+					});
+				}
+			}else{
+				this.onlogin=false;
+				this.outlogin=true;
+				alert('请先登录。。。');
+				location.href='login.html';
+			}
+			this.count=this.goodsCount;
+		});
+		this.$nextTick(function(){
+			//此处填第一次渲染完成后执行的代码
+			setTimeout("bindInfo()",1000);
+			this.getTotal();
+		});
+		window.updateCheck=this.checkInfo;
+	},
+	methods:{
+		goInfo:function(){
+			let cnos1=new Array();
+			let nums=new Array();
+			for(let index=0;index<this.carts.length;index++){
+				let num=eval(this.carts[index].num);
+				if(num>100||num<1){
+					alert('购物车数量不合法（1-100）');
+					return ;
+				}
+				cnos1.push(this.carts[index].cno);
+				nums.push(num);
+			}
+			axios.post('cart.action',qs.stringify({op:'upd',cnos:cnos1,nums:nums}))
+			.then(result=>{
+				let data=result.data;
+				if(data==1){
+					
+				}else{
+					return ;
+				}
+			});
+			
+			var cnos=new Array();
+			var moneys=new Array();
+			this.status.forEach((st,index)=>{
+				if(this.status[index]==1){
+					cnos.push(this.carts[index].cno);//订单商品no
+					moneys.push(this.money[index]);
+				}
+			});
+			if(cnos.length==0){
+				alert("对不起您未选中任何商品购买！");
+				return ;
+			}
+			var str=qs.stringify({cnos:cnos});
+			location.href='info.html#'+str;//data orderid
+		},
+		out:function(){
+			axios({url:'member.action?op=out',method:'get'})
+			.then(result=>{
+				let data=result.data;
+				if(data==1){
+					location.href='login.html';
+				}else{
+					alert('退出失败！！');
+					return ;
+				}
+			});
+		},
+		lost:function(index){
+			var cno=this.carts[index].cno;
+			var num=this.carts[index].num;
+			if(num>1){
+				axios({url:'cart.action?op=update',method:'get',params:{cno:cno,num:num-1}})
+				.then(result=>{
+					let data=result.data;
+					if(data==1){
+						this.carts[index].num=this.carts[index].num-1;
+						this.money[index]=this.money[index]-this.carts[index].price;
+						this.getTotal();
+					}
+				});
+			}
+		},
+		add:function(index){
+			var cno=this.carts[index].cno;
+			var num=eval(this.carts[index].num);
+			if(num<100){
+				axios({url:'cart.action?op=update',method:'get',params:{cno:cno,num:num+1}})
+				.then(result=>{
+					let data=result.data;
+					if(data==1){
+						this.carts[index].num=eval(this.carts[index].num)+1;
+						this.money[index]=this.money[index]+this.carts[index].price;
+						this.getTotal();
+					}
+				});
+			}
+		},
+		delGoods:function(index,obj){
+			var cno=this.carts[index].cno;
+			if(confirm("您确定要删除吗？")){
+				//从数据库中删除
+				axios.post("cart.action",qs.stringify({op:'delete',cno:cno})).then(result=>{
+					let data=result.data;
+					if(data>0){
+						this.goodsCount=this.goodsCount-1;
+						this.getTotal();
+						this.carts.splice(index,1);
+						this.status.splice(index,1);//视图li移调
+						this.money.splice(index,1);
+					}
+				});
+			}
+		},
+		delAll:function(){
+			var cnos=new Array();
+			var nos=new Array();
+			this.status.forEach((st,index)=>{
+				if(st==1){
+					cnos.push(this.carts[index].cno);//订单商品no
+					nos.push(index);
+				}
+			});
+			if(confirm("您确定要删除吗？")){
+				//从数据库中删除
+				axios.post("cart.action",qs.stringify({op:'deleteAll',cnos:cnos})).then(result=>{
+					let data=result.data;
+					if(data>0){
+						this.goodsCount=this.goodsCount-cnos.length;
+						var i=0;
+						nos.forEach((no,index)=>{
+							this.carts.splice(no-i,1);
+							this.status.splice(no-i,1);//视图li移调
+							this.money.splice(no-i,1);
+							i++;
+						});
+						this.getTotal();
+					}
+				});
+			}
+		},
+		getTotal:function(){//计算总价格
+			this.totalPrice=0;
+			this.count=0;
+			this.status.forEach((stat,index)=>{//通过index访问
+				if(stat==1){//选中的商品
+					this.totalPrice+=this.money[index];
+					this.count+=1;
+				}
+			});
+		},
+		checkInfo:function(index,st){
+			//修改status数组中的索引号为index位置
+			this.$set(this.status,index,st);//把容器对象中的status将index位置值设置st
+			//重新计算总价格
+			this.getTotal();
+		}
+	}
+});
+function bindInfo(){
+	//全选和全不选
+	$("#all").click(function(){
+		//获取全选是否被选中
+		//prop  获取标签的固有属性 attr  自动定义属性
+		var flag=$(this).prop("checked");
+		//判断
+		$(".tr_c input[type='checkbox']").prop("checked",flag);
+		var checkboxs=document.getElementsByClassName("qwe");
+		var len=checkboxs.length;
+		for(var i=0;i<len;i++){
+			if(checkboxs[i].checked==true){//选中时
+				//修改该行的状态值status数组中index位置为1
+				updateCheck($(checkboxs[i]).attr("index"),1);//复选框自带属性值
+			}
+			else{
+				updateCheck($(checkboxs[i]).attr("index"),0);//$(this).attr("index")自定义属性
+			}
+			
+		}
+	});
+	//获取表格中所有复选框
+	var checkboxs=document.getElementsByClassName("qwe");
+	var len=checkboxs.length;
+	for(var i=0;i<len;i++){
+		//给每个复选框绑定一个点击事件
+		checkboxs[i].onclick=function(){
+			if(this.checked==true){//选中时
+				//修改该行的状态值status数组中index位置为1
+				updateCheck($(this).attr("index"),1);//复选框自带属性值
+			}
+			else{
+				updateCheck($(this).attr("index"),0);//$(this).attr("index")自定义属性
+			}
+			
+			for(var j=0;j<len;j++){//每点击一次复选框触发事件检查全选按钮
+				if(!checkboxs[j].checked){
+					$("#all").prop("checked",false);
+					return;
+				}
+			}
+			$("#all").prop("checked",true);
+		}
+	}
+	
+}
+
+</script>
+</body>
+</html>
