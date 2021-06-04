@@ -1,0 +1,58 @@
+<meta charset="UTF-8">
+<style>
+.yc_add li {
+	width:350px;
+	margin-top: 20px;
+}
+
+.yc_add li label {
+	display: inline-block;
+	text-align:right;
+	width: 150px;
+}
+.yc_add li input {
+	width: 200px;
+}
+</style>
+<div class="yc_good">
+<form id="yc_order">
+	<ul class="yc_add">
+		<li><h1>根据订单详情编号进行修改</h1></li>
+		<li><label style="color: green;">订单详情编号:</label><input type="number" id="itemno" class="easyui-combobox"/></li>
+		<li><h1>修改以下内容(-1默认不修改)</h1></li>
+		<li><label>用户编号:</label><input id="mno" class="easyui-combobox"/></li>
+		<li><label>备注(非修改地址):</label><input type="text" id="descr" class="easyui-textbox"/></li>
+		<li><label>发货日期:</label><input type="date" id="sdate"/></li>
+		<li><label></label><a class="easyui-linkbutton" href="javascript:update()">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;改&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+	</ul>
+</form>
+</div>
+<script>
+//加载数据获取商品类型 
+	$('#itemno').combobox({
+		url:'../order.action?op=find',//从url取得数据
+		valueField:'itemno',
+		textField:'itemno'
+	});
+	$('#mno').combobox({
+		url:'../member.action?op=find',//从url取得数据
+		valueField:'mno',
+		textField:'nickName'
+	});
+	function update(){
+		//获取所有元素值
+		var itemno=$('#itemno').val();
+		var mno=$('#mno').val();
+		var descr=$('#descr').val();
+		var sdate=$('#sdate').val();
+		$.post("../order.action",{op:"updateAll",itemno:itemno,mno:mno,descr:descr,sdate:sdate},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	
+
+</script>

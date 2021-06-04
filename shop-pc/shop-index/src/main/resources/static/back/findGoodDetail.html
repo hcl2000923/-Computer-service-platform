@@ -1,0 +1,109 @@
+<meta charset="UTF-8" />
+<style>
+	#findGoodDetail{
+		width:100%;
+	}
+</style>
+<div id='a'><br/>
+	<label>型号编号 :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="gno" />
+	<label>配置型号 :&nbsp;&nbsp;</label><input type="number" name="sizeno" />
+	
+	<br/>
+	<label>内存加储存大小:</label><input type="text" name="size" />
+	<label>库存高于:&nbsp;&nbsp;&nbsp;</label><input type="number" name="balance" /><br/>
+	<label>价格低于:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="price" />
+	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a style="background-color: silver;" class="easyui-linkbutton" data-options="plain:true" href="javascript:find()">查询</a><br/>
+	<table id="findGoodDetail"></table>
+</div>
+
+<script type="text/javascript">
+	var sizeno1=0;
+	function msgbox(sizeno){
+		sizeno1=sizeno;
+		$('.showpic').show();     /* 点击按钮打开 对话框 */
+	}
+	//加载数据
+	$('#findGoodDetail').datagrid({
+		url:'../goodDetailServlet.action?op=findPage',
+		pagination:true,//分页工具条
+		pageList:[1,3,5,10,14,20],//每页显示数组的设置
+		pageSize:3,//自动给你讲pagesize以及第几页request传过去   叫rows 和page
+		toolbar:[{iconCls:'icon-reload',
+			handler:function(){
+				$('#findGoodDetail').datagrid('reload');//根据url重新到admin.action中传op=find取得数据
+			}	
+		},'-',{iconCls:'icon-add',
+			handler:function(){
+				alert('添加');
+			}	
+		}],
+		columns:[[
+			{field:'sizeno',title:'配置型号',width:'10%'},
+			{field:'gno',title:'配件品牌编号',width:'14%'},
+			{field:'gname',title:'配件品牌名',width:'12%'},
+			{field:'tno',title:'配件类型编号',width:'14%',align:'right'},
+			{field:'sellNum',title:'销量',width:'8%',align:'right'},
+			{field:'point',title:'评分',width:'10%',align:'center'},
+			{field:'size',title:'配置大小',width:'20%',align:'center'},
+			{field:'intro',title:'配置详情',width:'30%',align:'left'},
+			{field:'showPic',title:'展示图片',width:'20%',align:'center',formatter:function(value,row,index){
+				return '<img src="'+'../'+row.showPic+'" width="75" height="50">';
+			}	
+			},
+			{field:'balance',title:'库存',width:'10%',align:'right'},
+			{field:'price',title:'价格',width:'10%',align:'center'},
+
+			{field:'aa',title:'操作',width:'45%',align:'center',formatter:function(value,row,index){
+				return '<a href="javascript:updateprice('+row.sizeno+')">修改价格|</a>'
+				+'<a href="javascript:updateBal('+row.sizeno+')">修改库存|</a>'
+				+'<a href="javascript:updateIntro('+row.sizeno+',\''+row.intro+'\')">修改配件参数</a>';
+			}}
+		]]
+	});
+	function updateIntro(sizeno,intro){
+		var intro=prompt("请输入修改的参数详情:",intro);
+		$.post("../goodDetailServlet.action",{op:"updateIntro",sizeno:sizeno,intro:intro},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	//重置地址
+	function updateprice(sizeno){
+		var price=prompt("请输入修改的价格:");
+		$.post("../goodDetailServlet.action",{op:"updatePrice",sizeno:sizeno,price:price},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	function updateBal(sizeno){
+		var balance=prompt("请输入修改的库存数:");
+		$.post("../goodDetailServlet.action",{op:"updateBal",sizeno:sizeno,balance:balance},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	function find(){
+		var gno=$('#a input[name="gno"]').val();
+		var gname=$('#a input[name="gname"]').val();
+		var tno=$('#a input[name="tno"]').val();
+		var sellNum=$('#a input[name="sellNum"]').val();
+		var point=$('#a input[name="point"]').val();
+		var sizeno=$('#a input[name="sizeno"]').val();
+		var size=$('#a input[name="size"]').val();
+		var balance=$('#a input[name="balance"]').val();
+		var price=$('#a input[name="price"]').val();
+		$('#findGoodDetail').datagrid('reload',{gno:gno,gname:gname,tno:tno,sellNum:sellNum,point:point,sizeno:sizeno,size:size,balance:balance,price:price});
+	}
+</script>

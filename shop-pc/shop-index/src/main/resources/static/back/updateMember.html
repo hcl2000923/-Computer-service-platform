@@ -1,0 +1,78 @@
+<meta charset="UTF-8">
+<style>
+.yc_add li {
+	width:350px;
+	margin-top: 20px;
+}
+
+.yc_add li label {
+	display: inline-block;
+	text-align:right;
+	width: 150px;
+}
+.yc_add li input {
+	width: 200px;
+}
+</style>
+<div class="yc_good">
+<form id="yc_member">
+	<ul class="yc_add">
+		<li><h1>根据用户名进行修改</h1></li>
+		<li><label style="color: green;">用户名:</label><input id="yc_nick" class="easyui-combobox"/></li>
+		<li><h1>修改以下内容(-1默认不修改)</h1></li>
+		<li><label>用户积分:</label><input class="easyui-numberbox" value=-1  id="moneyPoint" /></li>
+		<li><label>电话:</label><input class="easyui-numberbox" id="tel"/></li>
+		<li><label>邮箱:</label><input class="easyui-textbox" id="email" /></li>
+		<li><label>地址（省-市-县-镇）:</label><input id="addr" class="easyui-textbox" /></li>
+		<li><label>余额:</label><input class="easyui-numberbox" id="restMoney" value=-1 data-options="min:-1,precision:2"/></li>
+		<li><label>照片：</label><input id="pic" type="file" name="photo"/></li>
+		<li><label>真实名:</label><input id="realName" class="easyui-textbox"/></li>
+		<li><label>性别（男1/女2）:</label><input id="sex" value=-1 class="easyui-numberbox"/></li>
+		<li><label></label><a class="easyui-linkbutton" href="javascript:update()">&nbsp;&nbsp;&nbsp;&nbsp;修&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;改&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+	</ul>
+</form>
+</div>
+<!-- 引入ajaxFileUpload -->
+<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+<script>
+//加载数据获取商品类型 
+	$('#yc_nick').combobox({
+		url:'../member.action?op=find',
+		valueField:'mno',
+		textField:'nickName'
+	});
+	function update(){
+		//获取所有元素值
+		var mno=$('#yc_nick').val();
+		var moneyPoint=$('#moneyPoint').val();
+		var tel=$('#tel').val();
+		var email=$('#email').val();
+		var addr=$('#addr').val();
+		var restMoney=$('#restMoney').val();
+		var realName=$('#realName').val();
+		var sex=$('#sex').val();
+		$.ajaxFileUpload({
+			url:'../memberFileUpload.action',
+			secureuri:false,
+			fileElementId:'pic',
+			dataType:'json',
+			data:{
+				mno:mno,moneyPoint:moneyPoint,
+				tel:tel,email:email,
+				addr:addr,restMoney:restMoney,
+				realName:realName,sex:sex
+			},
+			success:function(data){
+				if(data>0){
+					//清空文本框
+					$.messager.show({
+						title:"温馨提示",
+						msg:'用户修改成功',
+						timeout:5000,
+						showType:'slide'
+					});
+				}
+			}
+		});
+	}
+</script>

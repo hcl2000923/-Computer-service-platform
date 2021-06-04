@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>产品列表</title>
+<link href="css/style.css" type="text/css" rel="stylesheet" />
+<script src="js/jquery-1.7.min.js" type="text/javascript"></script>
+<script src="js/common.js"  type="text/javascript"></script>
+
+</head>
+<body class="index">
+<div class="top_ad"><div class="w1200"><a href="#" id="close"></a></div></div>
+<div id="yc_login">
+	<div class="top">
+		<div class="w1200">
+			<div class="left">
+				<div v-if="onlogin"><em>[{{user.nickName}}]&nbsp;&nbsp;&nbsp;</em>您好，欢迎光临易易城！<a href="javascript:void(0)" @click="out()">[注销]</a>
+				</div>
+				<div v-if="outlogin">
+					<a href="login.html">[登录]</a> <a href="reg.html">[注册]</a>
+				</div>
+			</div>
+	        <div class="right"><a href="member.html">我的会员中心</a>|<a href="#">服务中心</a>|<a href="#">在线客服</a>|<a href="shopcar.html">购物车<b>{{goodsCount}}</b>件</a></div>
+	        <div class="clear"></div>
+	    </div>
+	</div>
+	<div class="head">
+		<div class="w1200">
+	    	<div class="logo"><a href="index.html"></a></div>
+	        <div class="search">
+	        	<form action="#" class="form">
+	        		<input type="text" name="keyword" class="txt" placeholder="输入商品关键字"/>
+	                <input type="button" value="搜索" class="sub" @click="find()"/>
+	            </form>
+	        </div>
+	        <div class="s_r">
+	        	<dl>
+	            	<dt><a href="shopcar.html">购物车<span>{{goodsCount}}</span></a></dt>
+	                <dd>客服电话：<b>400-0139-038</b></dd>
+	            </dl>
+	        </div>
+	        <div class="clear"></div>
+	    </div>
+	</div>
+
+	<div class="w1200">
+		<div class="position"><a href="index.html">首页</a> > <a href="product.html">笔记本分类</a></div>
+	    
+	    <div class="c_nav">
+	        <div class="item"><span>品牌分类：</span><p><a href="javascript:void(0)" v-for="type in types" @click="addTno(type.tno)">{{type.tname}}</a></p><div class="clear"></div>
+	        </div>
+	    </div>
+	    
+	    <div class="order"><a id="a0001" href="javascript:void(0)" @click="pointSort()" class="cur">综合排序</a><a id="a0002" href="javascript:void(0)" @click="sellSort()">销量排序</a><span><font>共{{total}}件商品  <strong><b>{{page}}</b>/{{Math.ceil(total/rows)}}</strong></font><a href="javascript:void(0)" @click="go()">></a><a href="javascript:void(0)" @click="back()"><</a></span>
+	    <div class="clear"></div>
+	    </div>
+	    
+	    <div class="pro_cont">
+	    	<div style="margin-right: 10px;" class="item" v-for="(item,index) in goods">
+	        	<dl>
+	            	<dt><img :src="item.showPic"/></dt>
+	                <dd>
+	                	<img v-for="(detail,index1) in details" :src="detail.showPic" v-if="detail.gno==item.gno"/>
+	                </dd>
+	            </dl>
+	            <p class="p01"><font>￥</font>{{item.price}}</p>
+	            <p class="p02"><a :href="'product_show.html#'+item.sizeno"><b style="font-size: 15px;">{{item.gname}} {{item.size}}</b></a></p>
+	       		<p style="margin-top: 25px;margin-bottom: 0px;" class="p03"><span class="sp01">月销量：<b>{{item.sellNum}}</b></span><span>评价：<strong>{{item.wordNum}}</strong></span></p>
+	        </div>
+	        <div class="clear"></div>
+	    </div>
+	    
+	
+		<div class="page">
+	    	<a href="javascript:void(0)" class="pre" @click="back()">上一页</a>
+	    	<div v-for="i in Math.ceil(total/rows)" style="display: inline-block;">
+	        	<a href="javascript:void(0)" class="on" @click="update(i)" v-if="i==page">{{i}}</a>
+	        	<a href="javascript:void(0)" @click="update(i)" v-else>{{i}}</a>
+	        </div>
+	        <a href="javascript:void(0)" class="next" @click="go()">下一页></a>
+	        共{{Math.ceil(total/rows)}}页 到第<input id="pnum" type="text" value="1" />页  <a href="javascript:void(0)" class="sub" @click="goto1()">确定</a>
+	    </div>
+	</div>
+</div>
+<!--footer-->
+<div class="footer">
+	<div class="f_bz">
+    	<div class="w1200">
+            <dl class="dl01">
+                <dt>正品保证</dt>
+                <dd>正品护航  购物无忧</dd>
+            </dl>
+            <dl class="dl02">
+                <dt>你消费 我买单</dt>
+                <dd>返现购物商城</dd>
+            </dl>
+            <dl class="dl03">
+                <dt>品类丰富</dt>
+                <dd>品类齐全 轻松购物</dd>
+            </dl>
+            <dl class="dl04">
+                <dt>特色服务体验</dt>
+                <dd>为您呈现不一样的服务</dd>
+            </dl>
+            <div class="clear"></div>
+        </div>
+    </div>
+	<div class="f_nav">
+    	<div class="w1200">
+            <dl>
+                <dt>新手指南</dt>
+                <dd>
+                    <a href="#">注册新用户</a>
+                    <a href="#">商品订购流程</a>
+                    <a href="#">会员注册协议</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>付款方式</dt>
+                <dd>
+                    <a href="#">支付宝支付</a>
+                    <a href="#">网上银行支付</a>
+                    <a href="#">货到付款</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>常见问题</dt>
+                <dd>
+                    <a href="#">订单状态</a>
+                    <a href="#">发票说明</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>售后服务</dt>
+                <dd>
+                    <a href="#">退换货政策</a>
+                    <a href="#">退换货流程</a>
+                    <a href="#">退款说明</a>
+                    <a href="#">退换货申请</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>客服中心</dt>
+                <dd>
+                    <a href="#">常见问题</a>
+                    <a href="#">联系客服</a>
+                    <a href="#">投诉与建议</a>
+                </dd>
+            </dl>
+            <div class="ewm"><img src="images/home/ico35.png"/></div>
+            <div class="ewm"><img src="images/home/ico38.png"/></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="w1200">
+        <div class="bottom">
+            <a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="#">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a href="#">人才招聘</a>|<a href="#">站点地图</a>
+           
+            <p>网络文化经营许可证：粤网文[2015]0295-065号<br />© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
+            <p class="p02"><img src="images/home/ico25.jpg"/><img src="images/home/ico26.jpg"/><img src="images/home/ico27.jpg"/><img src="images/home/ico36.jpg"/><img src="images/home/ico37.jpg"/></p>
+        </div>
+    </div>
+</div>
+<!--float_right-->
+<div class="float">
+	<ul>
+    	<li><a href="shopcar.html" class="a01"></a></li>
+    </ul>
+</div>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/qs.js"></script>
+<script>
+let yc_login=new Vue({
+	el:"#yc_login",//对应div的id,即这个vue的作用域
+	data:{
+		onlogin:false,
+		outlogin:true,
+		user:{},
+		carts:[],
+		goodsCount:0,
+		types:[],
+		goods:[],
+		tno:"",
+		rows:10,
+		page:1,
+		total:0,
+		details:[],
+		status:1
+	},
+	mounted:function(){//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
+		axios({
+			url:'member.action?op=check',
+			method:'get'
+		}).then(result=>{
+			if(result.data.member){//说明登录了
+				this.onlogin=true;
+				this.outlogin=false;
+				this.user=result.data.member;
+				if(result.data.carts){
+					this.carts=result.data.carts;
+					this.goodsCount=result.data.carts.length;
+				}
+			}else{
+				this.onlogin=false;
+				this.outlogin=true;
+			}
+		});
+		var hash=decodeURI(location.hash);
+		var tnos;
+		if(''==hash||hash.indexOf('#')>0){
+		
+		}else{
+			hash =hash.replace('#','');
+			let obj=qs.parse(hash);
+			var strtnos=obj.tnos;
+			tnos=strtnos.split(",");
+		}
+		axios({
+			url:'GoodTypeServlet.action?op=find',
+			method:'get'
+		}).then(result=>{
+			if(result.data){
+				this.types=result.data;
+			}else{
+				alert("加载失败！");
+			}
+		});
+		axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+		.then(result=>{
+			if(result.data){
+				this.goods=result.data.rows;
+				this.total=result.data.total;
+			}else{
+				alert("加载数据失败！");
+			}
+		});
+		axios.post('goodDetailServlet.action',qs.stringify({op:'findTno',tnos:tnos}))
+		.then(result=>{
+			if(result.data){
+				this.details=result.data;
+			}else{
+				alert("加载数据失败！");
+			}
+		});	
+	},
+	methods:{
+		out:function(){
+			axios({url:'member.action?op=out',method:'get'})
+			.then(result=>{
+				let data=result.data;
+				if(data==1){
+					location.href='product.html';
+				}else{
+					alert('退出失败！！');
+					return ;
+				}
+			});
+		},
+		addTno:function(tno){
+			this.page=1;
+			$(".order #a0001").addClass("cur");
+			$(".order #a0002").removeClass("cur");
+			this.status=1;
+			this.tno=tno;
+			let tnos=new Array();
+			tnos.push(this.tno);
+			axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+			.then(result=>{
+				if(result.data){
+					this.goods=result.data.rows;
+					this.total=result.data.total;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+			axios.post('goodDetailServlet.action',qs.stringify({op:'findTno',tnos:tnos}))
+			.then(result=>{
+				if(result.data){
+					this.details=result.data;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+		},
+		pointSort:function(){
+			this.page=1;
+			$(".order #a0001").addClass("cur");
+			$(".order #a0002").removeClass("cur");
+			this.status=1;
+			let tnos=new Array();
+			tnos.push(this.tno);
+			axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+			.then(result=>{
+				if(result.data){
+					this.goods=result.data.rows;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+		},
+		sellSort:function(){
+			this.page=1;
+			$(".order #a0002").addClass("cur");
+			$(".order #a0001").removeClass("cur");
+			this.status=2;
+			let tnos=new Array();
+			tnos.push(this.tno);
+			axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+			.then(result=>{
+				if(result.data){
+					this.goods=result.data.rows;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+		},
+		back:function(){
+			if(this.page==1){
+				alert("已在最前页");
+				return ;
+			}
+			this.page--;
+			let tnos=new Array();
+			tnos.push(this.tno);
+			axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+			.then(result=>{
+				if(result.data){
+					this.goods=result.data.rows;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+		},
+		go:function(){
+			if(this.page==Math.ceil(this.total/this.rows)){
+				alert("已在最后页");
+				return ;
+			}
+			this.page++;
+			let tnos=new Array();
+			tnos.push(this.tno);
+			axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+			.then(result=>{
+				if(result.data){
+					this.goods=result.data.rows;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+		},
+		update:function(i){
+			this.page=i;
+			let tnos=new Array();
+			tnos.push(this.tno);
+			axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+			.then(result=>{
+				if(result.data){
+					this.goods=result.data.rows;
+				}else{
+					alert("加载数据失败！");
+				}
+			});
+		},
+		goto1:function(){
+			var pnum=$("#pnum").val();
+			if(pnum>0&&pnum<Math.ceil(this.total/this.rows)+1){
+				this.page=pnum;
+				let tnos=new Array();
+				tnos.push(this.tno);
+				axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+				.then(result=>{
+					if(result.data){
+						this.goods=result.data.rows;
+					}else{
+						alert("加载数据失败！");
+					}
+				});
+			}else{
+				alert("输入不合法！");
+			}
+		},
+		find:function(){
+			this.page=1;
+			$(".order #a0001").addClass("cur");
+			$(".order #a0002").removeClass("cur");
+			this.status=1;
+			var keyword=$.trim($('input[name="keyword"]').val());
+			let tnos=new Array();
+			axios({
+				url:'GoodTypeServlet.action?op=findTno',
+				method:'get',
+				params:{
+					gname:keyword
+				}
+			}).then(result=>{
+				if(result.data){
+					result.data.forEach((item,index)=>{
+						tnos.push(item.tno);
+						axios.post('goodInfoServlet.action',qs.stringify({op:'findTno',tnos:tnos,page:this.page,rows:this.rows,type:this.status}))
+						.then(result=>{
+							if(result.data){
+								this.goods=result.data.rows;
+								this.total=result.data.total;
+							}else{
+								alert("加载数据失败！");
+							}
+						});
+						axios.post('goodDetailServlet.action',qs.stringify({op:'findTno',tnos:tnos}))
+						.then(result=>{
+							if(result.data){
+								this.details=result.data;
+							}else{
+								alert("加载数据失败！");
+							}
+						});
+					});
+				}else{
+					alert("查询无果！");
+				}
+			});
+		}
+	}
+});
+</script>
+
+</body>
+</html>

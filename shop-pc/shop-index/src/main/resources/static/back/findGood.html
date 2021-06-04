@@ -1,0 +1,63 @@
+<meta charset="UTF-8" />
+<style>
+	#findGood{
+		width:100%;
+	}
+</style>
+<div id='d'><br/>
+	<label>配件品牌编号:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="gno" />
+	<label>配件品牌名:</label><input type="text" name="gname" /><br/>
+	<label>配件类型:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="tno" /><br/>
+	<label>销量高于:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="sellNum" />
+	<label>评分高于:&nbsp;&nbsp;&nbsp;</label><input type="number" name="point" />
+	<a style="background-color: silver;" class="easyui-linkbutton" data-options="plain:true" href="javascript:find()">查询</a><br/>
+	<table id="findGood"></table>
+</div>
+<script type="text/javascript">
+	//加载数据
+	$('#findGood').datagrid({
+		url:'../goodInfoServlet.action?op=findPage',
+		pagination:true,//分页工具条
+		pageList:[1,3,5,10,14,20],//每页显示数组的设置
+		pageSize:3,//自动给你讲pagesize以及第几页request传过去   叫rows 和page
+		toolbar:[{iconCls:'icon-reload',
+			handler:function(){
+				$('#findGood').datagrid('reload');//根据url重新到admin.action中传op=find取得数据
+			}	
+		},'-',{iconCls:'icon-add',
+			handler:function(){
+				alert('添加');
+			}	
+		}],
+		columns:[[
+			{field:'gno',title:'配件品牌编号',width:'15%'},
+			{field:'gname',title:'配件品牌名',width:'15%'},
+			{field:'tno',title:'配件类型',width:'12%',align:'right'},
+			{field:'sellNum',title:'销量',width:'10%',align:'right'},
+			{field:'point',title:'评分',width:'20%',align:'center'},
+
+			{field:'aa',title:'操作',width:'10%',align:'center',formatter:function(value,row,index){
+				return '<a href="javascript:updatePoint('+row.gno+')">修改评分</a>';
+			}}
+		]]
+	});
+	//重置地址
+	function updatePoint(gno){
+		var point=prompt("请输入评分值::");
+		$.post("../goodInfoServlet.action",{op:"updatePoint",gno:gno,point:point},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	function find(){
+		var gno=$('#d input[name="gno"]').val();
+		var gname=$('#d input[name="gname"]').val();
+		var tno=$('#d input[name="tno"]').val();
+		var sellNum=$('#d input[name="sellNum"]').val();
+		var point=$('#d input[name="point"]').val();
+		$('#findGood').datagrid('reload',{gno:gno,gname:gname,tno:tno,sellNum:sellNum,point:point});
+	}
+</script>

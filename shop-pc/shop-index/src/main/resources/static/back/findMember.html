@@ -1,0 +1,111 @@
+<meta charset="UTF-8">
+<style>
+	#findMember{
+		width:100%;
+	}
+</style>
+<!--
+<div id="admin">
+	<table class="easyui-datagrid" style="width:400px;height:250px" 
+	data-options="url:'admin.action?op=find',fitColumns:true,singleSelect:true">
+		<thead>
+			<tr>
+				<th data-options="field:'aid',width:100">Code</th>
+				<th data-options="field:'aname',width:100">Name</th>
+				<th data-options="field:'tel',width:100,align:'right'">Price</th>
+			</tr>
+		</thead>
+	</table>
+</div>-->
+<div id='b'><br/>
+	<label>用户账号名:</label><input type="text" name="nickName" />
+	<label>状态（正常1/冻结2）:</label><input type="number" name="status" />
+	<label>电话:&nbsp;&nbsp;&nbsp;</label><input type="tel" name="tel" /><br/>
+	<label>邮箱:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="email" name="email" />
+	<label>地址（省-市-县-镇）:&nbsp;</label><input type="text" name="addr" />
+	<label>余额:&nbsp;&nbsp;&nbsp;</label><input type="number" name="restMoney" /><br/>
+	<label>真实名:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="text" name="realName" />
+	<label>性别（男1/女2）:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="number" name="sex" />
+	<label>账号id:</label><input type="number" name="mno" /><br/>
+	<a class="easyui-linkbutton" data-options="plain:true" href="javascript:find()">查询</a><br/>
+	新密码:<input type="text" name="pwd" />
+	<table id="findMember"></table>
+</div>
+<script type="text/javascript">
+	//加载数据
+	$('#findMember').datagrid({
+		url:'../member.action?op=findPage',
+		pagination:true,//分页工具条
+		pageList:[1,3,5,10,14,20],//每页显示数组的设置
+		pageSize:3,//自动给你讲pagesize以及第几页request传过去   叫rows 和page
+		toolbar:[{iconCls:'icon-reload',
+			handler:function(){
+				$('#findMember').datagrid('reload');//根据url重新到admin.action中传op=find取得数据
+			}	
+		},'-',{iconCls:'icon-add',
+			handler:function(){
+				alert('添加');
+			}	
+		}],
+		columns:[[
+			{field:'mno',title:'用户编号',width:'8%'},
+			{field:'nickName',title:'用户账号名',width:'10%'},
+			{field:'realName',title:'真实名',width:'9%'},
+			{field:'pwd',title:'密码',width:'8%',formatter:function(value,row,index){
+				return '**********';
+			}},
+			{field:'tel',title:'电话号码',width:'10%',align:'right'},
+			{field:'email',title:'邮箱',width:'20%',align:'right'},
+			{field:'addr',title:'地址',width:'20%',align:'right'},
+			{field:'sex',title:'性别(1男/2女)',width:'10%',align:'right'},
+			{field:'moneyPoint',title:'积分',width:'10%',align:'right'},
+			{field:'status',title:'用户状态(1正常/2冻结)',width:'15%',align:'right'},
+			{field:'restMoney',title:'余额',width:'10%',align:'right'},
+			{field:'aa',title:'操作',width:'15%',align:'center',formatter:function(value,row,index){
+				return '<a href="javascript:resetPwd('+row.mno+')">重置密码|</a>'+'<a href="javascript:freezeUser('+row.mno+')">冻结|</a>'+'<a href="javascript:huntfreeze('+row.mno+')">解冻</a>';
+			}}
+		]]
+	});
+	//重置密码
+	function resetPwd(mno){
+		var pwd=$('#b input[name="pwd"]').val();
+		$.post("../member.action",{op:"updatePwd",mno:mno,pwd:pwd},function(result){
+	        if(result==1){
+	        	alert("修改成功");
+	        }else{
+	        	alert("修改失败");
+	        }
+	    });
+	}
+	function freezeUser(mno){
+		$.post("../member.action",{op:"freeze",mno:mno},function(result){
+	        if(result==1){
+	        	alert("冻结成功");
+	        }else{
+	        	alert("冻结失败");
+	        }
+	    });
+	}
+	function huntfreeze(mno){
+		$.post("../member.action",{op:"hunt",mno:mno},function(result){
+	        if(result==1){
+	        	alert("解冻成功");
+	        }else{
+	        	alert("解冻失败");
+	        }
+	    });
+	}
+	function find(){
+		var nickName=$('#b input[name="nickName"]').val();
+		var realName=$('#b input[name="realName"]').val();
+		var tel=$('#b input[name="tel"]').val();
+		var email=$('#b input[name="email"]').val();
+		var addr=$('#b input[name="addr"]').val();
+		var sex=$('#b input[name="sex"]').val();
+		var status=$('#b input[name="status"]').val();
+		var restMoney=$('#b input[name="restMoney"]').val();
+		var mno=$('#b input[name="mno"]').val();
+		
+		$('#findMember').datagrid('reload',{nickName:nickName,realName:realName,tel:tel,email:email,addr:addr,sex:sex,status:status,restMoney:restMoney,mno:mno});
+	}
+</script>

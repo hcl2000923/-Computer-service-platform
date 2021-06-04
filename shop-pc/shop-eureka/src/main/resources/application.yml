@@ -7,5 +7,5 @@ eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:8000/eureka
-    fetch-registry: false    #\u8981\u4E0D\u8981\u53BB\u6CE8\u518C\u4E2D\u5FC3\u83B7\u53D6\u5176\u4ED6\u670D\u52A1\u7684\u5730\u5740 , \u89E3\u51B3eureka\u542F\u52A8\u65F6\u62A5\u9519
-    register-with-eureka: false    #\u662F\u5426\u5F53\u524D\u5BA2\u6237\u7AEF\u8981\u6CE8\u518C\u5230eureka
+    fetch-registry: false
+    register-with-eureka: false

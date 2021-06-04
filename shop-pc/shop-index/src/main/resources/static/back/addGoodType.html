@@ -1,0 +1,59 @@
+<meta charset="UTF-8">
+<style>
+.yc_add li {
+	width:350px;
+	margin-top: 20px;
+}
+
+.yc_add li label {
+	display: inline-block;
+	text-align:right;
+	width: 150px;
+}
+.yc_add li input {
+	width: 200px;
+}
+</style>
+<div class="yc_good">
+<form id="yc_addgoodType">
+	<ul class="yc_add">
+		<li><label>电脑品牌(包括维修类型)：</label><input id="goodType" class="easyui-textbox" type="text"/></li>
+
+		<li><label>商品图片：</label><input id="pics" type="file" name="pic"/></li>
+
+	
+		<li><label></label><input class="easyui-linkbutton" onclick="add()" value="添加商品类型"></li>
+		
+	</ul>
+</form>
+</div>
+
+<!-- 引入ajaxFileUpload -->
+<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+<script>
+	function add(){
+		//获取所有元素值
+		var tname=$('#goodType').val();
+	
+		$.ajaxFileUpload({
+			url:'../goodType.action',
+			secureuri:false,
+			fileElementId:'pics',
+			dataType:'json',
+			data:{
+				tname:tname
+			},
+			success:function(data){
+				if(data>0){
+					//清空文本框
+					$.messager.show({
+						title:"温馨提示",
+						msg:'配件添加成功',
+						timeout:5000,
+						showType:'slide'
+					});
+				}
+			}
+		});
+	}
+</script>
