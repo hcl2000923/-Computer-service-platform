@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: shop-comment
+  cloud:
+    config:
+      uri: http://localhost:8888
+      label: master
