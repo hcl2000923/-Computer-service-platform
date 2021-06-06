@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class OrderInfo {
+public class OrderInfo implements Serializable {
+    private static final long serialVersionUID = -8852651103467235852L;
     private String ono;
     private String receiver;
     private Integer status;

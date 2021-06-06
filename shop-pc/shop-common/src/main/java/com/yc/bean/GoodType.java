@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodType {
+public class GoodType implements Serializable {
+    private static final long serialVersionUID = 5351432863196501211L;
     private Integer tno;
     private String tname;
     private String pic;

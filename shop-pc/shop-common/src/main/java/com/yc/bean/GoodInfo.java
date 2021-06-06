@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodInfo {
+public class GoodInfo implements Serializable {
+    private static final long serialVersionUID = -4575392408879121675L;
     private Integer gno;
     private String gname;
 

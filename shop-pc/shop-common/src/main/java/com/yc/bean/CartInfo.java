@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @program: shop-pc
  * @description:
@@ -13,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartInfo {
+public class CartInfo implements Serializable {
+    private static final long serialVersionUID = 5101141995243643853L;
     private Integer cno;
     private GoodDetail goodDetail;//sizeno;
     private MemberInfo memberInfo;//mno;
