@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shopmemberinfo.dao.ShopMemberinfoMapper">
+    <cache/>
+
+    <!--嵌套查询-->
+    <select id="selectByUidAndPwd" resultMap="MemberAndOrder">
+        select * from memberinfo
+        <where>
+            mno=#{mno} and pwd=#{pwd}
+        </where>
+    </select>
+    <select id="getOrderiteminfo" resultType="OrderItemInfo">
+        select * from orderiteminfo
+        <where>
+            mno = #{mno}
+        </where>
+    </select>
+    <resultMap id="MemberAndOrder" type="MemberInfo">
+        <result property="mno" column="mno"/>
+        <collection property="orderItemInfoList"
+                    javaType="ArrayList" ofType="OrderItemInfo"
+                    column="mno" select="getOrderiteminfo" fetchType="lazy">
+        </collection>
+    </resultMap>
+
+    <!--新增用户-->
+    <insert id="addMemberInfo" parameterType="MemberInfo" useGeneratedKeys="true" keyProperty="mno">
+        insert into memberinfo(nickname,pwd,status,sex,moneyPoint) values(#{nickName},MD5(#{pwd}),1,1,0)
+    </insert>
+
+    <!--修改用户-->
+    <update id="updateByMno" parameterType="MemberInfo">
+        update memberinfo
+        <set>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="pwd!=null">
+                pwd=MD5(#{pwd}),
+            </if>
+            <if test="realName!=null">
+                realName=#{realName},
+            </if>
+            <if test="tel!=null">
+                tel=#{tel},
+            </if>
+            <if test="sex">
+                sex=#{sex},
+            </if>
+            <if test="email!=null">
+                email=#{email},
+            </if>
+            <if test="addr!=null">
+                addr=#{addr},
+            </if>
+
+            <if test="restMoney!=null">
+                restMoney=#{restMoney},
+            </if>
+
+            <if test="photo!=null">
+                photo=#{photo}
+            </if>
+        </set>
+        <where>
+            mno=#{mno}
+        </where>
+    </update>
+
+    <!--总条数-->
+    <select id="getMemberinfoCount" resultType="Integer">
+        select count(*) from memberinfo
+        <where>
+            <if test="mno!=null">
+                mno=#{mno}
+            </if>
+            <if test="nickName!=null">
+                and nickName=#{nickName}
+            </if>
+            <if test="realName!=null">
+                and realName=#{realName}
+            </if>
+            <if test="email!=null">
+                and email=#{email}
+            </if>
+            <if test="tel!=null">
+                and tel=#{tel}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+
+    <!--分页查询和查询所有-->
+    <select id="findAllAndPage" resultType="MemberInfo">
+        select * from memberinfo
+        <where>
+            <if test="mno!=null">
+                mno=#{mno}
+            </if>
+            <if test="nickName!=null">
+                and nickName=#{nickName}
+            </if>
+            <if test="realName!=null">
+                and realName=#{realName}
+            </if>
+            <if test="email!=null">
+                and email=#{email}
+            </if>
+            <if test="tel!=null">
+                and tel=#{tel}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

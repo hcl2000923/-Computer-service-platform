@@ -3,7 +3,9 @@ package com.yc.bean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,8 +22,12 @@ import java.util.List;
 public class MemberInfo implements Serializable {
     private static final long serialVersionUID = 1694487819363528333L;
     private Integer mno;
+    @NotEmpty(message = "请输入账号！")
+    @Length(min = 6, max = 20, message = "密码必须是6到20个字符")
     private String nickName;
     private String realName;
+    @NotEmpty(message = "请输入密码！")
+    @Length(min = 6, max = 20, message = "密码必须是6到20个字符")
     private String pwd;
     private String tel;
     private String email;
