@@ -6,8 +6,7 @@ eureka:
       defaultZone: http://127.0.0.1:8000/eureka
 spring:
   datasource:
-  driver-class-name: com.mysql.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/springboot
-  username: root
-  password: 1234
-  type: com.mchange.v2.c3p0.ComboPooledDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/crbook?useUnicode=true&serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: 123
