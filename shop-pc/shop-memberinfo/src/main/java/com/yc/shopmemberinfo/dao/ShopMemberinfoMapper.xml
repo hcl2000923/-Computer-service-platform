@@ -4,6 +4,26 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopmemberinfo.dao.ShopMemberinfoMapper">
     <cache/>
+    <sql id="if-and">
+        <if test="mno!=null">
+            mno=#{mno}
+        </if>
+        <if test="nickName!=null">
+            and nickName=#{nickName}
+        </if>
+        <if test="realName!=null">
+            and realName=#{realName}
+        </if>
+        <if test="email!=null">
+            and email=#{email}
+        </if>
+        <if test="tel!=null">
+            and tel=#{tel}
+        </if>
+        <if test="status!=null">
+            and status=#{status}
+        </if>
+    </sql>
 
     <!--嵌套查询-->
     <select id="selectByUidAndPwd" resultMap="MemberAndOrder">
@@ -74,24 +94,7 @@
     <select id="getMemberinfoCount" resultType="Integer">
         select count(*) from memberinfo
         <where>
-            <if test="mno!=null">
-                mno=#{mno}
-            </if>
-            <if test="nickName!=null">
-                and nickName=#{nickName}
-            </if>
-            <if test="realName!=null">
-                and realName=#{realName}
-            </if>
-            <if test="email!=null">
-                and email=#{email}
-            </if>
-            <if test="tel!=null">
-                and tel=#{tel}
-            </if>
-            <if test="status!=null">
-                and status=#{status}
-            </if>
+            <include refid="if-and"></include>
         </where>
     </select>
 
@@ -99,24 +102,7 @@
     <select id="findAllAndPage" resultType="MemberInfo">
         select * from memberinfo
         <where>
-            <if test="mno!=null">
-                mno=#{mno}
-            </if>
-            <if test="nickName!=null">
-                and nickName=#{nickName}
-            </if>
-            <if test="realName!=null">
-                and realName=#{realName}
-            </if>
-            <if test="email!=null">
-                and email=#{email}
-            </if>
-            <if test="tel!=null">
-                and tel=#{tel}
-            </if>
-            <if test="status!=null">
-                and status=#{status}
-            </if>
+            <include refid="if-and"></include>
         </where>
     </select>
 

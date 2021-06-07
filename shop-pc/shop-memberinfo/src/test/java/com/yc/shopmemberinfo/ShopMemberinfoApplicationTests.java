@@ -1,5 +1,6 @@
 package com.yc.shopmemberinfo;
 
+import com.github.pagehelper.PageInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
 import com.yc.shopmemberinfo.service.IShopMemberinfoBiz;
@@ -57,7 +58,7 @@ class ShopMemberinfoApplicationTests {
     @Test
     void findPage() {
         MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setMno(8);
+//        memberInfo.setMno(8);
         Integer memberinfoCount = shopMemberinfo.getMemberinfoCount(memberInfo);
         System.out.println(memberinfoCount);
     }
@@ -74,8 +75,8 @@ class ShopMemberinfoApplicationTests {
     void findPageBiz() {
         MemberInfo m = new MemberInfo();
         Page p = new Page(2, 2);
-        iShopMemberinfoBiz.findByPage(m, p);
-
+        PageInfo<MemberInfo> byPage = iShopMemberinfoBiz.findByPage(m, p);
+        System.out.println(byPage);
     }
 
 }

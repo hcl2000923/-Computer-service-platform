@@ -3,7 +3,6 @@ package com.yc.shopmemberinfo.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yc.bean.MemberInfo;
-import com.yc.exception.BizException;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
@@ -29,13 +28,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     }
 
     @Override
-    public int addMemberInfo(MemberInfo memberInfo) throws BizException {
-        if (memberInfo.getPwd() == null && memberInfo.getPwd().length() < 6) {
-            throw new BizException("密码为空，或密码长度小于6位！");
-        }
-        if (memberInfo.getNickName() != null && memberInfo.getNickName().length() < 6) {
-            throw new BizException("账号为空，或账号长度小于6位！");
-        }
+    public int addMemberInfo(MemberInfo memberInfo) {
         int t = shopMemberinfoMapper.addMemberInfo(memberInfo);
         if (t == 1) {
             return 1;

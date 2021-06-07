@@ -22,10 +22,11 @@ public interface ShopMemberinfoMapper {
     //动态更新sql
     int updateByMno(MemberInfo memberInfo);
 
-    //查询条数
+    //查询条数  不建议使用可以用下面的函数
+    @Deprecated
     Integer getMemberinfoCount(MemberInfo memberInfo);
 
     //分页查询
     List<MemberInfo> findAllAndPage(MemberInfo memberInfo);
-    
+
 }

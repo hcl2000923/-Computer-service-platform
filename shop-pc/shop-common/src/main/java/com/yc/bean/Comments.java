@@ -19,7 +19,9 @@ import java.util.Date;
 public class Comments implements Serializable {
     private static final long serialVersionUID = -6110117701936217180L;
     private Integer commentno;
+
     private GoodDetail goodDetail;//sizeno;
+
     private MemberInfo memberInfo;//mno;
 
     private String word;
