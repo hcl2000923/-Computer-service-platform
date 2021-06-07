@@ -1,1 +1,1 @@
-select * from memberinfo;
+select * from comments;

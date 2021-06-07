@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
-<mapper namespace="com.yc.shopcomment.dao.ShopCommentMapper">
+<mapper namespace="com.yc.shopcart.dao.ShopCartMapper">
     <cache/>
 
     <!--新增评论-->
@@ -48,13 +48,13 @@
         <result property="word" column="word"/>
         <result property="date" column="date" javaType="java.util.Date"/>
 
-        <association property="goodDetail" javaType="GoodDetail" fetchType="lazy">
+        <association property="goodDetail" javaType="GoodDetail">
             <id column="sizeno" property="sizeno"/>
         </association>
-        <association property="memberInfo" javaType="MemberInfo" fetchType="lazy">
+        <association property="memberInfo" javaType="MemberInfo">
             <id column="mno" property="mno"/>
         </association>
-        <association property="goodInfo" javaType="GoodInfo" fetchType="lazy">
+        <association property="goodInfo" javaType="GoodInfo">
             <id property="gno" column="gno"/>
             <result property="gname" column="gname"/>
         </association>

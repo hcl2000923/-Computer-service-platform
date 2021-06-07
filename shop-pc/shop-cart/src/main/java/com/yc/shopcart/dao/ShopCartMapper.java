@@ -1,4 +1,4 @@
-package com.yc.shopcomment.dao;
+package com.yc.shopcart.dao;
 
 import com.yc.bean.Comments;
 import org.apache.ibatis.annotations.Param;
@@ -12,8 +12,8 @@ import java.util.List;
  * @create: 2021-06-06 14:09
  */
 
-public interface ShopCommentMapper {
-    //删除操作
+public interface ShopCartMapper {
+    //操作
     int delete(@Param("commentno") int commentno);
 
     //添加评论
