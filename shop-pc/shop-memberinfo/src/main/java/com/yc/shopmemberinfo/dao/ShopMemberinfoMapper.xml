@@ -32,6 +32,12 @@
             mno=#{mno} and pwd=#{pwd}
         </where>
     </select>
+    <select id="getCartinfo" resultType="CartInfo">
+        select * from cartinfo
+        <where>
+            mno = #{mno}
+        </where>
+    </select>
     <select id="getOrderiteminfo" resultType="OrderItemInfo">
         select * from orderiteminfo
         <where>
@@ -43,6 +49,10 @@
         <collection property="orderItemInfoList"
                     javaType="ArrayList" ofType="OrderItemInfo"
                     column="mno" select="getOrderiteminfo" fetchType="lazy">
+        </collection>
+        <collection property="cartInfoList"
+                    javaType="ArrayList" ofType="CartInfo"
+                    column="mno" select="getCartinfo" fetchType="lazy">
         </collection>
     </resultMap>
 

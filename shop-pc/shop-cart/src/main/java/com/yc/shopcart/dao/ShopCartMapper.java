@@ -1,7 +1,6 @@
 package com.yc.shopcart.dao;
 
-import com.yc.bean.Comments;
-import org.apache.ibatis.annotations.Param;
+import com.yc.bean.CartInfo;
 
 import java.util.List;
 
@@ -13,16 +12,24 @@ import java.util.List;
  */
 
 public interface ShopCartMapper {
-    //操作
-    int delete(@Param("commentno") int commentno);
 
-    //添加评论
-    int addComment(Comments comments);
+    //添加操作
+    int addCartInfo(CartInfo cartInfo);
 
-    //查询条数   该方法可以通过去page.total获取
-//    Integer getCommentsCount(Comments comments);
+    //删除操作
+    int delete(CartInfo cartInfo);
 
-    //分页查询  总条数
-    List<Comments> findGoodInfoAndCommentsAllAndPage(Comments comments);
+    //批量删除
+    int deleteByCnos(Integer[] cnos);
+
+    //更新购物车数量
+    int updateNum(CartInfo cartInfo);
+
+    //查询 多条件动态sql  可分页  连表查询  gooddetail cartinfo goodinfo
+    List<CartInfo> findThreeTable(CartInfo cartInfo);
+
+    //批量查询
+    List<CartInfo> selectByCnos(Integer[] cnos);
+
 
 }

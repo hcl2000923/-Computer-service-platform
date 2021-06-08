@@ -1,36 +1,60 @@
 package com.yc.shopcart.service;
 
+import com.yc.bean.CartInfo;
+import com.yc.shopcart.dao.ShopCartMapper;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class ShopCartImpl implements IShopCartBiz {
 
-//    @Resource
-//    private ShopCommentMapper shopCommentMapper;
-//
-//    @Override
-//    public int delete(int commentno) {
-//        return shopCommentMapper.delete(commentno);
-//    }
-//
-//    @Override
-//    public int addComment(Comments comments) {
-//        if (comments != null) {
-//            return 0;
-//        }
-//        return shopCommentMapper.addComment(comments);
-//    }
-//
-//    @Override
-//    public List<Comments> findAllByComments(Comments comments) {
-//        return shopCommentMapper.findGoodInfoAndCommentsAllAndPage(comments);
-//    }
-//
-//    @Override
-//    public PageInfo<Comments> findByPage(Comments comments, Page page) {
-//        PageHelper.startPage(page.getPageNum(), page.getPageSize());
-//        List<Comments> list = shopCommentMapper.findGoodInfoAndCommentsAllAndPage(comments);
-//        PageInfo<Comments> p = new PageInfo<Comments>(list);
-//        return p;
-//    }
+    @Resource
+    private ShopCartMapper shopCartMapper;
+
+    @Override
+    public int addCartInfo(CartInfo cartInfo) {
+        if (cartInfo == null) {
+            return 0;
+        }
+        return shopCartMapper.addCartInfo(cartInfo);
+    }
+
+    @Override
+    public int delete(CartInfo cartInfo) {
+        if (cartInfo == null) {
+            return 0;
+        }
+        return shopCartMapper.delete(cartInfo);
+    }
+
+    @Override
+    public int deleteByCnos(Integer[] cnos) {
+        if (cnos == null || cnos.length == 0) {
+            return 0;
+        }
+        return shopCartMapper.deleteByCnos(cnos);
+    }
+
+    @Override
+    public int updateNum(CartInfo cartInfo) {
+        if (cartInfo == null) {
+            return 0;
+        }
+        return shopCartMapper.updateNum(cartInfo);
+    }
+
+    @Override
+    public List<CartInfo> findThreeTable(CartInfo cartInfo) {
+        return shopCartMapper.findThreeTable(cartInfo);
+    }
+
+    @Override
+    public List<CartInfo> selectByCnos(Integer[] cnos) {
+        if (cnos == null || cnos.length == 0) {
+            return null;
+        }
+        return shopCartMapper.selectByCnos(cnos);
+    }
 }

@@ -27,5 +27,5 @@ public class GoodInfo implements Serializable {
     private Integer point;
     private String pics;
 
-    private List<GoodDetail> goodDetails;
+    private List<GoodDetail> goodDetailList;
 }

@@ -3,60 +3,116 @@
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopcart.dao.ShopCartMapper">
+    <!--二级缓存-->
     <cache/>
 
     <!--新增评论-->
-    <insert id="addComment" parameterType="Comments" useGeneratedKeys="true" keyProperty="commentno">
-        insert into comments(sizeno,mno,word,type,pic,date,gno) values(#{goodDetail.sizeno},#{memberInfo.mno},#{word},#{type},#{pic},NOW(),#{goodInfo.gno})
+    <insert id="addCartInfo" parameterType="CartInfo" useGeneratedKeys="true" keyProperty="cno">
+        insert into cartinfo values(null,#{goodDetail.sizeno},#{memberInfo.mno},1)
     </insert>
-
-    <delete id="delete" parameterType="int">
-        delete from comments where commentno=#{commentno}
-    </delete>
-
-    <!--*****注意这是新的多对一的连表查询方式，链表分页多条件查询-->
-    <!--结果查询-->
-    <select id="findGoodInfoAndCommentsAllAndPage" resultMap="CommentsAndGoodInfo">
-        SELECT commentno,sizeno,mno,word,type,pic,date,comments.gno gno,gname from comments left join goodinfo
-        on
-        goodinfo.gno=comments.gno
+    <!--动态choose的sql语句-->
+    <delete id="delete" parameterType="CartInfo">
+        delete from cartinfo
         <where>
-            <if test="commentno!=null">
-                commentno=#{commentno}
+            <choose>
+                <when test="memberInfo!=null">
+                    <if test="memberInfo.mno">
+                        mno=#{memberInfo.mno}
+                    </if>
+                </when>
+                <otherwise>
+                    and cno=#{cno}
+                </otherwise>
+            </choose>
+        </where>
+    </delete>
+    <!--使用到了foreach动态sql-->
+    <delete id="deleteByCnos" parameterType="Integer[]">
+        delete from cartinfo
+        <where>
+            cno in
+            <foreach collection="array" item="cno" open="(" separator="," close=")">
+                #{cno}
+            </foreach>
+        </where>
+    </delete>
+    <!--更新操作-->
+    <update id="updateNum" parameterType="CartInfo">
+        update cartinfo
+        <set>
+            num=#{num}
+        </set>
+        <where>
+            cno=#{cno}
+        </where>
+    </update>
+    <!--多层嵌套查询-->
+    <select id="findThreeTable" resultMap="CartAndGoodDetail">
+        select * from cartinfo
+        <where>
+            <if test="cno">
+                cno=#{cno}
+            </if>
+            <if test="memberInfo!=null">
+                <if test="memberInfo.mno!=null">
+                    and mno=#{memberInfo.mno}
+                </if>
             </if>
             <if test="goodDetail!=null">
                 <if test="goodDetail.sizeno!=null">
                     and sizeno=#{goodDetail.sizeno}
                 </if>
             </if>
-
-            <if test="goodInfo!=null">
-                <if test="goodInfo.gno!=null">
-                    and comments.gno=#{goodInfo.gno}
-                </if>
-            </if>
-            <if test="type!=null">
-                and type=#{type}
-            </if>
         </where>
-        ORDER BY commentno DESC
+        order by cno desc
     </select>
-    <resultMap id="CommentsAndGoodInfo" type="Comments">
-        <id property="commentno" column="commentno"/>
-        <result property="type" column="type"/>
-        <result property="pic" column="pic"/>
-        <result property="word" column="word"/>
-        <result property="date" column="date" javaType="java.util.Date"/>
-
-        <association property="goodDetail" javaType="GoodDetail">
-            <id column="sizeno" property="sizeno"/>
+    <select id="getGoodInfo" resultType="GoodInfo">
+        select * from goodinfo
+        <where>
+            gno = #{gno}
+        </where>
+    </select>
+    <select id="getGoodDetail" resultMap="GoodDetailAndGoodInfo">
+        select * from gooddetail
+        <where>
+            sizeno = #{sizeno}
+        </where>
+    </select>
+    <resultMap id="CartAndGoodDetail" type="CartInfo">
+        <result property="memberInfo.mno" column="mno"/>
+        <association property="goodDetail" column="sizeno" javaType="GoodDetail" select="getGoodDetail"
+                     fetchType="lazy"/>
+    </resultMap>
+    <resultMap id="GoodDetailAndGoodInfo" type="GoodDetail">
+        <association property="goodInfo" column="gno" javaType="GoodInfo" select="getGoodInfo"
+                     fetchType="lazy"/>
+    </resultMap>
+    <!--按数组查询  三表连表查询-->
+    <select id="selectByCnos" parameterType="Integer[]" resultMap="CartInfoGoodDetailGoodInfo">
+        select cno,mno,g.sizeno sizeno,price,num,gi.gno gno,gname,showPic,size
+        from cartinfo c
+        left join gooddetail g on g.sizeno =c.sizeno
+        left join goodinfo gi on gi.gno=g.gno
+        where cno in
+        <foreach collection="array" item="cno" open="(" separator="," close=")">
+            #{cno}
+        </foreach>
+    </select>
+    <resultMap id="CartInfoGoodDetailGoodInfo" type="CartInfo">
+        <id property="cno" column="cno"/>
+        <result property="num" column="num"/>
+        <association property="memberInfo" javaType="MemberInfo" fetchType="lazy">
+            <id property="mno" column="mno"/>
         </association>
-        <association property="memberInfo" javaType="MemberInfo">
-            <id column="mno" property="mno"/>
-        </association>
-        <association property="goodInfo" javaType="GoodInfo">
-            <id property="gno" column="gno"/>
-            <result property="gname" column="gname"/>
+        <association property="goodDetail" javaType="GoodDetail" fetchType="lazy">
+            <id property="sizeno" column="sizeno"/>
+            <result property="price" column="price"/>
+            <result property="size" column="size"/>
+            <result property="showPic" column="showPic"/>
+            <association property="goodInfo" javaType="GoodInfo">
+                <id column="gno" property="gno"/>
+                <result property="gname" column="gname"/>
+            </association>
         </association>
     </resultMap>
 </mapper>

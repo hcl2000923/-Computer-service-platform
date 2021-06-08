@@ -23,7 +23,7 @@ public class ShopCommentBizImpl implements IShopCommentBiz {
 
     @Override
     public int addComment(Comments comments) {
-        if (comments != null) {
+        if (comments == null) {
             return 0;
         }
         return shopCommentMapper.addComment(comments);
