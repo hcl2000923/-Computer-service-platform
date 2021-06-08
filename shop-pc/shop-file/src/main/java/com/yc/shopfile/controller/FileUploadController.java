@@ -4,6 +4,7 @@ import com.yc.bean.*;
 import com.yc.util.FileUploadUtil;
 import com.yc.util.YcConstants;
 import com.yc.vo.Result;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpSession;
 public class FileUploadController {
 
     @PostMapping("memberUpload")
+    @Transactional
     public Result memberinfoPhoto(Result result, HttpServletRequest req, HttpServletResponse resp, HttpSession httpSession) {
         MemberInfo memberInfo = null;
         try {
@@ -41,6 +43,7 @@ public class FileUploadController {
         return result;
     }
 
+    @Transactional
     @PostMapping("commentUpload")
     public Result commentsPhoto(HttpServletRequest request, HttpServletResponse response, Result result) {
         try {
@@ -58,6 +61,7 @@ public class FileUploadController {
         return result;
     }
 
+    @Transactional
     @PostMapping("goodDetailUpload")
     public Result goodDetailPhoto(HttpServletRequest request, HttpServletResponse response, Result result) {
         try {
@@ -75,6 +79,7 @@ public class FileUploadController {
         return result;
     }
 
+    @Transactional
     @PostMapping("goodInfoUpload")
     public Result goodInfoPhoto(HttpServletRequest request, HttpServletResponse response, Result result) {
         try {
@@ -92,6 +97,7 @@ public class FileUploadController {
         return result;
     }
 
+    @Transactional
     @PostMapping("goodTypeUpload")
     public Result goodTypePhoto(HttpServletRequest request, HttpServletResponse response, Result result) {
         try {
