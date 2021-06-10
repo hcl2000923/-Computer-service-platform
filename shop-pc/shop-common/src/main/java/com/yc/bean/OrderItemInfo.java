@@ -20,7 +20,7 @@ import java.util.Date;
 public class OrderItemInfo implements Serializable {
     private static final long serialVersionUID = -3721211042666306035L;
     private Integer itemno;
-    private MemberInfo member;//mno
+    private MemberInfo memberInfo;//mno
 
     private OrderInfo orderInfo; //ono;
     private GoodDetail goodDetail;//sizeno;
