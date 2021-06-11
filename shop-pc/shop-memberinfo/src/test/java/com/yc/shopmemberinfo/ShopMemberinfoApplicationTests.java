@@ -42,8 +42,9 @@ class ShopMemberinfoApplicationTests {
     void updateUser() {
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setRealName("fdaffds");
-        memberInfo.setMno(8);
-        int i = shopMemberinfo.updateByMno(memberInfo);
+//        memberInfo.setMno(8);
+        memberInfo.setNickName("hcl");
+        int i = shopMemberinfo.updateByMnoOrNickName(memberInfo);
         System.out.println(i);
     }
 
@@ -74,7 +75,9 @@ class ShopMemberinfoApplicationTests {
     @Test
     void findPageBiz() {
         MemberInfo m = new MemberInfo();
-        Page p = new Page(2, 2);
+        Page p = new Page();
+        p.setPageNum(2);
+        p.setPageSize(2);
         PageInfo<MemberInfo> byPage = iShopMemberinfoBiz.findByPage(m, p);
         System.out.println(byPage);
     }

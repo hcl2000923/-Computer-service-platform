@@ -3,12 +3,15 @@ package com.yc.shopmemberinfo.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yc.bean.MemberInfo;
+import com.yc.exception.BizException;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
+import com.yc.util.MailUtils;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @program: shop-pc
@@ -19,21 +22,27 @@ import java.util.List;
 @Service
 public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     @Resource
+    ExecutorService executorService;
+
+    @Resource
     private ShopMemberinfoMapper shopMemberinfoMapper;
 
     @Override
-    public MemberInfo login(MemberInfo memberInfo) {
+    public MemberInfo login(MemberInfo memberInfo) throws BizException {
         MemberInfo t = shopMemberinfoMapper.selectByUidAndPwd(memberInfo);
+        if (t == null) {
+            throw new BizException("用户名或密码错误！");
+        }
         return t;
     }
 
     @Override
-    public int addMemberInfo(MemberInfo memberInfo) {
+    public int addMemberInfo(MemberInfo memberInfo) throws BizException {
         int t = shopMemberinfoMapper.addMemberInfo(memberInfo);
-        if (t == 1) {
-            return 1;
+        if (t != 1) {
+            throw new BizException("注册异常");
         }
-        return 0;
+        return t;
     }
 
     @Override
@@ -41,15 +50,16 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         if (memberInfo == null) {
             return 0;
         }
-        return shopMemberinfoMapper.updateByMno(memberInfo);
+        return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
     }
 
     @Override
-    public int updatePwdByMno(MemberInfo memberInfo) {
-        if (memberInfo == null) {
-            return 0;
+    public int updatePwdByNickName(MemberInfo memberInfo) throws BizException {
+        int t = shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
+        if (t != 1) {
+            throw new BizException("重置密码异常");
         }
-        return shopMemberinfoMapper.updateByMno(memberInfo);
+        return t;
     }
 
     @Override
@@ -57,7 +67,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         if (memberInfo == null) {
             return 0;
         }
-        return shopMemberinfoMapper.updateByMno(memberInfo);
+        return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
     }
 
     @Override
@@ -65,7 +75,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         if (memberInfo == null) {
             return 0;
         }
-        return shopMemberinfoMapper.updateByMno(memberInfo);
+        return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
     }
 
     @Override
@@ -88,4 +98,12 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         PageInfo<MemberInfo> p = new PageInfo<MemberInfo>(list);
         return p;
     }
+
+    @Override
+    public void sendMail(MemberInfo memberInfo, String emailValid) {
+        executorService.execute(() -> {
+            MailUtils.sendMail(memberInfo.getEmail(), "验证码为：" + emailValid, "易易城账号找回密码验证码");
+        });
+    }
+
 }

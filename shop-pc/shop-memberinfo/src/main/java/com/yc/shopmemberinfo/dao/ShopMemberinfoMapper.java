@@ -20,7 +20,7 @@ public interface ShopMemberinfoMapper {
     int addMemberInfo(MemberInfo memberInfo);
 
     //动态更新sql
-    int updateByMno(MemberInfo memberInfo);
+    int updateByMnoOrNickName(MemberInfo memberInfo);
 
     //查询条数  不建议使用可以用下面的函数
     @Deprecated

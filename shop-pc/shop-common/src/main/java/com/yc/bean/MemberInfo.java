@@ -24,7 +24,7 @@ public class MemberInfo implements Serializable {
     private static final long serialVersionUID = 1694487819363528333L;
     private Integer mno;
     @NotEmpty(message = "请输入账号！")
-    @Length(min = 6, max = 20, message = "密码必须是6到20个字符")
+    @Length(min = 6, max = 20, message = "用户名必须是6到20个字符")
     private String nickName;
 
     private String realName;
@@ -34,6 +34,7 @@ public class MemberInfo implements Serializable {
 
     private String tel;
     @Email(message = "请输入正确的邮箱账号！")
+    @NotEmpty(message = "请尽快绑定邮箱！")
     private String email;
     private String idCard;
     private String addr;

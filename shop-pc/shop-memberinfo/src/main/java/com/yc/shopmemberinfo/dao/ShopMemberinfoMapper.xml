@@ -29,7 +29,7 @@
     <select id="selectByUidAndPwd" resultMap="MemberAndOrder">
         select * from memberinfo
         <where>
-            mno=#{mno} and pwd=#{pwd}
+            nickname=#{nickName} and pwd=#{pwd}
         </where>
     </select>
     <select id="getCartinfo" resultType="CartInfo">
@@ -62,7 +62,7 @@
     </insert>
 
     <!--修改用户-->
-    <update id="updateByMno" parameterType="MemberInfo">
+    <update id="updateByMnoOrNickName" parameterType="MemberInfo">
         update memberinfo
         <set>
             <if test="status!=null">
@@ -96,7 +96,14 @@
             </if>
         </set>
         <where>
-            mno=#{mno}
+            <choose>
+                <when test="mno!=null">
+                    mno=#{mno}
+                </when>
+                <when test="nickName!=null">
+                    nickName=#{nickName}
+                </when>
+            </choose>
         </where>
     </update>
 

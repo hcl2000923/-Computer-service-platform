@@ -40,8 +40,9 @@ class ShopCommentApplicationTests {
         Comments comments = new Comments();
         GoodInfo goodInfo = new GoodInfo();
         goodInfo.setGno(2);
-        Page page = new Page(2, 2);
-
+        Page page = new Page();
+        page.setPageNum(2);
+        page.setPageSize(2);
         PageInfo<Comments> byPage = iShopCommentBiz.findByPage(comments, page);
         System.out.println(byPage);
     }
