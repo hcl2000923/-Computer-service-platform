@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shoporder.dao.ShopOrderInfoMapper">
+    <cache/>
+
+    <!--新增在线支付-->
+    <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="ono">
+        insert into orderinfo values(#{ono},#{receiver},2,'在线支付',#{detailAddr},#{tel},#{addr},#{pCode},now())
+    </insert>
+    <!--更新orderInfo  状态等信息-->
+    <update id="update" parameterType="OrderInfo">
+        update orderinfo
+        <set>
+            <choose>
+                <when test="status!=null">
+                    status=#{status}
+                </when>
+                <when test="buyWay">
+                    buyWay=#{buyWay}
+                </when>
+            </choose>
+        </set>
+        <where>
+            ono=#{ono}
+        </where>
+    </update>
+    <!--一对多链表映射查询，可分页-->
+    <select id="findOneToMany" resultMap="OrderInfoAndOrderItemInfo">
+        select orderinfo.ono oiono,receiver,orderinfo.status oistatus,buyWay,detailAddr,tel,addr,pCode,odate,
+        itemno,mno,orderiteminfo.ono oiiono,sizeno,gno,money,num,descr,orderiteminfo.status
+        oiistatus,sdate,rdate,updateStatus
+        from orderinfo left join orderiteminfo
+        on orderinfo.ono=orderiteminfo.ono
+        <where>
+            <if test="ono!=null">
+                orderinfo.ono=#{ono}
+            </if>
+            <if test="receiver!=null">
+                and receiver=#{receiver}
+            </if>
+            <if test="buyWay!=null">
+                and buyWay=#{buyWay}
+            </if>
+            <if test="detailAddr!=null">
+                and detailAddr=#{detailAddr}
+            </if>
+            <if test="tel!=null">
+                and tel=#{tel}
+            </if>
+            <if test="addr!=null">
+                and addr=#{addr}
+            </if>
+            <if test="pCode!=null">
+                and pCode=#{pCode}
+            </if>
+            <if test="status!=null">
+                and orderinfo.status=#{status}
+            </if>
+            <if test="odate!=null">
+                and odate=#{odate}
+            </if>
+        </where>
+        ORDER BY orderinfo.ono DESC
+    </select>
+    <resultMap id="OrderInfoAndOrderItemInfo" type="OrderInfo">
+        <id column="oiono" property="ono"/>
+        <result property="receiver" column="receiver"/>
+        <result property="status" column="oistatus"/>
+        <result property="buyWay" column="buyWay"/>
+        <result property="detailAddr" column="detailAddr"/>
+        <result property="tel" column="tel"/>
+        <result property="addr" column="addr"/>
+        <result property="pCode" column="pCode"/>
+        <result property="odate" column="odate"/>
+        <collection property="orderItemInfoList" fetchType="lazy" ofType="OrderItemInfo">
+            <id property="itemno" column="itemno"/>
+            <result property="memberInfo.mno" column="mno"/>
+            <result property="orderInfo.ono" column="oiiono"/>
+            <result property="goodDetail.sizeno" column="sizeno"/>
+            <result property="goodInfo.gno" column="gno"/>
+            <result property="money" column="money"/>
+            <result property="num" column="num"/>
+            <result property="descr" column="descr"/>
+            <result property="status" column="oiistatus"/>
+            <result property="sdate" column="sdate"/>
+            <result property="rdate" column="rdate"/>
+            <result property="updateStatus" column="updateStatus"/>
+        </collection>
+    </resultMap>
+    <!--通过mno查找goodInfo-->
+    <select id="findByMno" resultType="OrderInfo" parameterType="Integer">
+        select * from orderinfo where ono in (select ono from orderiteminfo where mno=#{mno})
+    </select>
+</mapper>

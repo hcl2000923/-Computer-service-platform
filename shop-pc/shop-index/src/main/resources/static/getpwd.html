@@ -1,32 +1,40 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>忘记密码</title>
-<link href="css/style.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
+    <meta charset="utf-8"/>
+    <title>忘记密码</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+    <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
+    <script src="js/shop.js"></script>
 </head>
 <body class="member">
 
-	<div class="w1185">
-    	<div class="logo"><a href="index.html"></a></div>
-        <div class="font-d">欢迎登陆</div>
-        <div class="s_r"><img src="images/tel.jpg"/></div>
-        <div class="clear"></div>
-    </div>
+<div id="wel">
+    <welcome/>
+</div>
+<script>
+    let welVue = new Vue({
+        el: "#wel"
+    });
+</script>
 
 <div class="reg">
-	<div class="w1185">
-    	<div class="left">
-        	<p><b>免费注册</b></p>
+    <div class="w1185">
+        <div class="left">
+            <p><b>找回密码</b></p>
             <form action="#" class="form">
                 <ul>
-                     <li><span><font>*</font> 用户名：</span><input type="text" name="nickName" class="txt"/></li>
-                     <li><span><font>*</font> tel：</span><input type="password" name="tel" class="txt"/></li>
-                     <li><span><font>*</font> 请设置密码：</span><input type="password" name="pwd" class="txt"/></li>
-                     <li><span><font>*</font> 请确认密码：</span><input type="password" name="pwd1" class="txt"/></li>
-                     <li class="li03"><span><font>*</font> 验证码：</span><input type="number" name="code" class="txt txt2"/><img id="img" src="Code.jsp" height="50px" width="100px"/><a href="javascript:loadImage()">看不清?换一张</a></li>
-                     <li class="li02"><input type="button" value="立即注册" class="sub" onclick="update()"/></li>
+                    <li><span><font>*</font> 用户名：</span><input type="text" name="nickName" class="txt"/></li>
+                    <li><span><font>*</font> email：</span><input type="email" name="email" class="txt"/></li>
+                    <li><span><font>*</font> 请设置密码：</span><input type="password" name="pwd" class="txt"/></li>
+                    <li><span><font>*</font> 请确认密码：</span><input type="password" name="pwd1" class="txt"/></li>
+                    <li><span><font>*</font> 邮箱验证码：</span>
+                        <input type="text" name="code" class="txt txt2"/><a
+                                href="javascript:getValid()">&nbsp;&nbsp;&nbsp;获取验证码</a>
+                    </li>
+                    <li class="li02"><input type="button" value="立即重置" class="sub" onclick="update()"/></li>
                 </ul>
             </form>
         </div>
@@ -35,52 +43,59 @@
     </div>
 </div>
 
-<div class="bottom">
-	<a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="#">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a href="#">人才招聘</a>|<a href="#">站点地图</a>
-   
-    <p>网络文化经营许可证：粤网文[2015]0295-065号<br />© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
+<div id="bottom-vue">
+    <shop-bottom></shop-bottom>
 </div>
+
 <script>
-function loadImage(){
-	document.getElementById("img").src="Code.jsp?"+Math.random();
-}
-function update(){
-	var nickName=$.trim($('li input[name="nickName"]').val());
-	var tel=$.trim($('li input[name="tel"]').val());
-	var pwd=$.trim($('li input[name="pwd"]').val());
-	var pwd1=$.trim($('li input[name="pwd1"]').val());
-	var code=$.trim($('li input[name="code"]').val());
-	if (nickName == "") {
-		alert("请输入用户名...");
-		return;
-	}
-	if ( tel == "") {
-		alert("请输入电话...");
-		return;
-	}
-	if (pwd == ""||pwd1 == "") {
-		alert("请输入密码...");
-		return;
-	}
-	if (pwd != pwd1) {
-		alert("请确定密码是否一致...");
-		return;
-	}
-	if (code == "") {
-		alert("请输入验证码...");
-		return;
-	}
-	$.post("member.action",{op:"updatePwd",nickName:nickName,tel:tel,pwd:pwd,code:code},function(result){
-	    if(result==1){
-	    	alert("密码已修改");
-	    	window.location.href="login.html";
-	    }else if(result==2){
-	    	alert("验证码有误！");
-	    }else{
-	    	alert('验证码为空或者用户名与身份证有误或者密码不合法（最低7位长度）！！')
-	    }
-	},'text');
-}
+    let bottomVue = new Vue({
+        el: "#bottom-vue"
+    });
+</script>
+<script>
+    function getValid() {
+        let email = $.trim($('li input[name="email"]').val());
+        let nickName = $.trim($('li input[name="nickName"]').val());
+        let params = new URLSearchParams();
+        params.append("email", email);
+        params.append("nickName", nickName);
+        axios.post("shop-memberinfo/emailValid", params).then(response => {
+            if (response.data.code == 1) {
+                alert(response.data.msg);
+            } else {
+                alert(response.data.msg);
+            }
+        });
+    }
+
+    function update() {
+        let nickName = $.trim($('li input[name="nickName"]').val());
+        let pwd = $.trim($('li input[name="pwd"]').val());
+        let pwd1 = $.trim($('li input[name="pwd1"]').val());
+        let code = $.trim($('li input[name="code"]').val());
+        let email = $.trim($('li input[name="email"]').val());
+        if (pwd == "" || pwd1 == "") {
+            alert("请输入密码...");
+            return;
+        }
+        if (pwd != pwd1) {
+            alert("请确定密码是否一致...");
+            return;
+        }
+        let params = new URLSearchParams();
+        params.append('nickName', nickName);
+        params.append('pwd', pwd);
+        params.append('code', code);
+        params.append('email', email);
+        axios.post("shop-memberinfo/getAccount", params).then(response => {
+            if (response.data.code == 1) {
+                alert(response.data.msg);
+                window.location.href = "login.html";
+            } else {
+                alert(response.data.msg);
+            }
+        });
+    }
 </script>
 </body>
 </html>

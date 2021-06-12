@@ -1,58 +1,61 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>登陆</title>
-<link href="css/style.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
+    <meta charset="utf-8"/>
+    <title>登陆</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+
+    <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+    <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
+    <script src="js/shop.js"></script>
 </head>
 <body class="member">
 
-	<div class="w1185">
-    	<div class="logo"><a href="index.html"></a></div>
-        <div class="font-d">欢迎登陆</div>
-        <div class="s_r"><img src="images/tel.jpg"/></div>
-        <div class="clear"></div>
-    </div>
-
+<div id="wel">
+    <welcome/>
+</div>
+<script>
+    let welVue = new Vue({
+        el: "#wel"
+    });
+</script>
 <div class="m_bg">
-	<div class="w1185">
-    	<form action="#" class="form">
-        	<p style="margin-top: 40px"class="p01"><span>会员登录</span><a href="reg.html">免费注册</a></p>
-        	<p class="p02"><input type="text" value="" name="nickName" class="txt" placeholder="账户名"/></p>
+    <div class="w1185">
+        <form action="#" class="form">
+            <p style="margin-top: 40px" class="p01"><span>会员登录</span><a href="reg.html">免费注册</a></p>
+            <p class="p02"><input type="text" value="" name="nickName" class="txt" placeholder="账户名"/></p>
             <p class="p03"><input type="password" value="" name="pwd" class="txt" placeholder="密码"/></p>
             <p class="p04"><span class="sp02">忘记密码？点击<a href="getpwd.html">找回密码</a></span></p>
             <p class="p05"><input type="button" value="立即登陆" class="sub" onclick="login()"/></p>
         </form>
     </div>
 </div>
-
-<div class="bottom">
-	<a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="#">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a href="#">人才招聘</a>|<a href="#">站点地图</a>
-   
-    <p>网络文化经营许可证：粤网文[2015]0295-065号<br />© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
+<div id="bottom-vue">
+    <shop-bottom></shop-bottom>
 </div>
+<script>
+    let bottomVue = new Vue({
+        el: "#bottom-vue"
+    });
+</script>
+
 <script type="text/javascript">
-function login(){
-	var nickName=$.trim($('.p02 input[name="nickName"]').val());
-	var pwd=$.trim($('.p03 input[name="pwd"]').val());
-	if (nickName == "") {
-		alert("请输入账号...");
-		return;
-	}
-	
-	if (pwd == "") {
-		alert("请输入密码...");
-		return;
-	}
-	$.post("member.action",{op:"login",nickName:nickName,pwd:pwd},function(result){
-	    if(result>0){
-	    	window.location.href="index.html";
-	    }else{
-	    	alert('用户名或密码错误！！')
-	    }
-	},'text');
-}
+    function login() {
+        let nickName = $.trim($('.p02 input[name="nickName"]').val());
+        let pwd = $.trim($('.p03 input[name="pwd"]').val());
+        let params = new URLSearchParams();
+        params.append('nickName', nickName);
+        params.append('pwd', pwd);
+        axios.post("shop-memberinfo/login", params).then(response => {
+                if (response.data.code == 1) {
+                    window.location.href = "index.html";
+                } else {
+                    alert(response.data.msg);
+                }
+            }
+        );
+    }
 </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -15,7 +16,8 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodDetail {
+public class GoodDetail implements Serializable {
+    private static final long serialVersionUID = -5547091655631948893L;
     private Integer sizeno;
 
     private GoodInfo goodInfo;

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @program: shop-pc
  * @description:
@@ -13,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class adminInfo {
+public class adminInfo implements Serializable {
+    private static final long serialVersionUID = 7420264579275519624L;
     private Integer aid;
     private String aname;
     private String pwd;

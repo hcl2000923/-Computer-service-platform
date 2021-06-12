@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shopcomment.dao.ShopCommentMapper">
+    <cache/>
+
+    <!--新增评论-->
+    <insert id="addComment" parameterType="Comments" useGeneratedKeys="true" keyProperty="commentno">
+        insert into comments(sizeno,mno,word,type,pic,date,gno) values(#{goodDetail.sizeno},#{memberInfo.mno},#{word},#{type},#{pic},NOW(),#{goodInfo.gno})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        delete from comments where commentno=#{commentno}
+    </delete>
+
+    <!--*****注意这是新的多对一的连表查询方式，链表分页多条件查询-->
+    <!--结果查询-->
+    <select id="findGoodInfoAndCommentsAllAndPage" resultMap="CommentsAndGoodInfo">
+        SELECT commentno,sizeno,mno,word,type,pic,date,comments.gno gno,gname from comments left join goodinfo
+        on
+        goodinfo.gno=comments.gno
+        <where>
+            <if test="commentno!=null">
+                commentno=#{commentno}
+            </if>
+            <if test="goodDetail!=null">
+                <if test="goodDetail.sizeno!=null">
+                    and sizeno=#{goodDetail.sizeno}
+                </if>
+            </if>
+
+            <if test="goodInfo!=null">
+                <if test="goodInfo.gno!=null">
+                    and comments.gno=#{goodInfo.gno}
+                </if>
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+        </where>
+        ORDER BY commentno DESC
+    </select>
+    <resultMap id="CommentsAndGoodInfo" type="Comments">
+        <id property="commentno" column="commentno"/>
+        <result property="type" column="type"/>
+        <result property="pic" column="pic"/>
+        <result property="word" column="word"/>
+        <result property="date" column="date" javaType="java.util.Date"/>
+
+        <association property="goodDetail" javaType="GoodDetail" fetchType="lazy">
+            <id column="sizeno" property="sizeno"/>
+        </association>
+        <association property="memberInfo" javaType="MemberInfo" fetchType="lazy">
+            <id column="mno" property="mno"/>
+        </association>
+        <association property="goodInfo" javaType="GoodInfo" fetchType="lazy">
+            <id property="gno" column="gno"/>
+            <result property="gname" column="gname"/>
+        </association>
+    </resultMap>
+</mapper>
