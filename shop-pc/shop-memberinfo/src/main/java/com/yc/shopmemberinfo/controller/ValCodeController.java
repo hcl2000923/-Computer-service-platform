@@ -1,5 +1,6 @@
 package com.yc.shopmemberinfo.controller;
 
+import com.yc.util.YcConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,7 +65,7 @@ public class ValCodeController {
         }
 
         // 将四位数字的验证码保存到Session中。
-        session.setAttribute("validateCode", randomCode.toString());
+        session.setAttribute(YcConstants.VALIDATECODE, randomCode.toString());
         //允许跨域访问
         resp.setHeader("Access-Control-Allow-Origin", "*");
         // 禁止图像缓存。        

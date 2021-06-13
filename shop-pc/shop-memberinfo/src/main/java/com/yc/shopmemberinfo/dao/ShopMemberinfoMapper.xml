@@ -48,11 +48,11 @@
         <result property="mno" column="mno"/>
         <collection property="orderItemInfoList"
                     javaType="ArrayList" ofType="OrderItemInfo"
-                    column="mno" select="getOrderiteminfo" fetchType="lazy">
+                    column="mno" select="getOrderiteminfo" fetchType="eager">
         </collection>
         <collection property="cartInfoList"
                     javaType="ArrayList" ofType="CartInfo"
-                    column="mno" select="getCartinfo" fetchType="lazy">
+                    column="mno" select="getCartinfo" fetchType="eager">
         </collection>
     </resultMap>
 

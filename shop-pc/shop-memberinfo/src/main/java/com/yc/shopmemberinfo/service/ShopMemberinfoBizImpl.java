@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.exception.BizException;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
+import com.yc.util.Encrypt;
 import com.yc.util.MailUtils;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
 
     @Override
     public MemberInfo login(MemberInfo memberInfo) throws BizException {
+        String pwd = Encrypt.md5(memberInfo.getPwd());
+        memberInfo.setPwd(pwd);
         MemberInfo t = shopMemberinfoMapper.selectByUidAndPwd(memberInfo);
         if (t == null) {
             throw new BizException("用户名或密码错误！");
@@ -46,11 +49,12 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     }
 
     @Override
-    public int updateAllByMno(MemberInfo memberInfo) {
-        if (memberInfo == null) {
-            return 0;
+    public int updateAllByMno(MemberInfo memberInfo) throws BizException {
+        int t = shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
+        if (t != 1) {
+            throw new BizException("设置个人信息异常");
         }
-        return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
+        return t;
     }
 
     @Override
