@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 /**
  * @program: shop-pc
@@ -15,7 +16,8 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Code {
+public class Code implements Serializable {
+    private static final long serialVersionUID = 8808810111135145261L;
     @NotEmpty(message = "验证码不能为空")
     private String code;
 }
