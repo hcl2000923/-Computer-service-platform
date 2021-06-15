@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -15,30 +16,20 @@ import javax.servlet.http.HttpSession;
 @RestController
 public class FileUploadController {
 
+    @Resource
+    IMemberInfoAction iMemberInfoAction;
+
     @PostMapping("memberUpload")
-    @Transactional
-    public Result memberinfoPhoto(Result result, HttpServletRequest req, HttpServletResponse resp, HttpSession httpSession) {
+    @Transactional(rollbackFor = Exception.class)
+    public Result memberinfoPhoto(HttpServletRequest req, HttpSession session) throws Exception {
         MemberInfo memberInfo = null;
-        try {
-            memberInfo = FileUploadUtil.parseRequest(req, MemberInfo.class);
-        } catch (Exception e) {
-            result.setCode(0);
-            result.setMsg("添加异常！");
-            e.printStackTrace();
-        }
-
+        memberInfo = FileUploadUtil.parseRequest(req, MemberInfo.class);
+        MemberInfo m = (MemberInfo) session.getAttribute(YcConstants.LOGINUSER);
         //远程调用update头像
-        int i = 1;
-
-        MemberInfo m = (MemberInfo) httpSession.getAttribute(YcConstants.LOGINUSER);
-        if (m != null && i == 1) {
+        Result result = iMemberInfoAction.updatePhoto(memberInfo);
+        if (result.getCode() == 1) {
             m.setPhoto(memberInfo.getPhoto());
-            httpSession.setAttribute(YcConstants.LOGINUSER, m);
-            result.setCode(1);
-            result.setMsg("添加成功！");
-        } else {
-            result.setCode(0);
-            result.setMsg("添加失败！");
+            session.setAttribute(YcConstants.LOGINUSER, m);
         }
         return result;
     }

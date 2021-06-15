@@ -82,7 +82,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>还没有上传头像？ 点击上传头像吧<br/><input id="pics" type="file" value="{{user.photo}}"
+                            <td>还没有上传头像？ 点击上传头像吧<br/><input id="pics" type="file"
                                                             name="photo" style="width: 70px"/>
                                 <a class="save" href="javascript:void(0)" @click="goHead()"><b>保存</b></a></td>
                         </tr>
@@ -219,15 +219,15 @@
             },
             goHead: function () {
                 $.ajaxFileUpload({
-                    url: 'memberFileUpload.action',
+                    url: 'shop-file/memberUpload',
                     secureuri: false,
                     fileElementId: 'pics',
                     dataType: 'json',
                     data: {
                         mno: this.user.mno
                     },
-                    success: function (data) {
-                        if (data > 0) {
+                    success: function (res) {
+                        if (res.data.code > 0) {
                             alert("修改成功");
                             this.check();
                         }

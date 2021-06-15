@@ -1,6 +1,9 @@
 package com.yc.shopfile.controller;
 
+import com.yc.bean.MemberInfo;
+import com.yc.vo.Result;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @program: shop-book
@@ -8,11 +11,9 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @author: 作者
  * @create: 2021-05-22 16:03
  */
+
 @FeignClient(value = "shop-memberinfo")
 public interface IMemberInfoAction {
-//    @GetMapping("queryByPage")
-//    public Result queryByPage(CrShow crShow);
-//
-//    @GetMapping("queryByPage1")
-//    public Result queryByPage1(CrShow1 crShow1);
+    @GetMapping("updatePhoto")
+    public Result updatePhoto(MemberInfo memberInfo);
 }

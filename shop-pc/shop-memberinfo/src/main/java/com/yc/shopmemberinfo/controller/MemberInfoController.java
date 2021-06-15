@@ -6,11 +6,9 @@ import com.yc.shopmemberinfo.service.IShopMemberinfoBiz;
 import com.yc.util.YcConstants;
 import com.yc.vo.Code;
 import com.yc.vo.Result;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -49,11 +47,10 @@ public class MemberInfoController {
     }
 
     @GetMapping("code")
-    public Result codeEquals(@Valid Code code, Errors errors, HttpSession session) {
+    public Result codeEquals(@Valid Code code, Errors errors, @SessionAttribute String validateCode) {
         if (errors.hasFieldErrors("code")) {
             return Result.failure("验证码为空", errors.getFieldErrors());
         }
-        String validateCode = (String) session.getAttribute(YcConstants.VALIDATECODE);
         if (validateCode.equalsIgnoreCase(code.getCode())) {
             return Result.success("验证码一致", errors.getFieldError());
         } else {
@@ -198,6 +195,17 @@ public class MemberInfoController {
             return Result.success("修改密码成功！", null);
         } catch (BizException e) {
             return Result.failure(e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("updatePhoto")
+    @Transactional
+    public Result updatePhoto(@RequestBody MemberInfo memberInfo) throws BizException {
+        int t = iShopMemberinfoBiz.updateAllByMno(memberInfo);
+        if (t == 1) {
+            return Result.success("添加成功!", null);
+        } else {
+            return Result.failure("添加失败!", null);
         }
     }
 }

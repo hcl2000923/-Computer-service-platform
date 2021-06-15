@@ -10,6 +10,20 @@ Vue.component("shop-bottom", {
 </div>
 `
 });
+Vue.component("shop-cart", {
+    template: `
+<div class="w1200">
+    <div class="logo"><a href="index.html"></a></div>
+    <div class="s_r">
+        <dl>
+            <dt><a href="shopcar.html">购物车</a></dt>
+            <dd>客服电话：<b>400-0139-038</b></dd>
+        </dl>
+    </div>
+    <div class="clear"></div>
+</div>
+`
+});
 Vue.component("welcome", {
     template: `
 <div class="w1185">

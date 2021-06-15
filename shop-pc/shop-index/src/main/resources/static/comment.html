@@ -5,6 +5,9 @@
     <title>评论</title>
     <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <script src="js/jquery-1.7.min.js" type="text/javascript"></script>
+    <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+    <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
+    <script src="js/shop.js"></script>
     <style>
         .shopcar ul {
             list-style: none;
@@ -30,157 +33,71 @@
 <div class="top_ad">
     <div class="w1200"><a href="#" id="close"></a></div>
 </div>
-<div id="yc_login">
-    <div class="top">
-        <div class="w1200">
-            <div class="left">您好，欢迎光临易易城！
-                <div v-if="onlogin"><em>[{{user.nickName}}]&nbsp;&nbsp;&nbsp;</em><a href="javascript:void(0)"
-                                                                                     @click="out()">[注销]</a>
-                </div>
-                <div v-if="outlogin">
-                    <a href="login.html">[登录]</a> <a href="reg.html">[注册]</a>
-                </div>
-            </div>
-            <div class="right"><a href="member.html">我的会员中心</a>|<a href="#">服务中心</a>|<a href="#">在线客服</a>|<a
-                    href="shopcar.html">购物车<b>{{goodsCount}}</b>件</a></div>
-            <div class="clear"></div>
-        </div>
-    </div>
+<div id="login-body">
+    <login-body></login-body>
+</div>
+<script>
+    let loginVue = new Vue({
+        el: "#login-body"
+    });
+</script>
 
-    <div class="head">
-        <div class="w1200">
-            <div class="logo"><a href="index.html"></a></div>
-            <div class="s_r">
-                <dl>
-                    <dt><a href="shopcar.html">购物车<span>{{goodsCount}}</span></a></dt>
-                    <dd>客服电话：<b>400-0139-038</b></dd>
-                </dl>
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div>
+<div class="head" id="head-body">
+    <shop-cart></shop-cart>
+</div>
+<script>
+    let headVue = new Vue({
+        el: "#head-body"
+    });
+</script>
 
-    <div class="w1200">
-        <div class="position"><a href="index.html">首页</a> > <a href="javascript:void(0)">评论</a></div>
+<div class="w1200">
+    <div class="position"><a href="index.html">首页</a> > <a href="javascript:void(0)">评论</a></div>
 
-        <div class="shopcar" style="height: 600px;">
-            <ul>
-                <li>商品图片</li>
-                <li>商品名</li>
-                <li>价格</li>
-            </ul>
-            <ul>
-                <li style="height: 200px;line-height:200px;"><img :src="good.showPic" height="198px" width="368px"></li>
-                <li style="height: 200px;line-height:200px;font-size: 30px"><b style="color: orange;">{{good.gname}}-{{good.size}}</b>
-                </li>
-                <li style="height: 200px;line-height:200px;font-size: 30px"><b style="color: red;">￥{{good.price}}元</b>
-                </li>
-            </ul>
-            <br/>
-            <b style="clear:none;font-size: 20px">评价填写:</b><br/>
-            <textarea style="font-size: 20px;font-family: 宋体;" placeholder="请填写内容！！！" required="required" rows="9"
-                      cols="110">
+    <div class="shopcar" style="height: 600px;">
+        <ul>
+            <li>商品图片</li>
+            <li>商品名</li>
+            <li>价格</li>
+        </ul>
+        <ul>
+            <li style="height: 200px;line-height:200px;"><img :src="good.showPic" height="198px" width="368px"></li>
+            <li style="height: 200px;line-height:200px;font-size: 30px"><b style="color: orange;">{{good.gname}}-{{good.size}}</b>
+            </li>
+            <li style="height: 200px;line-height:200px;font-size: 30px"><b style="color: red;">￥{{good.price}}元</b>
+            </li>
+        </ul>
+        <br/>
+        <b style="clear:none;font-size: 20px">评价填写:</b><br/>
+        <textarea style="font-size: 20px;font-family: 宋体;" placeholder="请填写内容！！！" required="required" rows="9"
+                  cols="110">
         	
         </textarea><br/>
-            <b>图片：</b><input id="pics" type="file" name="pic" multiple="multiple"/>
-            <b style="font-family: '宋体';font-size: 25px;color: green;">
-                <input type="radio" value="1" name="comment" checked="checked"/>好评&nbsp;&nbsp;<input type="radio"
-                                                                                                     value="2"
-                                                                                                     name="comment"/>中评&nbsp;&nbsp;<input
-                    type="radio" value="3" name="comment"/>差评</b>
-            <table style="margin-top: 50px" width="100%" border="0" cellspacing="0" cellpadding="0" class="go_tb">
-                <tr>
-                    <td width="20%"><a href="product.html" class="go_buy">继续购物</a></td>
-                    <td width="63%">&nbsp;</td>
-                    <td width="17%" align="right"><a href="javascript:void(0)" onclick="add()" class="code">提 交</a></td>
-                </tr>
-            </table>
-            <div class="clear"></div>
-        </div>
+        <b>图片：</b><input id="pics" type="file" name="pic" multiple="multiple"/>
+        <b style="font-family: '宋体';font-size: 25px;color: green;">
+            <input type="radio" value="1" name="comment" checked="checked"/>好评&nbsp;&nbsp;<input type="radio"
+                                                                                                 value="2"
+                                                                                                 name="comment"/>中评&nbsp;&nbsp;<input
+                type="radio" value="3" name="comment"/>差评</b>
+        <table style="margin-top: 50px" width="100%" border="0" cellspacing="0" cellpadding="0" class="go_tb">
+            <tr>
+                <td width="20%"><a href="product.html" class="go_buy">继续购物</a></td>
+                <td width="63%">&nbsp;</td>
+                <td width="17%" align="right"><a href="javascript:void(0)" onclick="add()" class="code">提 交</a></td>
+            </tr>
+        </table>
+        <div class="clear"></div>
     </div>
 </div>
 <!--footer-->
-<div class="footer">
-    <div class="f_bz">
-        <div class="w1200">
-            <dl class="dl01">
-                <dt>正品保证</dt>
-                <dd>正品护航 购物无忧</dd>
-            </dl>
-            <dl class="dl02">
-                <dt>你消费 我买单</dt>
-                <dd>返现购物商城</dd>
-            </dl>
-            <dl class="dl03">
-                <dt>品类丰富</dt>
-                <dd>品类齐全 轻松购物</dd>
-            </dl>
-            <dl class="dl04">
-                <dt>特色服务体验</dt>
-                <dd>为您呈现不一样的服务</dd>
-            </dl>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="f_nav">
-        <div class="w1200">
-            <dl>
-                <dt>新手指南</dt>
-                <dd>
-                    <a href="#">注册新用户</a>
-                    <a href="#">商品订购流程</a>
-                    <a href="#">会员注册协议</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>付款方式</dt>
-                <dd>
-                    <a href="#">支付宝支付</a>
-                    <a href="#">网上银行支付</a>
-                    <a href="#">货到付款</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>常见问题</dt>
-                <dd>
-                    <a href="#">订单状态</a>
-                    <a href="#">发票说明</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>售后服务</dt>
-                <dd>
-                    <a href="#">退换货政策</a>
-                    <a href="#">退换货流程</a>
-                    <a href="#">退款说明</a>
-                    <a href="#">退换货申请</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>客服中心</dt>
-                <dd>
-                    <a href="#">常见问题</a>
-                    <a href="#">联系客服</a>
-                    <a href="#">投诉与建议</a>
-                </dd>
-            </dl>
-            <div class="ewm"><img src="images/home/ico35.png"/></div>
-            <div class="ewm"><img src="images/home/ico38.png"/></div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="w1200">
-        <div class="bottom">
-            <a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="legal.html">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a
-                href="#">人才招聘</a>|<a href="#">站点地图</a>
-
-            <p>网络文化经营许可证：粤网文[2015]0295-065号<br/>© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
-            <p class="p02"><img src="images/home/ico25.jpg"/><img src="images/home/ico26.jpg"/><img
-                    src="images/home/ico27.jpg"/><img src="images/home/ico36.jpg"/><img src="images/home/ico37.jpg"/>
-            </p>
-        </div>
-    </div>
+<div id="footer-body">
+    <footer-body></footer-body>
 </div>
+<script>
+    let footerVue = new Vue({
+        el: "#footer-body"
+    });
+</script>
 <!--float_right-->
 <div class="float">
     <ul>
@@ -190,13 +107,9 @@
         <li><a href="#" class="a04"></a></li>
     </ul>
 </div>
-<script src="js/md5.js"></script>
-　
 <script type="text/javascript" src="js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="js/vue.min.js"></script>
-<script type="text/javascript" src="js/axios.min.js"></script>
 <script type="text/javascript" src="js/qs.js"></script>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     let yc_login = new Vue({
         el: "#yc_login",//对应div的id,即这个vue的作用域
         data: {
@@ -287,6 +200,6 @@
         });
     }
 
-</script>
+</script>-->
 </body>
 </html>

@@ -99,7 +99,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     public PageInfo<MemberInfo> findByPage(MemberInfo memberInfo, Page page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<MemberInfo> list = shopMemberinfoMapper.findAllAndPage(memberInfo);
-        PageInfo<MemberInfo> p = new PageInfo<MemberInfo>(list);
+        PageInfo<MemberInfo> p = new PageInfo<>(list);
         return p;
     }
 

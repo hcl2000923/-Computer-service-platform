@@ -25,18 +25,14 @@
         });
     </script>
 
-    <div class="head">
-        <div class="w1200">
-            <div class="logo"><a href="index.html"></a></div>
-            <div class="s_r">
-                <dl>
-                    <dt><a>购物车</a></dt>
-                    <dd>客服电话：<b>400-0139-038</b></dd>
-                </dl>
-            </div>
-            <div class="clear"></div>
-        </div>
+    <div class="head" id="head-body">
+        <shop-cart></shop-cart>
     </div>
+    <script>
+        let headVue = new Vue({
+            el: "#head-body"
+        });
+    </script>
 </div>
 
 
@@ -151,7 +147,7 @@
     </ul>
 </div>
 <script type="text/javascript" src="js/qs.js"></script>
-<script>
+<!--<script>
     var hash = decodeURI(location.hash);
     if ('' == hash || hash.indexOf('#') > 0) {
         location.href = 'index.html';//没有按规定格式访问则回到首页
@@ -289,7 +285,7 @@
                         if (data > 0) {
                             location.href = 'payply.html#' + data + "&" + this.totalPrice;//data orderid
                         } else if (data == -1) {
-                            alert("请先取消或者支付--》》未支付的在线订单！");
+                            alert("请先取消或者支付&#45;&#45;》》未支付的在线订单！");
                             location.href = "buyRecord.html";
                         } else {
                             alert('下单失败，请稍后重试。。。')
@@ -321,6 +317,6 @@
             }
         }
     });
-</script>
+</script>-->
 </body>
 </html>

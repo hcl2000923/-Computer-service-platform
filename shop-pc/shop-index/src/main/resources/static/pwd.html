@@ -22,23 +22,18 @@
         el: "#login-body"
     });
 </script>
-<div class="head">
-    <div class="w1200">
-        <div class="logo"><a href="index.html"></a></div>
-        <div class="s_r">
-            <dl>
-                <dt><a href="shopcar.html">购物车</a></dt>
-                <dd>客服电话：<b>400-0139-038</b></dd>
-            </dl>
-        </div>
-        <div class="clear"></div>
-    </div>
+<div class="head" id="head-body">
+    <shop-cart></shop-cart>
 </div>
+<script>
+    let headVue = new Vue({
+        el: "#head-body"
+    });
+</script>
 
 <div class="w1200">
     <div class="position"><a href="index.html">首页</a> > <a href="member.html">会员中心</a> > <a
             href="member.html">个人资料</a></div>
-
     <div class="m_d">
         <div class="left">
             <dl>
@@ -66,7 +61,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>还没有上传头像？ 点击<br/><input id="pics" type="file" value="{{user.photo}}" name="photo"
+                            <td>还没有上传头像？ 点击<br/><input id="pics" type="file" name="photo"
                                                        style="width: 70px"/><a
                                     class="save" href="javascript:void(0)" @click="goHead()">保存</a></td>
                         </tr>
@@ -79,13 +74,18 @@
                     <span>修改密码</span>
                 </dt>
                 <dd>
-                    <div class="item"><span><font>*</font>原密码：</span><input type="text" class="txt" v-model="pwd"/>
+                    <div class="item">
+                        <span><font>*</font>原密码：</span><input type="text" class="txt" v-model="pwd"/>
                     </div>
-                    <div class="item"><span><font>*</font>新密码：</span><input type="password" class="txt"
-                                                                            v-model="pwd1"/></div>
-                    <div class="item"><span><font>*</font>确认密码：</span><input type="password" class="txt"
-                                                                             v-model="pwd2"/></div>
-                    <div class="item"><input type="button" class="buto" value="确认修改" @click="fun()"/></div>
+                    <div class="item">
+                        <span><font>*</font>新密码：</span><input type="password" class="txt" v-model="pwd1"/>
+                    </div>
+                    <div class="item">
+                        <span><font>*</font>确认密码：</span><input type="password" class="txt" v-model="pwd2"/>
+                    </div>
+                    <div class="item">
+                        <input type="button" class="buto" value="确认修改" @click="fun()"/>
+                    </div>
                 </dd>
             </dl>
         </div>
@@ -151,25 +151,26 @@
                     if (res.data.code == 1) {
                         alert(res.data.msg);
                         location.href = 'login.html';
-                        this.check();
                     } else {
                         alert(res.data.msg);
                     }
                 });
             },
             goHead: function () {
+                alert("dfa");
                 $.ajaxFileUpload({
-                    url: 'memberFileUpload.action',
+                    url: 'shop-file/memberUpload',
                     secureuri: false,
                     fileElementId: 'pics',
                     dataType: 'json',
                     data: {
                         mno: this.user.mno
                     },
-                    success: function (data) {
-                        if (data > 0) {
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code > 0) {
                             alert("修改成功");
-                            location.href = 'pwd.html';
+                            this.check();
                         }
                     }
                 });

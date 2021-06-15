@@ -28,33 +28,31 @@
     <script src="js/shop.js"></script>
 </head>
 <body class="index">
-<div id="jm_top">
-    <div id="login-body">
-        <login-body></login-body>
-    </div>
+<div id="login-body">
+    <login-body></login-body>
+</div>
 
-    <script>
-        let loginVue = new Vue({
-            el: "#login-body"
-        });
-    </script>
-    <div class="head">
-        <div class="w1200">
-            <div class="logo"><a href="#"></a></div>
-            <div class="search">
-                <form action="#" class="form">
-                    <input type="text" name="keyword" class="txt" placeholder="输入商品关键字"/>
-                    <input type="button" value="搜索" class="sub" @click="find()"/>
-                </form>
-            </div>
-            <div class="s_r">
-                <dl>
-                    <dt><a href="shopcar.html">购物车<p></p></a></dt>
-                    <dd>客服电话：<b>400-0139-038</b></dd>
-                </dl>
-            </div>
-            <div class="clear"></div>
+<script>
+    let loginVue = new Vue({
+        el: "#login-body"
+    });
+</script>
+<div class="head">
+    <div class="w1200">
+        <div class="logo"><a href="#"></a></div>
+        <div class="search">
+            <form action="#" class="form">
+                <input type="text" name="keyword" class="txt" placeholder="输入商品关键字"/>
+                <input type="button" value="搜索" class="sub" @click="find()"/>
+            </form>
         </div>
+        <div class="s_r">
+            <dl>
+                <dt><a href="shopcar.html">购物车<p></p></a></dt>
+                <dd>客服电话：<b>400-0139-038</b></dd>
+            </dl>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>
 
@@ -66,7 +64,6 @@
                     <li class="li01"><a :href="'product.html#tnos='+value.tno" v-if="value.status==1">{{ value.tname
                         }}</a></li>
                 </ul>
-
             </div>
         </div>
     </div>
@@ -107,9 +104,11 @@
     <ul id="slider">
         <li style="background:url(images/home/banner.jpg) no-repeat center;height:100%;width:100%;"><a href="#"></a>
         </li>
-        <li style="background:url(images/home/banner1.jpg) no-repeat center;height:100%;width:100%;"><a href="#"></a>
+        <li style="background:url(images/home/banner1.jpg) no-repeat center;height:100%;width:100%;"><a
+                href="#"></a>
         </li>
-        <li style="background:url(images/home/banner2.jpg) no-repeat center;height:100%;width:100%;"><a href="#"></a>
+        <li style="background:url(images/home/banner2.jpg) no-repeat center;height:100%;width:100%;"><a
+                href="#"></a>
         </li>
     </ul>
 
@@ -127,7 +126,8 @@
                 <dt><b>限时抢购</b><span>让生活精彩不停</span>
                     <p><img onMouseDown="ISL_GoDown()" onMouseUp="ISL_StopDown()" onMouseOut="ISL_StopDown()"
                             class="img1" src="images/home/ico13.jpg" width="23" height="23"/>
-                        <img onmousedown="ISL_GoUp()" onMouseUp="ISL_StopUp()" onMouseOut="ISL_StopUp()" class="img2"
+                        <img onmousedown="ISL_GoUp()" onMouseUp="ISL_StopUp()" onMouseOut="ISL_StopUp()"
+                             class="img2"
                              src="images/home/ico14.jpg" width="23" height="23"/></p></dt>
                 <dd>
                     <div class="Cont" id="ISL_Cont">
@@ -175,27 +175,26 @@
     </div>
 
     <a name="a02"></a>
-    <div id="jm_type">
-        <div class="idx02" v-for="(type,index) in types" v-if="type.status==1">
-            <dl>
-                <dt>{{ type.tname }}</dt>
-                <dd style="padding-left: 0px;">
-                    <div style="padding: 0;width:599px;" class="item big">
-                        <img style="right: 0px;" :src="type.pic" height="280px" width="599px"/>
+    <!--jm_type-->
+    <div class="idx02" v-for="(type,index) in types" v-if="type.status==1">
+        <dl>
+            <dt>{{ type.tname }}</dt>
+            <dd style="padding-left: 0px;">
+                <div style="padding: 0;width:599px;" class="item big">
+                    <img style="right: 0px;" :src="type.pic" height="280px" width="599px"/>
+                </div>
+                <div v-for="good in goodVOs" v-if="good.tno==type.tno">
+                    <div class="item">
+                        <a :href="'product_show.html#'+good.sizeno"
+                           class="title">{{good.gname}}&nbsp;{{good.size}}</a>
+                        <p><font>￥</font>{{good.price}}.<font>00</font></p>
+                        <a href="javascript:void(0)" @click="add(good.sizeno)" class="buy"></a>
+                        <img :src="good.showPic" height="185px" width="150px"/>
                     </div>
-                    <div v-for="good in goodVOs" v-if="good.tno==type.tno">
-                        <div class="item">
-                            <a :href="'product_show.html#'+good.sizeno"
-                               class="title">{{good.gname}}&nbsp;{{good.size}}</a>
-                            <p><font>￥</font>{{good.price}}.<font>00</font></p>
-                            <a href="javascript:void(0)" @click="add(good.sizeno)" class="buy"></a>
-                            <img :src="good.showPic" height="185px" width="150px"/>
-                        </div>
-                    </div>
-                    <div class="clear"></div>
-                </dd>
-            </dl>
-        </div>
+                </div>
+                <div class="clear"></div>
+            </dd>
+        </dl>
     </div>
 </div>
 

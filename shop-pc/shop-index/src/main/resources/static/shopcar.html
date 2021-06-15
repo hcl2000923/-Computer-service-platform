@@ -21,22 +21,18 @@
         el: "#login-body"
     });
 </script>
-<div class="head">
-    <div class="w1200">
-        <div class="logo"><a href="index.html"></a></div>
-        <div class="s_r">
-            <dl>
-                <dt><a href="shopcar.html">购物车</a></dt>
-                <dd>客服电话：<b>400-0139-038</b></dd>
-            </dl>
-        </div>
-        <div class="clear"></div>
-    </div>
+
+<div class="head" id="head-body">
+    <shop-cart></shop-cart>
 </div>
+<script>
+    let headVue = new Vue({
+        el: "#head-body"
+    });
+</script>
 
 <div class="w1200">
     <div class="position"><a href="index.html">首页</a> > <a href="javascript:void(0)">购物车</a></div>
-
     <div class="shopcar">
         <div class="shop_lc"><span class="sp01">我的购物车</span><span class="sp02">填写提交信息表单</span><span
                 class="sp03">在线支付</span>
@@ -60,16 +56,19 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td width="15%"><img :src="item.showPic"/></td>
-                                    <td width="85%"><a :href="'product_show.html#'+item.sizeno" class="title">{{item.gname}}-{{item.size}}</a>
+                                    <td width="85%">
+                                        <a :href="'product_show.html#'+item.sizeno" class="title">{{item.gname}}-{{item.size}}</a>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                         <td class="price">￥ {{item.price}}</td>
-                        <td><span class="jian"><a href="javascript:void(0)" @click="lost(index)">-</a></span><input
-                                style="height: 30px;width: 30px" :index="index" class="up" type="text"
-                                v-model="item.num"/><span class="jia"><a href="javascript:void(0)"
-                                                                         @click="add(index)">+</a></span></td>
+                        <td>
+                            <span class="jian"><a href="javascript:void(0)" @click="lost(index)">-</a></span>
+                            <input style="height: 30px;width: 30px" :index="index" class="up" type="text"
+                                   v-model="item.num"/>
+                            <span class="jia"><a href="javascript:void(0)" @click="add(index)">+</a></span>
+                        </td>
                         <td class="price">￥ {{money[index]}}</td>
                         <td><a href="javascript:void(0)" @click="delGoods(index,this)">删除</a></td>
                     </tr>
@@ -77,8 +76,9 @@
                         <td colspan="7">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td width="75%"><span class="del"><a href="javascript:void(0)"
-                                                                         @click="delAll()">删除选中商品</a></span></td>
+                                    <td width="75%"><span class="del">
+                                        <a href="javascript:void(0)" @click="delAll()">删除选中商品</a></span>
+                                    </td>
                                     <td width="11%">已选商品 <strong>{{count}}</strong>件</td>
                                     <td width="14%" class="all_price">合计：<font>￥{{totalPrice}}</font></td>
                                 </tr>
@@ -86,7 +86,6 @@
                         </td>
                     </tr>
                 </table>
-
                 <div class="clear"></div>
             </dd>
         </dl>
@@ -121,7 +120,7 @@
     </ul>
 </div>
 <script type="text/javascript" src="js/qs.js"></script>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     let yc_login = new Vue({
         el: "#yc_login",//对应div的id,即这个vue的作用域
         data: {
@@ -356,6 +355,6 @@
 
     }
 
-</script>
+</script>-->
 </body>
 </html>

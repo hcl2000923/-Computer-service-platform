@@ -1,525 +1,547 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>产品详情</title>
-<link href="css/style.css" type="text/css" rel="stylesheet" />
-    
-<link rel="stylesheet" href="css/detail.css" type="text/css" />
-<script src="js/jquery.1.4.2-min.js" type="text/javascript"></script>
-<script src="js/common.js" type="text/javascript"></script>
-<script type="text/javascript">
-function killErrors() {
-	return true;
-}
+    <meta charset="utf-8"/>
+    <title>产品详情</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet"/>
 
-</script>
+    <link rel="stylesheet" href="css/detail.css" type="text/css"/>
+    <script src="js/jquery.1.4.2-min.js" type="text/javascript"></script>
+    <script src="js/common.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function killErrors() {
+            return true;
+        }
+
+    </script>
+    <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+    <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
+    <script src="js/shop.js"></script>
 </head>
-<body class="index" >
-<div id="jm_good">
-	<div class="top_ad"><div class="w1200"><a href="#" id="close"></a></div></div>
-
-<div class="top">
-		<div class="w1200">
-			<div class="left">
-				<div v-if="onlogin"><em>[{{user.nickName}}]&nbsp;&nbsp;&nbsp;</em>您好，欢迎光临易易城！<a href="javascript:void(0)" @click="out()">[注销]</a>
-				</div>
-				<div v-if="outlogin">
-					<a href="login.html">[登录]</a> <a href="reg.html">[注册]</a>
-				</div>
-			</div>
-	        <div class="right"><a href="member.html">我的会员中心</a>|<a href="#">服务中心</a>|<a href="#">在线客服</a>|<a href="shopcar.html">购物车<b>{{goodsCount}}</b>件</a></div>
-	        <div class="clear"></div>
-	    </div>
-	</div>
-
-<div class="head">
-	<div class="w1200">
-    	<div class="logo"><a href="index.html"></a></div>
-      
-            <div class="s_r">
-        	<dl>
-            	<dt><a href="shopcar.html">购物车<p><span>{{goodsCount}}</span></p></a></dt>
-                <dd>客服电话：<b>400-0139-038</b></dd>
-            </dl>
-        </div>
-        <div class="clear"></div>
-    </div>
+<body class="index">
+<div class="top_ad">
+    <div class="w1200"><a href="#" id="close"></a></div>
 </div>
 
+<div id="login-body">
+    <login-body></login-body>
+</div>
+<script>
+    let loginVue = new Vue({
+        el: "#login-body"
+    });
+</script>
+
+<div class="head" id="head-body">
+    <shop-cart></shop-cart>
+</div>
+<script>
+    let headVue = new Vue({
+        el: "#head-body"
+    });
+</script>
 <div class="w1200 product">
-	<div class="position"><a href="#">首页</a> > <a href="#">{{good.gname}}</a>  </div>
+    <div class="position"><a href="#">首页</a> > <a href="#">{{good.gname}}</a></div>
 
     <script src="js/jquery.jqzoom.js" type="text/javascript"></script>
     <script src="js/use_jqzoom.js" type="text/javascript"></script>
-    
     <script src="js/jquery.livequery.js" type="text/javascript"></script>
     <script src="js/switchImg.js" type="text/javascript"></script>
     <!--one-->
-            <div class="one">
-            	<div class="left">
-                    <!--放大镜-->
-                	<div class="pro_detail">
-                        <div class="pro_detail_left">
-                            <div class="jqzoom"><img v-for="detail in gno" v-if="detail.sizeno==sizeno" :src="detail.showPic" class="fs" alt="" jqimg="" id="bigImg"/></div>
-                            <span>
-                                 <ul class="imgList">
-                                 	<span v-for="detail in gno">
-	                                    <li v-if="detail.sizeno==sizeno" @click="get(detail.sizeno)" class="on"><img :src="detail.showPic" alt=""/></li>
-	                       	     		<li v-else><img :src="detail.showPic" height="100%" width="100%" @click="get(detail.sizeno)" alt=""/></li>
-                       	     		</span>
-                                 </ul>
-                             </span>
-                        </div>
-                    </div>
-                    <!--放大镜-->
+    <div class="one">
+        <div class="left">
+            <!--放大镜-->
+            <div class="pro_detail">
+                <div class="pro_detail_left">
+                    <div class="jqzoom"><img v-for="detail in gno" v-if="detail.sizeno==sizeno"
+                                             :src="detail.showPic" class="fs" alt="" jqimg="" id="bigImg"/></div>
+                    <span>
+                        <ul class="imgList">
+                            <span v-for="detail in gno">
+                                <li v-if="detail.sizeno==sizeno" @click="get(detail.sizeno)" class="on">
+                                    <img :src="detail.showPic" alt=""/>
+                                </li>
+                                <li v-else>
+                                    <img :src="detail.showPic" height="100%" width="100%" @click="get(detail.sizeno)"
+                                         alt=""/>
+                                </li>
+                            </span>
+                        </ul>
+                    </span>
                 </div>
-                <div class="right" >
-                	<div class="title">{{good.gname}}&nbsp;{{goods.size}}</div>
-                   
-                    
-                    <div class="price">
-                    	<table width="100%" height="61" border="0" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td width="8%">售价：</td>
-                            <td width="41%"><b>￥{{goods.price}}</b></td>
-                          </tr>
-                        </table>
-                  	</div>
-                  	<br></br>
-                    <div class="send"><span>由 <u>奥凡尼旗舰店</u>从广东佛山市发货，并提供售后服务。</span><div class="clear"></div></div>
-					 <br/>
-					 <div class="size" ><small>选择尺码：</small>
-					 <p>
-						 <i v-for="value in gno">
-						 	<span class="on" v-if="value.sizeno==sizeno" @click="get(value.sizeno)">{{value.size}}</span>
-							<span v-else @click="get(value.sizeno)">{{value.size}}</span>
-						 </i>
-					 </p><div class="clear"></div>
-					 </div>
-                    <div class="number">
-                        <small>数量：</small><input type="text" class="num" value="1"/><span class="jian"></span><span class="jia"></span>
-                        <div class="ku" v-for="value in gno" v-if="value.sizeno==sizeno"><p>件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;库存{{value.balance}}件</p></div>
-                        <div class="clear"></div>
-                    </div>
-                    <br/>	
-                    <div class="sale"><small>销量：</small><span class="on">{{good.sellNum}}</span><div class="clear"></div></div>
-                    <div class="sub" style="margin-top:60px;margin-left: 120px;"><a style="display: block;margin-left: 100px;border-radiu:5px;" href="javascript:void(0)" class="btn02" @click="add()"></a></div>
+            </div>
+            <!--放大镜-->
+        </div>
+        <div class="right">
+            <div class="title">{{good.gname}}&nbsp;{{goods.size}}</div>
+            <div class="price">
+                <table width="100%" height="61" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="8%">售价：</td>
+                        <td width="41%"><b>￥{{goods.price}}</b></td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <div class="send"><span>由 <u>奥凡尼旗舰店</u>从广东佛山市发货，并提供售后服务。</span>
+                <div class="clear"></div>
+            </div>
+            <br/>
+            <div class="size"><small>选择尺码：</small>
+                <p>
+                    <i v-for="value in gno">
+                        <span class="on" v-if="value.sizeno==sizeno" @click="get(value.sizeno)">{{value.size}}</span>
+                        <span v-else @click="get(value.sizeno)">{{value.size}}</span>
+                    </i>
+                </p>
+                <div class="clear"></div>
+            </div>
+            <div class="number">
+                <small>数量：</small>
+                <input type="text" class="num" value="1"/>
+                <span class="jian"></span>
+                <span class="jia"></span>
+                <div class="ku" v-for="value in gno" v-if="value.sizeno==sizeno"><p>件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;库存{{value.balance}}件</p>
                 </div>
                 <div class="clear"></div>
             </div>
-            
-            <div class="share w1200">
-               <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                      <td width="13%">商品评分 <b>{{good.point}}</b>分</td>
-                      <td width="87%">
-                      <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
-                <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script><span>分享到:</span>
-                    </td>
-                 </tr>
-                </table>
-			</div>
-            
-            <!--two-->
-            <div class="two">
-            	<div class="left" >
-                <dl>
-                	<dt>相关产品</dt>
-                    <dd>
-                    	<div class="item" v-for="value in goodVOs" v-if="value.tno==good.tno  &&value.sizeno!=sizeno" >
-                        	<ul>
-                                <li><img :src="value.showPic" width="160" height="160"/></li>
-                                <li class="title"><a href="javascript:void(0)" @click="fresh(value.sizeno)">{{value.gname}}&nbsp;{{value.size}}</a></li>
-                                <li class="price">￥{{value.price}}</li>
-                            </ul>
-                        </div>
-                    
-                    </dd>
-                   </dl>
-                </div>
-                <div class="right">
-                <dl>
-                	<dt><a class="cur" href="#a01">商品详情</a><a href="#qwer">累计评价<font>（{{types.type}}）</font></a><a href="legal.html">法律条例</a></dt>
-                    <dd>
-                    	<a name="a01"></a>
-                    	<ul>
-                        	<li v-for="item in intro">{{item}}</li>
-                        
-                            <div class="clear"></div>
+            <br/>
+            <div class="sale">
+                <small>销量：</small>
+                <span class="on">{{good.sellNum}}</span>
+                <div class="clear"></div>
+            </div>
+            <div class="sub" style="margin-top:60px;margin-left: 120px;">
+                <a style="display: block;margin-left: 100px;border-radiu:5px;" href="javascript:void(0)"
+                   class="btn02" @click="add()"></a>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="share w1200">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="13%">商品评分 <b>{{good.point}}</b>分</td>
+                <td width="87%">
+                    <div class="bdsharebuttonbox">
+                        <a href="#" class="bds_more" data-cmd="more"></a>
+                        <a href="#" class="bds_qzone" data-cmd="qzone"></a>
+                        <a href="#" class="bds_tsina" data-cmd="tsina"></a>
+                        <a href="#" class="bds_tqq" data-cmd="tqq"></a>
+                        <a href="#" class="bds_renren" data-cmd="renren"></a>
+                        <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+                    </div>
+                    <script>
+                        window._bd_share_config = {
+                            "common": {
+                                "bdSnsKey": {},
+                                "bdText": "",
+                                "bdMini": "2",
+                                "bdPic": "",
+                                "bdStyle": "0",
+                                "bdSize": "16"
+                            },
+                            "share": {},
+                            "image": {
+                                "viewList": ["qzone", "tsina", "tqq", "renren", "weixin"],
+                                "viewText": "分享到：",
+                                "viewSize": "16"
+                            },
+                            "selectShare": {
+                                "bdContainerClass": null,
+                                "bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"]
+                            }
+                        };
+                        with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+                    <span>分享到:</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!--two-->
+    <div class="two">
+        <div class="left">
+            <dl>
+                <dt>相关产品</dt>
+                <dd>
+                    <div class="item" v-for="value in goodVOs" v-if="value.tno==good.tno  &&value.sizeno!=sizeno">
+                        <ul>
+                            <li><img :src="value.showPic" width="160" height="160"/></li>
+                            <li class="title">
+                                <a href="javascript:void(0)" @click="fresh(value.sizeno)">{{value.gname}}&nbsp;{{value.size}}</a>
+                            </li>
+                            <li class="price">￥{{value.price}}</li>
                         </ul>
-                    </dd> 
-                    <div class="pro-info"><img v-for="pic in pics" :src="pic" style="width:100%;height:100%"/></div>
-                    <br/>
-                    
-                    <dd id="qwer" class="dd03">
+                    </div>
+
+                </dd>
+            </dl>
+        </div>
+        <div class="right">
+            <dl>
+                <dt>
+                    <a class="cur" href="#a01">商品详情</a>
+                    <a href="#qwer">累计评价<font>（{{types.type}}）</font></a>
+                    <a href="legal.html">法律条例</a>
+                </dt>
+                <dd>
+                    <a name="a01"></a>
+                    <ul>
+                        <li v-for="item in intro">{{item}}</li>
+                        <div class="clear"></div>
+                    </ul>
+                </dd>
+                <div class="pro-info"><img v-for="pic in pics" :src="pic" style="width:100%;height:100%"/></div>
+                <br/>
+                <dd id="qwer" class="dd03">
                     <div class="pj_list">
                         <div class="pj_one">
                             <dl>
-                            	<dt><i v-for="(i,index) in 4" :key="index"><a class="cur" href="javascript:void(0)" @click="doSpeak(i-1)" v-if="i-1==type">{{name[i-1]}}<font>（{{types.type}}）</font></a>
-									<a href="javascript:void(0)" @click="doSpeak(i-1)" v-else>{{name[i-1]}}<font></font></a>
-                            	</i></dt>
+                                <dt>
+                                    <i v-for="(i,index) in 4" :key="index">
+                                        <a class="cur" href="javascript:void(0)" @click="doSpeak(i-1)"
+                                           v-if="i-1==type">{{name[i-1]}}<font>（{{types.type}}）</font></a>
+                                        <a href="javascript:void(0)" @click="doSpeak(i-1)"
+                                           v-else>{{name[i-1]}}<font></font></a>
+                                    </i>
+                                </dt>
                             </dl>
                             <div class="clear"></div>
                         </div>
                         <div class="pj_two">
                             <div class="pj_item" v-for="(item,index) in comments">
-                                <div class="two1">初次评价：<br />{{item.date}}</div>
-                                <div class="two2"><p style="font-size: 15px;">{{item.word}}</p>
-                                <p v-if="item.pic!=null&&item.pic!=''"><img :src="item.pic"/></p>
+                                <div class="two1">初次评价：<br/>{{item.date}}</div>
+                                <div class="two2">
+                                    <p style="font-size: 15px;">{{item.word}}</p>
+                                    <p v-if="item.pic!=null&&item.pic!=''">
+                                        <img :src="item.pic"/>
+                                    </p>
                                 </div>
-                                <div class="two3">(用户编号){{item.mno}}<br /></div>
+                                <div class="two3">(用户编号){{item.mno}}<br/></div>
                                 <div class="clear"></div>
                             </div>
-                            
                             <!--page-->
                             <div class="page">
-	    						<a href="javascript:void(0)" class="pre" @click="back()">上一页</a>
-	    						<div v-for="i in number" style="display: inline-block;">
-	        						<a href="javascript:void(0)" class="on" @click="update(i)" v-if="i==page">{{i}}</a>
-	        						<a href="javascript:void(0)" @click="update(i)" v-else>{{i}}</a>
-	       						 </div>
-	        					<a href="javascript:void(0)" class="next" @click="go()">下一页></a>
-	     						   共{{Math.ceil(total/rows)}}页
-	    					</div>
+                                <a href="javascript:void(0)" class="pre" @click="back()">上一页</a>
+                                <div v-for="i in number" style="display: inline-block;">
+                                    <a href="javascript:void(0)" class="on" @click="update(i)"
+                                       v-if="i==page">{{i}}</a>
+                                    <a href="javascript:void(0)" @click="update(i)" v-else>{{i}}</a>
+                                </div>
+                                <a href="javascript:void(0)" class="next" @click="go()">下一页></a>
+                                共{{Math.ceil(total/rows)}}页
+                            </div>
                             <!--page2-->
                         </div>
                     </div>
-                    </dd>
-                   </dl>
-                   
-                   <div class="shenmin">
-                   	<p><b>安全提示：</b>交易中请勿使用阿里旺旺以外的聊天工具沟通，不要接收可疑文件和不要点击不明来源的链接，支付前核实好域名和支付详情。 淘宝不会以订单有问题，让您提供任何银行卡、密码、手机验证码！遇此情况请终止通话或举报到淘宝网 常见骗术<br />推荐安全软件：  阿里钱盾阿里钱盾  UC浏览器UC浏览器  腾讯电脑管家腾讯电脑管家  360网盾360网盾 安全软件中心</p>
+                </dd>
+            </dl>
 
-					<p><b>内容申明：</b>淘宝为第三方交易平台及互联网信息服务提供者，淘宝（含网站、客户端等）所展示的商品/服务的标题、价格、详情等信息内容系由店铺经营者发布，其真实性、准确性和合法性均由店铺经营者负责。淘宝提醒用户购买商品/服务前注意谨慎核实。如用户对商品/服务的标题、价格、详情等任何信息有任何疑问的，请在购买前通过阿里旺旺与店铺经营者沟通确认；淘宝存在海量店铺，如用户发现店铺内有任何违法/侵权信息，请立即向淘宝举报并提供有效线索。</p>
-                   </div>
-                </div>
-                <div class="clear"></div>
+            <div class="shenmin">
+                <p><b>安全提示：</b>交易中请勿使用阿里旺旺以外的聊天工具沟通，不要接收可疑文件和不要点击不明来源的链接，支付前核实好域名和支付详情。
+                    淘宝不会以订单有问题，让您提供任何银行卡、密码、手机验证码！遇此情况请终止通话或举报到淘宝网 常见骗术<br/>推荐安全软件： 阿里钱盾阿里钱盾 UC浏览器UC浏览器 腾讯电脑管家腾讯电脑管家
+                    360网盾360网盾 安全软件中心</p>
+
+                <p><b>内容申明：</b>淘宝为第三方交易平台及互联网信息服务提供者，淘宝（含网站、客户端等）所展示的商品/服务的标题、价格、详情等信息内容系由店铺经营者发布，其真实性、准确性和合法性均由店铺经营者负责。淘宝提醒用户购买商品/服务前注意谨慎核实。如用户对商品/服务的标题、价格、详情等任何信息有任何疑问的，请在购买前通过阿里旺旺与店铺经营者沟通确认；淘宝存在海量店铺，如用户发现店铺内有任何违法/侵权信息，请立即向淘宝举报并提供有效线索。
+                </p>
             </div>
-</div>
+        </div>
+        <div class="clear"></div>
+    </div>
 </div>
 <!--footer-->
-<div class="footer">
-	<div class="f_bz">
-    	<div class="w1200">
-            <dl class="dl01">
-                <dt>正品保证</dt>
-                <dd>正品护航  购物无忧</dd>
-            </dl>
-            <dl class="dl02">
-                <dt>你消费 我买单</dt>
-                <dd>返现购物商城</dd>
-            </dl>
-            <dl class="dl03">
-                <dt>品类丰富</dt>
-                <dd>品类齐全 轻松购物</dd>
-            </dl>
-            <dl class="dl04">
-                <dt>特色服务体验</dt>
-                <dd>为您呈现不一样的服务</dd>
-            </dl>
-            <div class="clear"></div>
-        </div>
-    </div>
-	<div class="f_nav">
-    	<div class="w1200">
-            <dl>
-                <dt>新手指南</dt>
-                <dd>
-                    <a href="#">注册新用户</a>
-                    <a href="#">商品订购流程</a>
-                    <a href="#">会员注册协议</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>付款方式</dt>
-                <dd>
-                    <a href="#">支付宝支付</a>
-                    <a href="#">网上银行支付</a>
-                    <a href="#">货到付款</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>常见问题</dt>
-                <dd>
-                    <a href="#">订单状态</a>
-                    <a href="#">发票说明</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>售后服务</dt>
-                <dd>
-                    <a href="#">退换货政策</a>
-                    <a href="#">退换货流程</a>
-                    <a href="#">退款说明</a>
-                    <a href="#">退换货申请</a>
-                </dd>
-            </dl>
-            <dl>
-                <dt>客服中心</dt>
-                <dd>
-                    <a href="#">常见问题</a>
-                    <a href="#">联系客服</a>
-                    <a href="#">投诉与建议</a>
-                </dd>
-            </dl>
-            <div class="ewm"><img src="images/home/ico35.png"/></div>
-            <div class="ewm"><img src="images/home/ico38.png"/></div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="w1200">
-        <div class="bottom">
-            <a href="#">关于我们</a>|<a href="#">帮助中心</a>|<a href="#">法律声明</a>|<a href="#">用户协议</a>|<a href="#">联系我们</a>|<a href="#">人才招聘</a>|<a href="#">站点地图</a>
-           
-            <p>网络文化经营许可证：粤网文[2015]0295-065号<br />© 2015 深圳易易城科技网络有限公司. 粤ICP备15042543号</p>
-            <p class="p02"><img src="images/home/ico25.jpg"/><img src="images/home/ico26.jpg"/><img src="images/home/ico27.jpg"/><img src="images/home/ico36.jpg"/><img src="images/home/ico37.jpg"/></p>
-        </div>
-    </div>
+<div id="footer-body">
+    <footer-body></footer-body>
 </div>
+<script>
+    let footerVue = new Vue({
+        el: "#footer-body"
+    });
+</script>
 <!--float_right-->
 <div class="float">
-	<ul>
-    	<li><a href="#" class="a01"></a></li>
+    <ul>
+        <li><a href="#" class="a01"></a></li>
     </ul>
 </div>
 
-<script type="text/javascript" src="js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="js/vue.min.js"></script>
-<script type="text/javascript" src="js/axios.min.js"></script>
 <script type="text/javascript" src="js/qs.js"></script>
 <script type="text/javascript">
-$(function(){
-var imgWid = 0 ;
-var imgHei = 0 ; //变量初始化
-var big = 6.2;//放大倍数
-$(".pj_item .two2 p img").hover(function(){
-$(this).stop(true,true);
-var imgWid2 = 0;var imgHei2 = 0;//局部变量
-imgWid = $(this).width();
-imgHei = $(this).height();
-imgWid2 = imgWid * big;
-imgHei2 = imgHei * big;
-$(this).css({"z-index":2,"position":"relative"});
-$(this).animate({"width":imgWid2,"height":imgHei2,"margin-left":-imgWid2/3,"margin-top":-imgWid2/3});
-},function(){$(this).stop().animate({"width":imgWid,"height":imgHei,"margin-left":0,"margin-top":0,"z-index":1});
-});
-})
+    $(function () {
+        var imgWid = 0;
+        var imgHei = 0; //变量初始化
+        var big = 6.2;//放大倍数
+        $(".pj_item .two2 p img").hover(function () {
+            $(this).stop(true, true);
+            var imgWid2 = 0;
+            var imgHei2 = 0;//局部变量
+            imgWid = $(this).width();
+            imgHei = $(this).height();
+            imgWid2 = imgWid * big;
+            imgHei2 = imgHei * big;
+            $(this).css({"z-index": 2, "position": "relative"});
+            $(this).animate({
+                "width": imgWid2,
+                "height": imgHei2,
+                "margin-left": -imgWid2 / 3,
+                "margin-top": -imgWid2 / 3
+            });
+        }, function () {
+            $(this).stop().animate({
+                "width": imgWid,
+                "height": imgHei,
+                "margin-left": 0,
+                "margin-top": 0,
+                "z-index": 1
+            });
+        });
+    })
 </script>
-<script type="text/javascript">
-let jm_good=new Vue({
-	el:"#jm_good",//对应div的id,即这个vue的作用域
-	data:{
-		onlogin:false,
-		outlogin:true,
-		goods:{},
-		good:{},
-		user:{},
-		carts:[],
-		goodsCount:0,
-		gno:[],
-		sizeno:{},
-		goodVOs:[],
-		intro:[],
-		pics:[],
-		types:{},
-		rows:10,
-		page:1,
-		type:0,
-		comments:[],
-		total:0,
-		number:0,
-		name:['全部','好评','中评','差评']
-	},
-	mounted:function(){//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-		axios({
-			url:'member.action?op=check',
-			method:'post'
-		}).then(result=>{
-			if(result.data.member){//说明登录了
-				this.onlogin=true;
-				this.outlogin=false;
-				this.user=result.data.member;
-				if(result.data.carts){
-					this.carts=result.data.carts;
-					this.goodsCount=result.data.carts.length;
-				}
-			}else{
-				this.onlogin=false;
-				this.outlogin=true;
-			}
-		});
-		this.jia();
-	},
-	methods:{
-		jia:function(){
-			var hash=decodeURI(location.hash);
-			var sizeno;
-			if(''==hash||hash.indexOf('#')>0){
-				location.href="product.html";
-			}else{
-				hash =hash.replace('#','');
-				//let obj=qs.parse(hash);
-				var sizeno=hash;
-				//sizenos=strtnos.split(",");
-				this.sizeno=sizeno;
-			} 
-			axios.post('goodDetailServlet.action',qs.stringify({op:'findBySizeno',sizeno:sizeno}))
-			.then(result=>{
-				if(result.data){
-					this.good=result.data;
-					if(this.good.intro!=null&&this.good.pics!=null){
-						this.pics=this.good.pics.split(";");
-					}
-					axios.post('comment.action',qs.stringify({op:'findWord',gno:this.good.gno,page:this.page,rows:this.rows,type:this.type}))
-					.then(result=>{
-						if(result.data){
-							this.comments=result.data.rows;
-							this.total=result.data.total;
-							this.number=Math.ceil(this.total/this.rows);
-						}else{
-							alert("加载评论失败！");
-						}
-					});
-					axios.post('goodInfoServlet.action',qs.stringify({op:'findGno',gno:this.good.gno}))
-					.then(result=>{
-						if(result.data){
-							this.gno=result.data;
-							this.doIntro();
-						}else{
-							alert("加载数据失败！");
-						}
-					});
-				}else{
-					alert("加载数据失败！");
-				}
-			});
-	 	axios({
-				url:'goodInfoServlet.action?op=finds',
-				method:'get',
-				params:{}
-			}).then(result=>{
-				if(result.data){
-					this.goodVOs = result.data;
-				}
-			}); 
-		},
-		doIntro:function(){
-			var no=this.sizeno;
-			axios({
-				url:'goodDetailServlet.action?op=findIntro',
-				method:'get',
-				params:{
-					sizeno:no
-				}
-			}).then(result=>{
-				let data=result.data;
-				if(data){
-					var introStr=data.good.intro;
-					this.types=data.type;
-					if(introStr!=null){
-						this.intro=introStr.split(";");
-						this.goods=data.good;
-					}
-				}else{
-					alert('加载失败！！');
-					return ;
-				}
-			});
-		},
-		out:function(){
-			axios({url:'member.action?op=out',method:'get'})
-			.then(result=>{
-				let data=result.data;
-				if(data==1){
-					location.href='login.html';
-				}else{
-					alert('退出失败！！');
-					return ;
-				}
-			});
-		},
-		get:function(sizeno){
-			this.sizeno=sizeno;
-			this.doIntro();
-		},
-		fresh:function(sizeno){
-			location.href="product_show.html#"+sizeno;
-			this.jia();
-		},
-		add:function(){
-			var sizeno=this.sizeno;
-			axios({
-				url:'cart.action?op=add',
-				method:'get',
-				params:{sizeno:sizeno}
-			}).then(result=>{ // 请求失败处理
-				if(result.data==1){
-					alert('添加成功！');
-				}else if(result.data==2){
-					alert('购物车已有数据，请到购物车中自行添加！');
-				}else{
-					alert('您可能未登录，添加失败！');
-				}
-		    });
-		},
-		doSpeak:function(x){
-			this.type=x;
-			axios.post('comment.action',qs.stringify({op:'findWord',gno:this.good.gno,page:this.page,rows:this.rows,type:this.type}))
-			.then(result=>{
-				if(result.data){
-					this.comments=result.data.rows;
-					this.total=result.data.total;
-					//console.log(this.comments);
-				}else{
-					alert("加载评论失败！");
-				}
-			});
-		},
-		back:function(){
-			if(this.page==1){
-				alert("已在最前页");
-				return ;
-			}
-			this.page--;
-			axios.post('comment.action',qs.stringify({op:'findWord',gno:this.good.gno,page:this.page,rows:this.rows,type:this.type}))
-			.then(result=>{
-				if(result.data){
-					this.comments=result.data.rows;
-				}else{
-					alert("加载评论失败！");
-				}
-			});
-		},
-		go:function(){
-			if(this.page==Math.ceil(this.total/this.rows)){
-				alert("已在最后页");
-				return ;
-			}
-			this.page++;
-			axios.post('comment.action',qs.stringify({op:'findWord',gno:this.good.gno,page:this.page,rows:this.rows,type:this.type}))
-			.then(result=>{
-				if(result.data){
-					this.comments=result.data.rows;
-				}else{
-					alert("加载评论失败！");
-				}
-			});
-		},
-		update:function(i){
-			this.page=i;
-			axios.post('comment.action',qs.stringify({op:'findWord',gno:this.good.gno,page:this.page,rows:this.rows,type:this.type}))
-			.then(result=>{
-				if(result.data){
-					this.comments=result.data.rows;
-				}else{
-					alert("加载评论失败！");
-				}
-			});
-		},
-	}
-});
-
-</script>
+<!--<script type="text/javascript">
+    let jm_good = new Vue({
+        el: "#jm_good",//对应div的id,即这个vue的作用域
+        data: {
+            onlogin: false,
+            outlogin: true,
+            goods: {},
+            good: {},
+            user: {},
+            carts: [],
+            goodsCount: 0,
+            gno: [],
+            sizeno: {},
+            goodVOs: [],
+            intro: [],
+            pics: [],
+            types: {},
+            rows: 10,
+            page: 1,
+            type: 0,
+            comments: [],
+            total: 0,
+            number: 0,
+            name: ['全部', '好评', '中评', '差评']
+        },
+        created: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
+            axios({
+                url: 'member.action?op=check',
+                method: 'post'
+            }).then(result => {
+                if (result.data.member) {//说明登录了
+                    this.onlogin = true;
+                    this.outlogin = false;
+                    this.user = result.data.member;
+                    if (result.data.carts) {
+                        this.carts = result.data.carts;
+                        this.goodsCount = result.data.carts.length;
+                    }
+                } else {
+                    this.onlogin = false;
+                    this.outlogin = true;
+                }
+            });
+            this.jia();
+        },
+        methods: {
+            jia: function () {
+                var hash = decodeURI(location.hash);
+                var sizeno;
+                if ('' == hash || hash.indexOf('#') > 0) {
+                    location.href = "product.html";
+                } else {
+                    hash = hash.replace('#', '');
+                    //let obj=qs.parse(hash);
+                    var sizeno = hash;
+                    //sizenos=strtnos.split(",");
+                    this.sizeno = sizeno;
+                }
+                axios.post('goodDetailServlet.action', qs.stringify({op: 'findBySizeno', sizeno: sizeno}))
+                    .then(result => {
+                        if (result.data) {
+                            this.good = result.data;
+                            if (this.good.intro != null && this.good.pics != null) {
+                                this.pics = this.good.pics.split(";");
+                            }
+                            axios.post('comment.action', qs.stringify({
+                                op: 'findWord',
+                                gno: this.good.gno,
+                                page: this.page,
+                                rows: this.rows,
+                                type: this.type
+                            }))
+                                .then(result => {
+                                    if (result.data) {
+                                        this.comments = result.data.rows;
+                                        this.total = result.data.total;
+                                        this.number = Math.ceil(this.total / this.rows);
+                                    } else {
+                                        alert("加载评论失败！");
+                                    }
+                                });
+                            axios.post('goodInfoServlet.action', qs.stringify({op: 'findGno', gno: this.good.gno}))
+                                .then(result => {
+                                    if (result.data) {
+                                        this.gno = result.data;
+                                        this.doIntro();
+                                    } else {
+                                        alert("加载数据失败！");
+                                    }
+                                });
+                        } else {
+                            alert("加载数据失败！");
+                        }
+                    });
+                axios({
+                    url: 'goodInfoServlet.action?op=finds',
+                    method: 'get',
+                    params: {}
+                }).then(result => {
+                    if (result.data) {
+                        this.goodVOs = result.data;
+                    }
+                });
+            },
+            doIntro: function () {
+                var no = this.sizeno;
+                axios({
+                    url: 'goodDetailServlet.action?op=findIntro',
+                    method: 'get',
+                    params: {
+                        sizeno: no
+                    }
+                }).then(result => {
+                    let data = result.data;
+                    if (data) {
+                        var introStr = data.good.intro;
+                        this.types = data.type;
+                        if (introStr != null) {
+                            this.intro = introStr.split(";");
+                            this.goods = data.good;
+                        }
+                    } else {
+                        alert('加载失败！！');
+                        return;
+                    }
+                });
+            },
+            out: function () {
+                axios({url: 'member.action?op=out', method: 'get'})
+                    .then(result => {
+                        let data = result.data;
+                        if (data == 1) {
+                            location.href = 'login.html';
+                        } else {
+                            alert('退出失败！！');
+                            return;
+                        }
+                    });
+            },
+            get: function (sizeno) {
+                this.sizeno = sizeno;
+                this.doIntro();
+            },
+            fresh: function (sizeno) {
+                location.href = "product_show.html#" + sizeno;
+                this.jia();
+            },
+            add: function () {
+                var sizeno = this.sizeno;
+                axios({
+                    url: 'cart.action?op=add',
+                    method: 'get',
+                    params: {sizeno: sizeno}
+                }).then(result => { // 请求失败处理
+                    if (result.data == 1) {
+                        alert('添加成功！');
+                    } else if (result.data == 2) {
+                        alert('购物车已有数据，请到购物车中自行添加！');
+                    } else {
+                        alert('您可能未登录，添加失败！');
+                    }
+                });
+            },
+            doSpeak: function (x) {
+                this.type = x;
+                axios.post('comment.action', qs.stringify({
+                    op: 'findWord',
+                    gno: this.good.gno,
+                    page: this.page,
+                    rows: this.rows,
+                    type: this.type
+                }))
+                    .then(result => {
+                        if (result.data) {
+                            this.comments = result.data.rows;
+                            this.total = result.data.total;
+                            //console.log(this.comments);
+                        } else {
+                            alert("加载评论失败！");
+                        }
+                    });
+            },
+            back: function () {
+                if (this.page == 1) {
+                    alert("已在最前页");
+                    return;
+                }
+                this.page&#45;&#45;;
+                axios.post('comment.action', qs.stringify({
+                    op: 'findWord',
+                    gno: this.good.gno,
+                    page: this.page,
+                    rows: this.rows,
+                    type: this.type
+                }))
+                    .then(result => {
+                        if (result.data) {
+                            this.comments = result.data.rows;
+                        } else {
+                            alert("加载评论失败！");
+                        }
+                    });
+            },
+            go: function () {
+                if (this.page == Math.ceil(this.total / this.rows)) {
+                    alert("已在最后页");
+                    return;
+                }
+                this.page++;
+                axios.post('comment.action', qs.stringify({
+                    op: 'findWord',
+                    gno: this.good.gno,
+                    page: this.page,
+                    rows: this.rows,
+                    type: this.type
+                }))
+                    .then(result => {
+                        if (result.data) {
+                            this.comments = result.data.rows;
+                        } else {
+                            alert("加载评论失败！");
+                        }
+                    });
+            },
+            update: function (i) {
+                this.page = i;
+                axios.post('comment.action', qs.stringify({
+                    op: 'findWord',
+                    gno: this.good.gno,
+                    page: this.page,
+                    rows: this.rows,
+                    type: this.type
+                }))
+                    .then(result => {
+                        if (result.data) {
+                            this.comments = result.data.rows;
+                        } else {
+                            alert("加载评论失败！");
+                        }
+                    });
+            },
+        }
+    });
+</script>-->
 </body>
 </html>
