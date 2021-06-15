@@ -3,6 +3,7 @@ package com.yc.shoporder;
 import com.yc.bean.*;
 import com.yc.shoporder.dao.ShopOrderInfoMapper;
 import com.yc.shoporder.dao.ShopOrderItemInfoMapper;
+import com.yc.shoporder.service.IShopOrderInfoBiz;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ class ShopOrderApplicationTests {
     ShopOrderItemInfoMapper shopOrderItemInfoMapper;
     @Resource
     ShopOrderInfoMapper shopOrderInfoMapper;
+    @Resource
+    IShopOrderInfoBiz iShopOrderInfoBiz;
 
 
     @Test
@@ -71,11 +74,9 @@ class ShopOrderApplicationTests {
         goodInfo.setGno(13);
 
         orderItemInfo.setMoney(new BigDecimal(999));
-        orderItemInfo.setNum(3);
         orderItemInfo.setDescr("wu");
         orderItemInfo.setMemberInfo(memberInfo);
         orderItemInfo.setGoodDetail(goodDetail);
-        orderItemInfo.setGoodInfo(goodInfo);
         orderItemInfo.setOrderInfo(orderInfo);
         list.add(orderItemInfo);
 ////////////////////////////////
@@ -87,11 +88,8 @@ class ShopOrderApplicationTests {
         goodDetail1.setSizeno(29);
 
         GoodInfo goodInfo1 = new GoodInfo();
-        goodInfo1.setGno(14);
-        orderItemInfo1.setGoodInfo(goodInfo1);
         orderItemInfo1.setGoodDetail(goodDetail1);
         orderItemInfo1.setMoney(new BigDecimal(929));
-        orderItemInfo1.setNum(3);
         orderItemInfo1.setDescr("wu");
 
         list.add(orderItemInfo1);
@@ -146,6 +144,22 @@ class ShopOrderApplicationTests {
     @Transactional
     void findByMno() {
         List<OrderInfo> list = shopOrderInfoMapper.findByMno(new Integer(9));
+        System.out.println(list);
+    }
+
+    @Test
+    @Transactional
+    void find() {
+        Integer mno = 9;
+        List<OrderInfo> list = iShopOrderInfoBiz.findByMno(mno);
+        OrderInfo orderInfo = null;
+        List<OrderInfo> orderInfoMore = null;
+        for (int i = 0; i < list.size(); i++) {
+            orderInfo = list.get(i);
+            orderInfoMore = iShopOrderInfoBiz.findOneToMany(orderInfo);
+            System.out.println(orderInfoMore);
+            list.set(i, orderInfoMore.get(0));
+        }
         System.out.println(list);
     }
 

@@ -20,11 +20,12 @@ import java.util.Date;
 public class OrderItemInfo implements Serializable {
     private static final long serialVersionUID = -3721211042666306035L;
     private Integer itemno;
-    private MemberInfo memberInfo;//mno
-
-    private OrderInfo orderInfo; //ono;
-    private GoodDetail goodDetail;//sizeno;
-    private GoodInfo goodInfo; //gno;
+    //mno
+    private MemberInfo memberInfo;
+    //ono
+    private OrderInfo orderInfo;
+    //sizeno
+    private GoodDetail goodDetail;
     private BigDecimal money;
     private Integer num;
     private String descr;

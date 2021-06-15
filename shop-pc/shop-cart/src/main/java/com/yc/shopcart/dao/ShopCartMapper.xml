@@ -87,6 +87,7 @@
         <association property="goodInfo" column="gno" javaType="GoodInfo" select="getGoodInfo"
                      fetchType="lazy"/>
     </resultMap>
+
     <!--按数组查询  三表连表查询-->
     <select id="selectByCnos" parameterType="Integer[]" resultMap="CartInfoGoodDetailGoodInfo">
         select cno,mno,g.sizeno sizeno,price,num,gi.gno gno,gname,showPic,size

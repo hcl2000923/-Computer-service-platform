@@ -9,6 +9,7 @@ import com.yc.util.Encrypt;
 import com.yc.util.MailUtils;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.concurrent.ExecutorService;
  * @create: 2021-06-06 17:31
  */
 @Service
+@Transactional
 public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     @Resource
     ExecutorService executorService;

@@ -57,8 +57,6 @@ Vue.component("login-body", {
         axios.get("shop-memberinfo/getLoginUser").then(res => {
             if (res.data.code == 1) {
                 this.loginUser = res.data.data;
-            } else {
-                this.loginUser = res.data.data;
             }
         });
     }
