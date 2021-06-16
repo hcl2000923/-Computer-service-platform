@@ -3,14 +3,13 @@ package com.yc.shopmemberinfo.controller;
 import com.yc.bean.MemberInfo;
 import com.yc.exception.BizException;
 import com.yc.shopmemberinfo.service.IShopMemberinfoBiz;
-import com.yc.util.Encrypt;
+import com.yc.util.YcConstants;
 import com.yc.vo.Code;
 import com.yc.vo.Result;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -33,16 +32,14 @@ public class MemberInfoController {
     @PostMapping("login")
     public Result login(@Valid MemberInfo memberInfo, Errors errors, HttpSession session) {
         if (errors.hasFieldErrors("nickName") || errors.hasFieldErrors("pwd")) {
-            return Result.failure("输入错误", errors.getFieldErrors());//不带s随机返回一个
+            //不带s随机返回一个
+            return Result.failure("输入错误", errors.getFieldErrors());
         }
         try {
-            String pwd = Encrypt.md5(memberInfo.getPwd());
-            memberInfo.setPwd(pwd);
-            MemberInfo loginuser = iShopMemberinfoBiz.login(memberInfo);
-            session.setAttribute("loginedUser", loginuser);
+            MemberInfo loginUser = iShopMemberinfoBiz.login(memberInfo);
+            session.setAttribute(YcConstants.LOGINUSER, loginUser);
             return Result.success("登录成功", errors.getFieldError());
         } catch (BizException e) {
-            e.printStackTrace();
             //自定义错误信息
             errors.reject("accountOrPwdError", e.getMessage());
             return Result.failure(e.getMessage(), errors.getAllErrors());
@@ -50,11 +47,10 @@ public class MemberInfoController {
     }
 
     @GetMapping("code")
-    public Result codeEquals(@Valid Code code, Errors errors, HttpSession session) {
+    public Result codeEquals(@Valid Code code, Errors errors, @SessionAttribute String validateCode) {
         if (errors.hasFieldErrors("code")) {
-            return Result.failure("验证码为空", errors.getFieldErrors());//不带s随机返回一个
+            return Result.failure("验证码为空", errors.getFieldErrors());
         }
-        String validateCode = (String) session.getAttribute("validateCode");
         if (validateCode.equalsIgnoreCase(code.getCode())) {
             return Result.success("验证码一致", errors.getFieldError());
         } else {
@@ -66,7 +62,7 @@ public class MemberInfoController {
     @PostMapping("emailValid")
     public Result emailValid(@Valid MemberInfo memberInfo, Errors errors, HttpSession session) {
         if (errors.hasFieldErrors("nickName") || errors.hasFieldErrors("email")) {
-            return Result.failure("输入错误", errors.getFieldErrors());//不带s随机返回一个
+            return Result.failure("输入错误", errors.getFieldErrors());
         }
         List<MemberInfo> allByTrem = iShopMemberinfoBiz.findAllByTrem(memberInfo);
         if (allByTrem.size() == 0) {
@@ -76,8 +72,8 @@ public class MemberInfoController {
         } else {
             //用户已绑定邮箱
             String emailValid = UUID.randomUUID().toString().substring(0, 4);
-            session.setAttribute("EmailValid", emailValid);
-            session.setAttribute("EmailAccount", memberInfo.getNickName());
+            session.setAttribute(YcConstants.EMAILVALID, emailValid);
+            session.setAttribute(YcConstants.EMAILACCOUNT, memberInfo.getNickName());
             iShopMemberinfoBiz.sendMail(memberInfo, emailValid);
             return Result.success("已发送，等待邮箱验证码！", errors.getFieldError());
         }
@@ -93,12 +89,12 @@ public class MemberInfoController {
                 || errors1.hasFieldErrors("pwd")) {
             return Result.failure("输入错误", errors.getFieldErrors());
         }
-        String valid = (String) session.getAttribute("EmailValid");
+        String valid = (String) session.getAttribute(YcConstants.EMAILVALID);
         if (valid == null) {
             errors.reject("NotAlreadyValid", "对不起，您还未发送验证码！");
             return Result.failure("对不起，您还未发送验证码！", errors.getAllErrors());
         }
-        String nickName = (String) session.getAttribute("EmailAccount");
+        String nickName = (String) session.getAttribute(YcConstants.EMAILACCOUNT);
         if (!nickName.contentEquals(memberInfo.getNickName())) {
             //如果不等于，检查发送验证的账号是否和是当前账号
             errors.reject("AccountNotEquals", "请检查输入账号是否和发送验证的账号一致！");
@@ -116,7 +112,6 @@ public class MemberInfoController {
             iShopMemberinfoBiz.updatePwdByNickName(m);
             return Result.success("重置密码成功", errors.getFieldError());
         } catch (BizException e) {
-            e.printStackTrace();
             //自定义错误信息
             errors.reject("重置密码失败", e.getMessage());
             return Result.failure(e.getMessage(), errors.getAllErrors());
@@ -143,16 +138,74 @@ public class MemberInfoController {
                 return Result.failure("用户名已被注册", errors.getAllErrors());
             }
         } catch (BizException e) {
-            e.printStackTrace();
-            //自定义错误信a息
+            //自定义错误信息
             errors.reject("regError", e.getMessage());
             return Result.failure(e.getMessage(), errors.getAllErrors());
         }
     }
 
-    @GetMapping("getLoginedUser")
-    public Result getLoginedUser(@SessionAttribute(required = false) MemberInfo loginedUser) {
-        return Result.success("登录对象获取成功！", loginedUser);
+    @GetMapping("getLoginUser")
+    public Result getLoginUser(@SessionAttribute(required = false) MemberInfo loginUser) {
+        if (loginUser != null) {
+            return Result.success("登录对象获取成功！", loginUser);
+        }
+        return Result.failure("登录对象获取失败！", loginUser);
     }
 
+    @GetMapping("logout")
+    public ModelAndView logout(ModelAndView mav, HttpSession session) {
+        session.invalidate();
+        mav.setViewName("redirect:http://127.0.0.1");
+        return mav;
+    }
+
+    @PostMapping("updateAll")
+    public Result updateAll(@Valid MemberInfo memberInfo, Errors errors, HttpSession session) {
+        try {
+            if (errors.hasFieldErrors("email")) {
+                return Result.failure("输入错误", errors.getFieldErrors());
+                //不带s随机返回一个
+            }
+            iShopMemberinfoBiz.updateAllByMno(memberInfo);
+            MemberInfo memberInfo1 = new MemberInfo();
+            memberInfo1.setMno(memberInfo.getMno());
+            List<MemberInfo> allByTrem = iShopMemberinfoBiz.findAllByTrem(memberInfo);
+            if (allByTrem.size() != 0) {
+                session.setAttribute(YcConstants.LOGINUSER, allByTrem.get(0));
+            }
+            return Result.success("修改信息成功！", errors.getFieldError());
+        } catch (BizException e) {
+            //自定义错误信息
+            errors.reject("UpdateErrors", e.getMessage());
+            return Result.failure(e.getMessage(), errors.getAllErrors());
+        }
+    }
+
+    @PostMapping("updatePwd")
+    public Result updatePwd(String pwd, String pwd1, HttpSession session) {
+        try {
+            MemberInfo memberInfo = (MemberInfo) session.getAttribute(YcConstants.LOGINUSER);
+            MemberInfo memberInfo1 = new MemberInfo();
+            memberInfo1.setNickName(memberInfo.getNickName());
+            memberInfo1.setPwd(pwd);
+            iShopMemberinfoBiz.login(memberInfo1);
+            memberInfo1.setPwd(pwd1);
+            iShopMemberinfoBiz.updateAllByMno(memberInfo1);
+            session.invalidate();
+            return Result.success("修改密码成功！", null);
+        } catch (BizException e) {
+            return Result.failure(e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("updatePhoto")
+    @Transactional
+    public Result updatePhoto(@RequestBody MemberInfo memberInfo) throws BizException {
+        int t = iShopMemberinfoBiz.updateAllByMno(memberInfo);
+        if (t == 1) {
+            return Result.success("添加成功!", null);
+        } else {
+            return Result.failure("添加失败!", null);
+        }
+    }
 }

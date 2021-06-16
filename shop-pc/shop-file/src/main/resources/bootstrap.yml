@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: shop-file
+  cloud:
+    config:
+      uri: http://localhost:8888
+      label: master
+  servlet:
+    multipart:
+      enabled: false
+      max-file-size: 50MB
+      max-request-size: 50MB
+logging:
+  level:
+    root: debug
+#开启降级
+#feign:
+#  hystrix:
+#    enabled: true

@@ -38,6 +38,7 @@ public class MemberInfo implements Serializable {
     private String email;
     private String idCard;
     private String addr;
+    //1.代表男2.代表女
     private Integer sex;
     private String bankCard;
     private String photo;
@@ -46,6 +47,7 @@ public class MemberInfo implements Serializable {
     private BigDecimal getMoney;
     private BigDecimal usefulMoney;
     private Integer moneyPoint;
+    //1.代表正常用户2.代表冻结用户
     private Integer status;
     private List<CartInfo> cartInfoList;
     private List<OrderItemInfo> orderItemInfoList;

@@ -5,9 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.exception.BizException;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
+import com.yc.util.Encrypt;
 import com.yc.util.MailUtils;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.concurrent.ExecutorService;
  * @create: 2021-06-06 17:31
  */
 @Service
+@Transactional
 public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     @Resource
     ExecutorService executorService;
@@ -29,6 +32,8 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
 
     @Override
     public MemberInfo login(MemberInfo memberInfo) throws BizException {
+        String pwd = Encrypt.md5(memberInfo.getPwd());
+        memberInfo.setPwd(pwd);
         MemberInfo t = shopMemberinfoMapper.selectByUidAndPwd(memberInfo);
         if (t == null) {
             throw new BizException("用户名或密码错误！");
@@ -46,11 +51,12 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     }
 
     @Override
-    public int updateAllByMno(MemberInfo memberInfo) {
-        if (memberInfo == null) {
-            return 0;
+    public int updateAllByMno(MemberInfo memberInfo) throws BizException {
+        int t = shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
+        if (t != 1) {
+            throw new BizException("设置个人信息异常");
         }
-        return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
+        return t;
     }
 
     @Override
@@ -95,7 +101,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     public PageInfo<MemberInfo> findByPage(MemberInfo memberInfo, Page page) {
         PageHelper.startPage(page.getPageNum(), page.getPageSize());
         List<MemberInfo> list = shopMemberinfoMapper.findAllAndPage(memberInfo);
-        PageInfo<MemberInfo> p = new PageInfo<MemberInfo>(list);
+        PageInfo<MemberInfo> p = new PageInfo<>(list);
         return p;
     }
 

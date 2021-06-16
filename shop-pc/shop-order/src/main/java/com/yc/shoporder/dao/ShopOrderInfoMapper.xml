@@ -29,40 +29,44 @@
     <!--一对多链表映射查询，可分页-->
     <select id="findOneToMany" resultMap="OrderInfoAndOrderItemInfo">
         select orderinfo.ono oiono,receiver,orderinfo.status oistatus,buyWay,detailAddr,tel,addr,pCode,odate,
-        itemno,mno,orderiteminfo.ono oiiono,sizeno,gno,money,num,descr,orderiteminfo.status
+        itemno,mno,orderiteminfo.ono oiiono,sizeno,money,num,descr,orderiteminfo.status
         oiistatus,sdate,rdate,updateStatus
         from orderinfo left join orderiteminfo
         on orderinfo.ono=orderiteminfo.ono
         <where>
-            <if test="ono!=null">
-                orderinfo.ono=#{ono}
-            </if>
-            <if test="receiver!=null">
-                and receiver=#{receiver}
-            </if>
-            <if test="buyWay!=null">
-                and buyWay=#{buyWay}
-            </if>
-            <if test="detailAddr!=null">
-                and detailAddr=#{detailAddr}
-            </if>
-            <if test="tel!=null">
-                and tel=#{tel}
-            </if>
-            <if test="addr!=null">
-                and addr=#{addr}
-            </if>
-            <if test="pCode!=null">
-                and pCode=#{pCode}
-            </if>
-            <if test="status!=null">
-                and orderinfo.status=#{status}
-            </if>
-            <if test="odate!=null">
-                and odate=#{odate}
-            </if>
+            <choose>
+                <when test="ono!=null">
+                    orderinfo.ono=#{ono}
+                </when>
+                <otherwise>
+                    <if test="receiver!=null">
+                        and receiver=#{receiver}
+                    </if>
+                    <if test="buyWay!=null">
+                        and buyWay=#{buyWay}
+                    </if>
+                    <if test="detailAddr!=null">
+                        and detailAddr=#{detailAddr}
+                    </if>
+                    <if test="tel!=null">
+                        and tel=#{tel}
+                    </if>
+                    <if test="addr!=null">
+                        and addr=#{addr}
+                    </if>
+                    <if test="pCode!=null">
+                        and pCode=#{pCode}
+                    </if>
+                    <if test="status!=null">
+                        and orderinfo.status=#{status}
+                    </if>
+                    <if test="odate!=null">
+                        and odate=#{odate}
+                    </if>
+                </otherwise>
+            </choose>
         </where>
-        ORDER BY orderinfo.ono DESC
+        ORDER BY odate DESC
     </select>
     <resultMap id="OrderInfoAndOrderItemInfo" type="OrderInfo">
         <id column="oiono" property="ono"/>
@@ -74,12 +78,10 @@
         <result property="addr" column="addr"/>
         <result property="pCode" column="pCode"/>
         <result property="odate" column="odate"/>
-        <collection property="orderItemInfoList" fetchType="lazy" ofType="OrderItemInfo">
+        <collection property="orderItemInfoList" fetchType="eager" ofType="OrderItemInfo">
             <id property="itemno" column="itemno"/>
             <result property="memberInfo.mno" column="mno"/>
             <result property="orderInfo.ono" column="oiiono"/>
-            <result property="goodDetail.sizeno" column="sizeno"/>
-            <result property="goodInfo.gno" column="gno"/>
             <result property="money" column="money"/>
             <result property="num" column="num"/>
             <result property="descr" column="descr"/>
@@ -87,8 +89,28 @@
             <result property="sdate" column="sdate"/>
             <result property="rdate" column="rdate"/>
             <result property="updateStatus" column="updateStatus"/>
+            <association property="goodDetail" column="sizeno" javaType="GoodDetail"
+                         select="getGoodDetail" fetchType="eager">
+            </association>
         </collection>
     </resultMap>
+    <select id="getGoodInfo" resultType="GoodInfo">
+        select * from goodinfo
+        <where>
+            gno = #{gno}
+        </where>
+    </select>
+    <resultMap id="GoodDetailAndGoodInfo" type="GoodDetail">
+        <association property="goodInfo" column="gno" javaType="GoodInfo"
+                     select="getGoodInfo" fetchType="eager">
+        </association>
+    </resultMap>
+    <select id="getGoodDetail" resultMap="GoodDetailAndGoodInfo">
+        select * from gooddetail
+        <where>
+            sizeno = #{sizeno}
+        </where>
+    </select>
     <!--通过mno查找goodInfo-->
     <select id="findByMno" resultType="OrderInfo" parameterType="Integer">
         select * from orderinfo where ono in (select ono from orderiteminfo where mno=#{mno})

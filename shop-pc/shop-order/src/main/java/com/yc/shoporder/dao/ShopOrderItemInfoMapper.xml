@@ -9,8 +9,7 @@
     <insert id="addOrderItemInfo" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="itemno">
         insert into orderiteminfo values
         <foreach collection="list" index="index" item="orderItemInfo" separator=",">
-            (null,#{orderItemInfo.memberInfo.mno},#{orderItemInfo.orderInfo.ono},#{orderItemInfo.goodDetail.sizeno},
-            #{orderItemInfo.goodInfo.gno},#{orderItemInfo.money},#{orderItemInfo.num},#{orderItemInfo.descr},2,
+            (null,#{orderItemInfo.memberInfo.mno},#{orderItemInfo.orderInfo.ono},#{orderItemInfo.goodDetail.sizeno},#{orderItemInfo.money},#{orderItemInfo.num},#{orderItemInfo.descr},2,
             DATE_ADD(CURDATE(),INTERVAL 1 DAY),DATE_ADD(CURDATE(),INTERVAL 3 DAY),1)
         </foreach>
     </insert>
@@ -48,9 +47,9 @@
     <!--分页查询链表查询-->
     <select id="findByMulti" resultMap="OrderItemInfoAndOrderInfo">
         select o.ono ono,receiver,buyWay,detailAddr,tel,addr,
-        pCode,odate,itemno,mno,sizeno,gno,money,num,descr,v.status vstatus,o.status ostatus,
+        pCode,odate,itemno,mno,sizeno,money,num,descr,v.status vstatus,o.status ostatus,
         sdate,rdate,updateStatus from orderiteminfo v
-        inner join orderinfo o on o.ono=v.ono
+        left join orderinfo o on o.ono=v.ono
         <where>
             <if test="orderInfo!=null">
                 <if test="orderInfo.receiver!=null">
@@ -77,11 +76,6 @@
             <if test="memberInfo!=null">
                 <if test="memberInfo.mno!=null">
                     and mno = #{memberInfo.mno}
-                </if>
-            </if>
-            <if test="goodInfo!=null">
-                <if test="goodInfo.gno!=null">
-                    and gno = #{goodInfo.gno}
                 </if>
             </if>
             <if test="itemno">
@@ -121,9 +115,6 @@
         </association>
         <association property="goodDetail" fetchType="lazy" javaType="GoodDetail">
             <id column="sizeno" property="sizeno"/>
-        </association>
-        <association property="goodInfo" fetchType="lazy" javaType="GoodInfo">
-            <id column="gno" property="gno"/>
         </association>
     </resultMap>
 

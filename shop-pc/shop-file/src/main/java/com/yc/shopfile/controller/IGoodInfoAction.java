@@ -1,18 +1,18 @@
-package com.yc.shopfile.controller;
-
-import org.springframework.cloud.openfeign.FeignClient;
-
-/**
- * @program: shop-book
- * @description:Feign接口对应一个服务
- * @author: 作者
- * @create: 2021-05-22 16:03
- */
-@FeignClient(value = "shop-good")
-public interface IGoodInfoAction {
-//    @GetMapping("queryByPage")
-//    public Result queryByPage(CrShow crShow);
+//package com.yc.shopfile.controller;
 //
-//    @GetMapping("queryByPage1")
-//    public Result queryByPage1(CrShow1 crShow1);
-}
+//import org.springframework.cloud.openfeign.FeignClient;
+//
+///**
+// * @program: shop-book
+// * @description:Feign接口对应一个服务
+// * @author: 作者
+// * @create: 2021-05-22 16:03
+// */
+//@FeignClient(value = "shop-good")
+//public interface IGoodInfoAction {
+////    @GetMapping("queryByPage")
+////    public Result queryByPage(CrShow crShow);
+////
+////    @GetMapping("queryByPage1")
+////    public Result queryByPage1(CrShow1 crShow1);
+//}

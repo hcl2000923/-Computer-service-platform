@@ -21,7 +21,7 @@ public interface IShopMemberinfoBiz {
     int addMemberInfo(MemberInfo memberInfo) throws BizException;
 
     //动态更新sql
-    int updateAllByMno(MemberInfo memberInfo);
+    int updateAllByMno(MemberInfo memberInfo) throws BizException;
 
     //更新密码
     int updatePwdByNickName(MemberInfo memberInfo) throws BizException;

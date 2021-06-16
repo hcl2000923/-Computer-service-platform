@@ -1,4 +1,8 @@
 spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/
+      suffix: .jsp
   application:
     name: shop-index
   cloud:
@@ -9,3 +13,6 @@ spring:
 feign:
   hystrix:
     enabled: true
+
+#tomcat.virtual.path: /**
+#basePath: D:/shopping

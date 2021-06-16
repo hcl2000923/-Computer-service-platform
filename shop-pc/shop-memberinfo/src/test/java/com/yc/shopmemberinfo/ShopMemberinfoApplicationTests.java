@@ -1,6 +1,7 @@
 package com.yc.shopmemberinfo;
 
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.yc.bean.MemberInfo;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
 import com.yc.shopmemberinfo.service.IShopMemberinfoBiz;
@@ -23,9 +24,11 @@ class ShopMemberinfoApplicationTests {
     @Test
     void selectByUidAndPwd() {
         MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setMno(4);
+        memberInfo.setNickName("hcl123456");
         memberInfo.setPwd("qwe");
         MemberInfo memberInfo1 = shopMemberinfo.selectByUidAndPwd(memberInfo);
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(memberInfo1));
         System.out.println(memberInfo1);
     }
 
