@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ShopCartImpl implements IShopCartBiz {
 
     @Resource
@@ -39,7 +40,6 @@ public class ShopCartImpl implements IShopCartBiz {
     }
 
     @Override
-    @Transactional
     public int updateNum(CartInfo cartInfo) {
         if (cartInfo == null) {
             return 0;

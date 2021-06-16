@@ -40,7 +40,6 @@ public class OrderController {
         for (int i = 0; i < list.size(); i++) {
             orderInfo = list.get(i);
             orderInfoMore = iShopOrderInfoBiz.findOneToMany(orderInfo);
-            System.out.println(orderInfoMore);
             list.set(i, orderInfoMore.get(0));
         }
         return Result.success("获取订单信息成功", list);

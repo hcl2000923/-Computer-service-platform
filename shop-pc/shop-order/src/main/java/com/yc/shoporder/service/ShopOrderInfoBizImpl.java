@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
     @Resource
     private ShopOrderInfoMapper shopOrderInfoMapper;

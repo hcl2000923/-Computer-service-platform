@@ -10,6 +10,7 @@ Vue.component("shop-bottom", {
 </div>
 `
 });
+
 Vue.component("shop-cart", {
     template: `
 <div class="w1200">
@@ -56,6 +57,8 @@ Vue.component("login-body", {
         //定义函数读取用户信息
         axios.get("shop-memberinfo/getLoginUser").then(res => {
             if (res.data.code == 1) {
+                this.loginUser = res.data.data;
+            } else {
                 this.loginUser = res.data.data;
             }
         });

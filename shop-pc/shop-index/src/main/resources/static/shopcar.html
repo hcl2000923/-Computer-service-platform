@@ -5,6 +5,7 @@
     <title>我的购物车</title>
     <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/qs.js"></script>
     <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
     <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
     <script src="js/shop.js"></script>
@@ -55,22 +56,28 @@
                         <td colspan="2">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td width="15%"><img :src="item.showPic"/></td>
+                                    <td width="15%"><img :src="item.goodDetail.showPic"/></td>
                                     <td width="85%">
-                                        <a :href="'product_show.html#'+item.sizeno" class="title">{{item.gname}}-{{item.size}}</a>
+                                        <a :href="'product_show.html#'+item.goodDetail.sizeno" class="title">{{item.goodDetail.goodInfo.gname}}-{{item.goodDetail.size}}</a>
                                     </td>
                                 </tr>
                             </table>
                         </td>
-                        <td class="price">￥ {{item.price}}</td>
-                        <td>
+                        <td class="price">￥ {{item.goodDetail.price}}</td>
+                        <td v-if="item.goodDetail.goodInfo.gno>6">
                             <span class="jian"><a href="javascript:void(0)" @click="lost(index)">-</a></span>
-                            <input style="height: 30px;width: 30px" :index="index" class="up" type="text"
-                                   v-model="item.num"/>
+                            <input style="height: 30px;width: 30px" class="up" type="text" :index="index"
+                                   v-model="item.num" @change="update(index)"/>
                             <span class="jia"><a href="javascript:void(0)" @click="add(index)">+</a></span>
                         </td>
-                        <td class="price">￥ {{money[index]}}</td>
-                        <td><a href="javascript:void(0)" @click="delGoods(index,this)">删除</a></td>
+                        <td v-else>
+                            <span class="jian"><a href="javascript:void(0)"></a></span>
+                            <input style="height: 30px;width: 30px" class="up" type="text" disabled
+                                   v-model="item.num"/>
+                            <span class="jia"><a href="javascript:void(0)"></a></span>
+                        </td>
+                        <td class="price">￥ {{item.goodDetail.price*item.num}}</td>
+                        <td><a href="javascript:void(0)" @click="delGoods(index)">删除</a></td>
                     </tr>
                     <tr class="tr_d">
                         <td colspan="7">
@@ -124,133 +131,124 @@
         el: "#shopcar-body",//对应div的id,即这个vue的作用域
         data: {
             carts: [],
-            goodsCount: 0,
             totalPrice: 0,//总价格
             status: [],//是否被选择
-            money: [],
             count: 0
         },
-        created: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-            axios({
-                url: 'member.action?op=check',
-                method: 'get'
-            }).then(result => {
-                if (result.data.member) {//说明登录了
-                    this.onlogin = true;
-                    this.outlogin = false;
-                    this.user = result.data.member;
-                    if (result.data.carts) {
-                        this.carts = result.data.carts;
-                        this.goodsCount = result.data.carts.length;
-                        this.carts.forEach((item, index) => {
-                            this.status.push(1);//加载进来默认复选框被选中的
-                            var mon = item.num * item.price;
-                            this.money.push(mon);
-                            this.totalPrice += mon;
-                        });
-                    }
-                } else {
-                    this.onlogin = false;
-                    this.outlogin = true;
-                    alert('请先登录。。。');
-                    location.href = 'login.html';
-                }
-                this.count = this.goodsCount;
-            });
+        created: function () {
+            this.check();
             this.$nextTick(function () {
                 //此处填第一次渲染完成后执行的代码
                 setTimeout("bindInfo()", 1000);
-                this.getTotal();
             });
             window.updateCheck = this.checkInfo;
         },
         methods: {
-            goInfo: function () {
-                let cnos1 = new Array();
-                let nums = new Array();
-                for (let index = 0; index < this.carts.length; index++) {
-                    let num = eval(this.carts[index].num);
-                    if (num > 100 || num < 1) {
-                        alert('购物车数量不合法（1-100）');
-                        return;
+            check: function () {
+                axios.get("shop-cart/findCarts").then(res => {
+                    if (res.data.code == 1) {
+                        this.carts = res.data.data;
+                        this.calculate();
+                        this.getTotal();
+                    } else {
+                        alert(res.data.msg);
+                        location.href = 'login.html';
                     }
-                    cnos1.push(this.carts[index].cno);
-                    nums.push(num);
-                }
-                axios.post('cart.action', qs.stringify({op: 'upd', cnos: cnos1, nums: nums}))
-                    .then(result => {
-                        let data = result.data;
-                        if (data == 1) {
-
-                        } else {
-                            return;
-                        }
-                    });
-
-                var cnos = new Array();
-                var moneys = new Array();
+                });
+            },
+            calculate: function () {
+                this.carts.forEach((item, index) => {
+                    this.status.push(1);//加载进来默认复选框被选中的
+                    this.totalPrice += item.num * item.goodDetail.price;
+                });
+                this.count = this.carts.length;
+            },
+            goInfo: function () {
+                let cnos = new Array();
                 this.status.forEach((st, index) => {
                     if (this.status[index] == 1) {
                         cnos.push(this.carts[index].cno);//订单商品no
-                        moneys.push(this.money[index]);
                     }
                 });
                 if (cnos.length == 0) {
                     alert("对不起您未选中任何商品购买！");
                     return;
                 }
-                var str = qs.stringify({cnos: cnos});
+                let str = qs.stringify({cnos: cnos});
                 location.href = 'info.html#' + str;//data orderid
             },
+            update: function (index) {
+                let cno = this.carts[index].cno;
+                let num = eval(this.carts[index].num);
+                if (num < 1 || num > 100) {
+                    alert("商品数量请保持再1~100内");
+                    this.carts[index].num = 1;
+                    return;
+                }
+                let params = new URLSearchParams();
+                params.append("cno", cno);
+                params.append("num", num);
+                axios.post("shop-cart/update", params).then((res) => {
+                    if (res.data.code == 1) {
+                        this.getTotal();
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            },
             lost: function (index) {
-                var cno = this.carts[index].cno;
-                var num = this.carts[index].num;
+                let cno = this.carts[index].cno;
+                let num = eval(this.carts[index].num);
                 if (num > 1) {
-                    axios({url: 'cart.action?op=update', method: 'get', params: {cno: cno, num: num - 1}})
-                        .then(result => {
-                            let data = result.data;
-                            if (data == 1) {
-                                this.carts[index].num = this.carts[index].num - 1;
-                                this.money[index] = this.money[index] - this.carts[index].price;
-                                this.getTotal();
-                            }
-                        });
+                    let params = new URLSearchParams();
+                    params.append("cno", cno);
+                    params.append("num", num - 1);
+                    axios.post("shop-cart/update", params).then((res) => {
+                        if (res.data.code == 1) {
+                            this.carts[index].num -= 1;
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    });
                 }
             },
             add: function (index) {
-                var cno = this.carts[index].cno;
-                var num = eval(this.carts[index].num);
+                let cno = this.carts[index].cno;
+                let num = eval(this.carts[index].num);
                 if (num < 100) {
-                    axios({url: 'cart.action?op=update', method: 'get', params: {cno: cno, num: num + 1}})
-                        .then(result => {
-                            let data = result.data;
-                            if (data == 1) {
-                                this.carts[index].num = eval(this.carts[index].num) + 1;
-                                this.money[index] = this.money[index] + this.carts[index].price;
-                                this.getTotal();
-                            }
-                        });
+                    let params = new URLSearchParams();
+                    params.append("cno", cno);
+                    params.append("num", num + 1);
+                    axios.post("shop-cart/update", params).then((res) => {
+                        if (res.data.code == 1) {
+                            this.carts[index].num += 1;
+                            this.getTotal();
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    });
                 }
             },
-            delGoods: function (index, obj) {
-                var cno = this.carts[index].cno;
+            delGoods: function (index) {
+                let cno = this.carts[index].cno;
                 if (confirm("您确定要删除吗？")) {
                     //从数据库中删除
-                    axios.post("cart.action", qs.stringify({op: 'delete', cno: cno})).then(result => {
-                        let data = result.data;
-                        if (data > 0) {
-                            this.goodsCount = this.goodsCount - 1;
-                            this.getTotal();
+                    let params = new URLSearchParams();
+                    params.append("cno", cno);
+                    axios.post("shop-cart/deleteOne", params).then(result => {
+                        if (result.data.code == 1) {
                             this.carts.splice(index, 1);
                             this.status.splice(index, 1);//视图li移调
-                            this.money.splice(index, 1);
+                            this.getTotal();
+                        } else {
+                            alert(res.data.msg);
                         }
                     });
                 }
             },
             delAll: function () {
-                var cnos = new Array();
-                var nos = new Array();
+                let cnos = new Array();
+                let nos = new Array();
                 this.status.forEach((st, index) => {
                     if (st == 1) {
                         cnos.push(this.carts[index].cno);//订单商品no
@@ -259,18 +257,13 @@
                 });
                 if (confirm("您确定要删除吗？")) {
                     //从数据库中删除
-                    axios.post("cart.action", qs.stringify({op: 'deleteAll', cnos: cnos})).then(result => {
-                        let data = result.data;
-                        if (data > 0) {
-                            this.goodsCount = this.goodsCount - cnos.length;
-                            var i = 0;
-                            nos.forEach((no, index) => {
-                                this.carts.splice(no - i, 1);
-                                this.status.splice(no - i, 1);//视图li移调
-                                this.money.splice(no - i, 1);
-                                i++;
-                            });
-                            this.getTotal();
+                    let params = new URLSearchParams();
+                    params.append("cnos", cnos);
+                    axios.post("shop-cart/deleteAll", params).then(result => {
+                        if (result.data.code == 1) {
+                            this.check();
+                        } else {
+                            alert(res.data.msg);
                         }
                     });
                 }
@@ -280,7 +273,7 @@
                 this.count = 0;
                 this.status.forEach((stat, index) => {//通过index访问
                     if (stat == 1) {//选中的商品
-                        this.totalPrice += this.money[index];
+                        this.totalPrice += this.carts[index].num * this.carts[index].goodDetail.price;
                         this.count += 1;
                     }
                 });
@@ -299,27 +292,27 @@
         $("#all").click(function () {
             //获取全选是否被选中
             //prop  获取标签的固有属性 attr  自动定义属性
-            var flag = $(this).prop("checked");
+            let flag = $(this).prop("checked");
             //判断
             $(".tr_c input[type='checkbox']").prop("checked", flag);
-            var checkboxs = document.getElementsByClassName("qwe");
-            var len = checkboxs.length;
-            for (var i = 0; i < len; i++) {
-                if (checkboxs[i].checked == true) {//选中时
+            let checkboxes = document.getElementsByClassName("qwe");
+            let len = checkboxes.length;
+            for (let i = 0; i < len; i++) {
+                if (checkboxes[i].checked == true) {//选中时
                     //修改该行的状态值status数组中index位置为1
-                    updateCheck($(checkboxs[i]).attr("index"), 1);//复选框自带属性值
+                    updateCheck($(checkboxes[i]).attr("index"), 1);//复选框自带属性值
                 } else {
-                    updateCheck($(checkboxs[i]).attr("index"), 0);//$(this).attr("index")自定义属性
+                    updateCheck($(checkboxes[i]).attr("index"), 0);//$(this).attr("index")自定义属性
                 }
 
             }
         });
         //获取表格中所有复选框
-        var checkboxs = document.getElementsByClassName("qwe");
-        var len = checkboxs.length;
-        for (var i = 0; i < len; i++) {
+        let checkboxes = document.getElementsByClassName("qwe");
+        let len = checkboxes.length;
+        for (let i = 0; i < len; i++) {
             //给每个复选框绑定一个点击事件
-            checkboxs[i].onclick = function () {
+            checkboxes[i].onclick = function () {
                 if (this.checked == true) {//选中时
                     //修改该行的状态值status数组中index位置为1
                     updateCheck($(this).attr("index"), 1);//复选框自带属性值
@@ -327,8 +320,8 @@
                     updateCheck($(this).attr("index"), 0);//$(this).attr("index")自定义属性
                 }
 
-                for (var j = 0; j < len; j++) {//每点击一次复选框触发事件检查全选按钮
-                    if (!checkboxs[j].checked) {
+                for (let j = 0; j < len; j++) {//每点击一次复选框触发事件检查全选按钮
+                    if (!checkboxes[j].checked) {
                         $("#all").prop("checked", false);
                         return;
                     }
@@ -336,7 +329,6 @@
                 $("#all").prop("checked", true);
             }
         }
-
     }
 
 </script>
