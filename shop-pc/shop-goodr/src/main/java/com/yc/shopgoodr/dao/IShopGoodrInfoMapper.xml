@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shopgoodr.dao.IShopGoodrInfoMapper">
+<!--添加商品详情-->
+    <cache/>
+
+<!--    <resultMap type="addGoodInfo" id="addGoodInfoResultMap">-->
+<!--        <id property="gno" column="gno"/>-->
+<!--        <result property="no" column="t_no"/>-->
+<!--        <result property="gname" column="gname"/>-->
+<!--        <result property="sellNum" column="sellNum"/>-->
+<!--        <result property="point" column="point"/>-->
+<!--        <result property="pics" column="pics"/>-->
+<!--        &lt;!&ndash; association：配置的一对一属性 &ndash;&gt;-->
+<!--        &lt;!&ndash; property：名字-->
+<!--             javaType：类型-->
+<!--         &ndash;&gt;-->
+<!--        <association property="goodType" javaType="GoodType">-->
+<!--            <id property="tno" column="tno"/>-->
+<!--            <result property="tno" column="tno"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
+    <resultMap type="GoodInfo" id="findByTremResult" >
+        <id property="gno" column="gno"/>
+        <result property="gno" column="gno"/>
+        <result property="gname" column="gname"/>
+        <result property="sellNum" column="sellNum"/>
+        <result property="point" column="point"/>
+        <result property="pics" column="pics"/>
+        <association property="goodType" fetchType="lazy" javaType="GoodType">
+            <id column="tno" property="tno"/>
+            <result property="tno" column="tno"/>
+        </association>
+    </resultMap>
+<select id="findByTrem" parameterType="GoodInfo" resultMap="findByTremResult">
+    select gno,gname,tno,sellNum,point,pics from goodinfo
+    <where>
+        <if test="gno!=null">
+            gno=#{gno}
+        </if>
+        <if test="goodType!=null">
+            and tno=#{goodType.tno}
+        </if>
+        <if test="gname!=null">
+            and gname=#{gname}
+        </if>
+        <if test="sellNum!=null">
+            and sellNum &gt; #{sellNum}
+        </if>
+        <if test="point!=null">
+            and point &gt; #{point}
+        </if>
+        order by tno asc
+    </where>
+</select>
+    <resultMap id="findSix" type="GoodDetail">
+
+        <association property="goodInfo" fetchType="lazy" javaType="GoodInfo">
+            <id column="gno" property="gno"/>
+            <result property="gname" column="gname"/>
+            <association property="goodType" fetchType="lazy" javaType="GoodType">
+                <id column="tno" property="tno"/>
+                <result property="tno" column="tno"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="findShowSix" resultMap="findSix">
+        select aa.*,gname,tno from (select * from gooddetail) aa,(select gno,tno,gname from goodinfo gf1 where 6>
+        (select count(gno) from goodinfo gf2 where gf1.tno=gf2.tno and gf1.gno>gf2.gno)
+        order by gf1.tno asc, gf1.gno desc) bb,(select MIN(sizeno) min from gooddetail GROUP BY gno) cc
+        where aa.gno=bb.gno and cc.min=aa.sizeno
+    </select>
+
+    <resultMap id="TotalResult" type="Integer">
+
+    </resultMap>
+    <select id="getCommentsTotal" resultMap="TotalResult">
+        select count(*) from comments left join gooddetail on comments.sizeno=gooddetail.sizeno
+        <where>
+            gooddetail.gno=#{goodInfo.gno}
+        </where>
+    </select>
+
+
+
+
+
+
+</mapper>
