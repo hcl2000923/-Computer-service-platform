@@ -81,11 +81,11 @@
     <resultMap id="CartAndGoodDetail" type="CartInfo">
         <result property="memberInfo.mno" column="mno"/>
         <association property="goodDetail" column="sizeno" javaType="GoodDetail" select="getGoodDetail"
-                     fetchType="lazy"/>
+                     fetchType="eager"/>
     </resultMap>
     <resultMap id="GoodDetailAndGoodInfo" type="GoodDetail">
         <association property="goodInfo" column="gno" javaType="GoodInfo" select="getGoodInfo"
-                     fetchType="lazy"/>
+                     fetchType="eager"/>
     </resultMap>
 
     <!--按数组查询  三表连表查询-->
@@ -102,10 +102,10 @@
     <resultMap id="CartInfoGoodDetailGoodInfo" type="CartInfo">
         <id property="cno" column="cno"/>
         <result property="num" column="num"/>
-        <association property="memberInfo" javaType="MemberInfo" fetchType="lazy">
+        <association property="memberInfo" javaType="MemberInfo" fetchType="eager">
             <id property="mno" column="mno"/>
         </association>
-        <association property="goodDetail" javaType="GoodDetail" fetchType="lazy">
+        <association property="goodDetail" javaType="GoodDetail" fetchType="eager">
             <id property="sizeno" column="sizeno"/>
             <result property="price" column="price"/>
             <result property="size" column="size"/>
