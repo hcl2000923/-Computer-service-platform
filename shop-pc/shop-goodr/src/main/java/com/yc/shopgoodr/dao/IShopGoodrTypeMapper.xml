@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shopgoodr.dao.IShopGoodrTypeMapper">
+<!--添加商品详情-->
+    <cache/>
+<!--    模糊查询-->
+        <resultMap type="GoodType" id="GoodTypeGoodInfo">
+            <id property="tno" column="tno"/>
+            <!-- association：配置的一对一属性 -->
+            <!-- property：名字
+                 javaType：类型
+             -->
+            <collection property="goodInfoList" javaType="ArrayList" ofType="GoodInfo" column="tno" select="QueryGoodInfo">
+                <id property="tno" column="tno"/>
+            </collection>
+        </resultMap>
+    <select id="findByTrem" resultMap="GoodTypeGoodInfo" parameterType="GoodType" >
+        select * from goodtype
+        <where>
+            <choose>
+                <when test="tname!=null">
+                    tname like #{tname}
+                </when>
+                <otherwise>
+                    <if test="tno!=null">
+                        tno=#{tno}
+                    </if>
+                    <if test="status">
+                        status=#{status}
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+</mapper>

@@ -5,3 +5,11 @@ spring:
     config:
       uri: http://localhost:8888
       label: master
+logging:
+  level:
+    com.yc.shopgood.dao: debug
+mybatis:
+  type-aliases-package: com.yc.bean
+  mapperLocations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

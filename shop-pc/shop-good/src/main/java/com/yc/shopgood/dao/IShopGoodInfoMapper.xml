@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shopgood.dao.IShopGoodInfoMapper">
+<!--添加商品详情-->
+    <cache/>
+
+<!--    <resultMap type="addGoodInfo" id="addGoodInfoResultMap">-->
+<!--        <id property="gno" column="gno"/>-->
+<!--        <result property="no" column="t_no"/>-->
+<!--        <result property="gname" column="gname"/>-->
+<!--        <result property="sellNum" column="sellNum"/>-->
+<!--        <result property="point" column="point"/>-->
+<!--        <result property="pics" column="pics"/>-->
+<!--        &lt;!&ndash; association：配置的一对一属性 &ndash;&gt;-->
+<!--        &lt;!&ndash; property：名字-->
+<!--             javaType：类型-->
+<!--         &ndash;&gt;-->
+<!--        <association property="goodType" javaType="GoodType">-->
+<!--            <id property="tno" column="tno"/>-->
+<!--            <result property="tno" column="tno"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
+    <insert id="addGoodInfo" parameterType="GoodInfo" useGeneratedKeys="true" keyProperty="gno" >
+        insert into goodinfo values(null,#{gname},#{goodType.tno},0,#{point},#{pics})
+    </insert>
+
+<update id="update" parameterType="GoodInfo">
+    update goodinfo
+    <set>
+        <if test="gno!=null">
+            gno=#{gno},
+        </if>
+        <if test="sellNum!=null">
+            sellNum=#{sellNum},
+        </if>
+        <if test="point!=null">
+            point=#{point},
+        </if>
+        <if test="pics!=null">
+            pics=#{pics},
+        </if>
+    </set>
+    <where>
+        and gno=#{gno}
+    </where>
+</update>
+
+
+
+
+</mapper>

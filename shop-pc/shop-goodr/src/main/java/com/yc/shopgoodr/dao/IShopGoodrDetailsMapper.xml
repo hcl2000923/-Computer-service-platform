@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
+<mapper namespace="com.yc.shopgoodr.dao.IShopGoodrDetailsMapper">
+    <!--添加商品详情-->
+        <cache/>
+        <resultMap id="addDetail" type="GoodDetail">
+            <id property="sizeno" column="sizeno"/>
+            <result property="size" column="size"/>
+           <result property="sizeno" column="sizeno"/>
+            <result property="balance" column="balance"/>
+            <result property="intro" column="intro"/>
+            <result property="showPic" column="showPic"/>
+            <result property="price" column="price"/>
+            <association property="goodInfo" javaType="GoodInfo">
+                <id column="gno" property="gno"/>
+                <result property="gname" column="gname"/>
+                <result property="point" column="point"/>
+                <result property="sellNum" column="sellNum"/>
+                <association property="goodType"  javaType="GoodType">
+                    <id column="tno" property="tno"/>
+                </association>
+            </association>
+        </resultMap>
+    <select id="findByPage2" resultMap="addDetail">
+        select gd.gno gno,gname,tno,sellNum,point,pics,sizeno,size,balance,intro,showPic,price
+        from goodinfo gi inner join gooddetail gd on gi.gno=gd.gno
+        <where>
+            <if test="goodInfo!=null">
+                tno=#{goodInfo.tno}
+            </if>
+            <if test="goodInfo!=null">
+                <if test="goodInfo.gno!=null">
+                    and gi.gno=#{goodInfo.gno}
+                </if>
+                <if test="goodInfo.gname!=null">
+                    and gname={goodInfo.gname}
+                </if>
+                <if test="goodInfo.point!=null">
+                    and point>#{goodInfo.point}
+                </if>
+                <if test="goodInfo.sellNum!=null">
+                    and sellNum>#{goodInfo.sellNum}
+                </if>
+            </if>
+            <if test="sizeno!=null">
+                and sizeno=#{sizeno}
+            </if>
+            <if test="balance!=null">
+                and balance <![CDATA[ < ]]> #{balance}
+            </if>
+            order by sizeno desc
+        </where>
+    </select>
+</mapper>

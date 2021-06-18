@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yc.shopadmin.mapper.adminInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.yc.bean.adminInfo" >
+    <id column="aid" property="aid" jdbcType="INTEGER" />
+    <result column="aname" property="aname" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    aid, aname, pwd, tel
+  </sql>
+  <select id="selectByAdmin" resultMap="BaseResultMap" parameterType="com.yc.bean.adminInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from admininfo
+    where aname = #{aname,jdbcType=VARCHAR} and pwd=MD5(#{pwd,jdbcType=VARCHAR})
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.yc.bean.adminInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from admininfo
+    <where>
+      <if test="aid!=null">
+        aid=#{aid}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from admininfo
+    where aid = #{aid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.yc.bean.adminInfo" >
+    insert into admininfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="aname != null" >
+        aname,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="aname != null" >
+        #{aname,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+       MD5(#{pwd,jdbcType=VARCHAR}),
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yc.bean.adminInfo" >
+    update admininfo
+    <set >
+      <if test="aname != null" >
+        aname = #{aname,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = MD5(#{pwd,jdbcType=VARCHAR}),
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=INTEGER}
+  </update>
+</mapper>
