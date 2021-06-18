@@ -18,8 +18,7 @@
     <!--结果查询-->
     <select id="findGoodInfoAndCommentsAllAndPage" resultMap="CommentsAndGoodInfo">
         SELECT commentno,sizeno,mno,word,type,pic,date,comments.gno gno,gname from comments left join goodinfo
-        on
-        goodinfo.gno=comments.gno
+        on goodinfo.gno=comments.gno
         <where>
             <if test="commentno!=null">
                 commentno=#{commentno}
@@ -48,13 +47,13 @@
         <result property="word" column="word"/>
         <result property="date" column="date" javaType="java.util.Date"/>
 
-        <association property="goodDetail" javaType="GoodDetail" fetchType="lazy">
+        <association property="goodDetail" javaType="GoodDetail" fetchType="eager">
             <id column="sizeno" property="sizeno"/>
         </association>
-        <association property="memberInfo" javaType="MemberInfo" fetchType="lazy">
+        <association property="memberInfo" javaType="MemberInfo" fetchType="eager">
             <id column="mno" property="mno"/>
         </association>
-        <association property="goodInfo" javaType="GoodInfo" fetchType="lazy">
+        <association property="goodInfo" javaType="GoodInfo" fetchType="eager">
             <id property="gno" column="gno"/>
             <result property="gname" column="gname"/>
         </association>

@@ -1,10 +1,13 @@
 package com.yc.shoporder.controller;
 
+import com.yc.bean.CartInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.bean.OrderInfo;
+import com.yc.bean.OrderItemInfo;
 import com.yc.enums.OrderInfoPayStatusEnum;
 import com.yc.exception.BizException;
 import com.yc.shoporder.service.IShopOrderInfoBiz;
+import com.yc.shoporder.service.IShopOrderItemInfoBiz;
 import com.yc.vo.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @program: shop-pc
@@ -25,8 +30,8 @@ public class OrderController {
     @Resource
     private IShopOrderInfoBiz iShopOrderInfoBiz;
 
-//    @Resource
-//    private IShopOrderItemInfoBiz iShopOrderItemInfoBiz;
+    @Resource
+    private IShopOrderItemInfoBiz iShopOrderItemInfoBiz;
 
     @GetMapping("findOrderByMno")
     public Result findOrderByMno(@SessionAttribute(required = false) MemberInfo loginUser) {
@@ -57,7 +62,24 @@ public class OrderController {
         } catch (BizException e) {
             return Result.failure(e.getMessage(), null);
         }
+    }
 
+    @PostMapping("add")
+    public Result add(OrderInfo orderInfo, @SessionAttribute MemberInfo loginUser, @SessionAttribute List<CartInfo> cartInfos, String descr, HttpSession session) {
+        String orderid = UUID.randomUUID().toString();
+        orderInfo.setOno(orderid);
+
+        OrderItemInfo orderItemInfo = new OrderItemInfo();
+        orderItemInfo.setMemberInfo(loginUser);
+        List<OrderItemInfo> list = iShopOrderItemInfoBiz.checkStatus(orderItemInfo);
+        if (list.isEmpty() || list == null) {
+            return Result.failure("请先取消或者支付--》》未支付的在线订单！", "buyRecord.html");
+        }
+        if (cartInfos.isEmpty() || list == null) {
+            return Result.failure("请选中购物车的商品！", "shopcar.html");
+        }
+        boolean flag = iShopOrderInfoBiz.genOrder(orderInfo, cartInfos, descr, loginUser);
+        return null;
     }
 
 }

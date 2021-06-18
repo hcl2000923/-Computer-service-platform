@@ -1,5 +1,7 @@
 package com.yc.shoporder.service;
 
+import com.yc.bean.CartInfo;
+import com.yc.bean.MemberInfo;
 import com.yc.bean.OrderInfo;
 import com.yc.exception.BizException;
 
@@ -37,4 +39,6 @@ public interface IShopOrderInfoBiz {
      * @return
      */
     List<OrderInfo> findByMno(Integer mno);
+
+    boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser);
 }

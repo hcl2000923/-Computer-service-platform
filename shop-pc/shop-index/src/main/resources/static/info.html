@@ -57,19 +57,21 @@
                     </select>
                     <input type="text" class="txt" v-model="detail"/>
                 </div>
-                <div class="item"><span><font>*</font>邮政编码：</span><input type="text" class="txt" v-model="pcode"/>
+                <div class="item"><span><font>*</font>邮政编码：</span><input type="text" class="txt"
+                                                                         v-model="orderInfo.pCode"/>
                 </div>
                 <div class="item">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                             <td width="8%"><span><font>*</font>详细地址：</span></td>
-                            <td width="92%"><textarea v-model="detailAddr"></textarea></td>
+                            <td width="92%"><textarea v-model="orderInfo.detailAddr"></textarea></td>
                         </tr>
                     </table>
                 </div>
                 <div class="item"><span><font>*</font>收货人姓名：</span><input type="text" class="txt"
-                                                                          v-model="receiver"/></div>
-                <div class="item"><span><font>*</font>手机：</span><input type="text" class="txt" v-model="tel"/></div>
+                                                                          v-model="orderInfo.receiver"/></div>
+                <div class="item"><span><font>*</font>手机：</span><input type="text" class="txt" v-model="orderInfo.tel"/>
+                </div>
             </dd>
         </dl>
 
@@ -89,15 +91,15 @@
                         <td>
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td width="15%"><img :src="item.showPic"/></td>
-                                    <td width="85%"><a :href="'product_show.html#'+item.sizeno" class="title">{{item.gname}}-{{item.size}}</a>
+                                    <td width="15%"><img :src="item.goodDetail.showPic"/></td>
+                                    <td width="85%"><a :href="'product_show.html#'+item.sizeno" class="title">{{item.goodDetail.goodInfo.gname}}-{{item.goodDetail.size}}</a>
                                     </td>
                                 </tr>
                             </table>
                         </td>
-                        <td class="price">￥ {{item.price}}</td>
+                        <td class="price">￥ {{item.goodDetail.price}}</td>
                         <td>{{item.num}}</td>
-                        <td class="price">￥ {{money[index]}}</td>
+                        <td class="price">￥ {{item.goodDetail.price*item.num}}</td>
                     </tr>
                     <tr class="tr_d">
                         <td colspan="7">
@@ -146,27 +148,13 @@
         <li><a href="#" class="a04"></a></li>
     </ul>
 </div>
-<script type="text/javascript" src="js/qs.js"></script>
 <script>
-    let hash = decodeURI(location.hash);
-    if ('' == hash || hash.indexOf('#') > 0) {
-        location.href = 'index.html';//没有按规定格式访问则回到首页
-    }
-    hash = hash.replace('#', '');
-    let obj = qs.parse(hash);
-    let strcnos = obj.cnos;
-    let cnos = strcnos.split(",");
     let confirmVue = new Vue({
         el: "#confirm-body",//对应div的id,即这个vue的作用域
         data: {
             user: {},
-            carts: {},
-            buyCarts: {},
-            goodsCount: 0,
+            buyCarts: [],
             totalPrice: 0,//总价格
-            money: [],
-            detail: '',
-            goodsCount: 0,
             i: 0,
             j: 0,
             provs: ['北京', '河北', '山东'],
@@ -175,30 +163,33 @@
                 ['石家庄', '保定', '唐山', '廊坊'],
                 ['济南', '青岛', '烟台', '德州']
             ],
-            receiver: "",
-            pcode: "",
-            detailAddr: "",
-            word: "",
-            tel: ""
+            detail: '',
+            orderInfo: {
+                receiver: '',
+                detailAddr: '',
+                tel: '',
+                addr: '',
+                pCode: ''
+            },
+            word: ''
         },
         created: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-            axios({
-                url: 'member.action?op=check',
-                method: 'get'
-            }).then(result => {
-                if (result.data.member) {//说明登录了
-                    this.onlogin = true;
-                    this.outlogin = false;
-                    this.user = result.data.member;
-                    this.receiver = result.data.member.nickName;
-                    this.tel = result.data.member.tel;
-                    var strs = new Array();
-                    strs = result.data.member.addr.split("-");
+            axios.get("shop-cart/find").then(res => {
+                if (res.data.code == 1) {
+                    this.user = res.data.data.loginUser;
+                    this.buyCarts = res.data.data.cartInfos;
+                    this.buyCarts.forEach((item) => {
+                        this.totalPrice += item.num * item.goodDetail.price;
+                    });
+                    this.orderInfo.receiver = this.user.nickName;
+                    this.orderInfo.tel = this.user.tel;
+                    let strs = new Array();
+                    strs = this.user.addr.split("-");
                     this.detail = strs[2];
-                    for (var k = 0; k < this.provs.length; k++) {
+                    for (let k = 0; k < this.provs.length; k++) {
                         if (this.provs[k] == strs[0]) {
                             this.i = k;
-                            for (var k1 = 0; k1 < this.cities[k].length; k1++) {
+                            for (let k1 = 0; k1 < this.cities[k].length; k1++) {
                                 if (this.cities[k][k1] == strs[1]) {
                                     this.j = k1;
                                     break;
@@ -207,96 +198,64 @@
                             break;
                         }
                     }
-                    if (result.data.carts) {
-                        this.carts = result.data.carts;
-                        this.goodsCount = result.data.carts.length;
-                    }
                 } else {
-                    this.onlogin = false;
-                    this.outlogin = true;
-                    alert('请先登录。。。');
-                    location.href = 'login.html';
+                    alert(res.data.msg);
+                    location.href = 'index.html';
                 }
-            });
-            axios.post('cart.action', qs.stringify({op: 'find', cnos: cnos})).then(result => {
-                this.buyCarts = result.data;//List<CartVO> list=biz.findByMnoVO(menber.getMno());
-                //购物车中每行数据进行循环
-                result.data.forEach((item, index) => {
-                    this.money.push(item.price * item.num);
-                    this.totalPrice += item.num * item.price;
-                });
             });
         },
         methods: {
             genOrder: function () {
-                if (this.pcode == "" || this.detailAddr == "" || this.receiver == "" || this.tel == "") {
+                if (this.orderInfo.pCode == "" || this.orderInfo.detailAddr == "" || this.orderInfo.receiver == "" || this.orderInfo.tel == "") {
                     alert("必要信息未填全！！");
                     return;
                 }
-                var cnos = new Array();
-                this.buyCarts.forEach((item, index) => {
-                    cnos.push(item.cno);
-                });
-                var sizenos = new Array();
-                this.buyCarts.forEach((item, index) => {
+                let sizenos = new Array();
+                this.buyCarts.forEach((item) => {
                     sizenos.push(item.sizeno);
                 });
-                var nums = new Array();
-                this.buyCarts.forEach((item, index) => {
+                let nums = new Array();
+                this.buyCarts.forEach((item) => {
                     nums.push(item.num);
                 });
-                this.check(nums, sizenos);
-            },
-            sub: function () {
+                // this.check(nums, sizenos);
+                this.putOrder();
+            }
+            ,
+            putOrder: function () {
                 //发送请求
-                var addr = this.provs[this.i] + "-" + this.cities[this.i][this.j] + "-" + this.detail;
-                var detailAddr = this.detailAddr;
-                var tel = this.tel;
-                var pCode = this.pcode;
-                var descr = this.word;
-                var receiver = this.receiver;
-                axios.post("order.action", qs.stringify({
-                    op: 'add',
-                    descr: descr,
-                    receiver: receiver,
-                    pCode: pCode,
-                    tel: tel,
-                    cnos: cnos,
-                    detailAddr: detailAddr,
-                    addr: addr
-                })).then(result => {
-                    //如果订单生成成功，返回订单编号
-                    let data = result.data;
-                    if (data > 0) {
+                this.orderInfo.addr = this.provs[this.i] + "-" + this.cities[this.i][this.j] + "-" + this.detail;
+                let params = new URLSearchParams();
+                params.append("receiver", this.orderInfo.receiver);
+                params.append("detailAddr", this.orderInfo.detailAddr);
+                params.append("tel", this.orderInfo.tel);
+                params.append("pCode", this.orderInfo.pCode);
+                params.append("descr", this.word);
+                params.append("addr", this.orderInfo.addr);
+                axios.post("shop-order/add", params).then(result => {
+                    //如果订单生成成功，返回订单编号;
+                    if (result.data.code == 1) {
                         location.href = 'payply.html#' + data + "&" + this.totalPrice;//data orderid
                     } else if (data == -1) {
-                        alert("请先取消或者支付--》》未支付的在线订单！");
+                        alert("请先取消或者支付-->>未支付的在线订单！");
                         location.href = "buyRecord.html";
                     } else {
                         alert('下单失败，请稍后重试。。。')
                     }
                 });
-            },
+            }
+            ,
             check: function (nums, sizenos) {
-                axios.post('goodDetailServlet.action', qs.stringify({
-                    op: 'check',
-                    nums: nums,
-                    sizenos: sizenos
-                })).then(result => {
-                    if (result.data == "ok") {
-                        this.sub();
-                    } else if (result.data == "") {
-                        alert('请检查订单中是否有商品');
-                        location.href = "shopcar.html";
-                        return;
-                    } else if (result.data == null) {
-                        alert('提交失败，请重试！');
-                        location.href = "shopcar.html";
-                        return;
+                let params = new URLSearchParams();
+                params.append("nums", nums);
+                params.append("sizenos", sizenos);
+                axios.post('shop-goodr/checkNum', params).then(res => {
+                    //检查库存
+                    if (res.data.code == 1) {
+                        this.putOrder();
                     } else {
-                        alert(result.data);
+                        alert(res.data.msg);
                         location.href = "shopcar.html";
-                        return;
                     }
                 });
             }

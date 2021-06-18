@@ -5,7 +5,6 @@
     <title>我的购物车</title>
     <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="js/qs.js"></script>
     <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
     <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
     <script src="js/shop.js"></script>
@@ -174,8 +173,15 @@
                     alert("对不起您未选中任何商品购买！");
                     return;
                 }
-                let str = qs.stringify({cnos: cnos});
-                location.href = 'info.html#' + str;//data orderid
+                let params = new URLSearchParams();
+                params.append("cnos", cnos);
+                axios.post("shop-cart/saveCnos", params).then(res => {
+                    if (res.data.code == 1) {
+                        location.href = 'info.html';
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
             },
             update: function (index) {
                 let cno = this.carts[index].cno;

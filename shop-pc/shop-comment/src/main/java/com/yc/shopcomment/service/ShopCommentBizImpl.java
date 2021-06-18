@@ -6,11 +6,13 @@ import com.yc.bean.Comments;
 import com.yc.shopcomment.dao.ShopCommentMapper;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Service
+@Transactional
 public class ShopCommentBizImpl implements IShopCommentBiz {
 
     @Resource
