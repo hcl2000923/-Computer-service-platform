@@ -18,6 +18,10 @@
         <spring-cloud.version>Hoxton.SR11</spring-cloud.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
         <!--		mybatis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

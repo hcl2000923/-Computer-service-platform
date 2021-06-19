@@ -235,16 +235,13 @@
                 axios.post("shop-order/add", params).then(result => {
                     //如果订单生成成功，返回订单编号;
                     if (result.data.code == 1) {
-                        location.href = 'payply.html#' + data + "&" + this.totalPrice;//data orderid
-                    } else if (data == -1) {
-                        alert("请先取消或者支付-->>未支付的在线订单！");
-                        location.href = "buyRecord.html";
+                        location.href = 'payply.html#' + result.data.data + "&" + this.totalPrice;//data orderid
                     } else {
-                        alert('下单失败，请稍后重试。。。')
+                        alert(result.data.msg);
+                        location.href = result.data.data;
                     }
                 });
-            }
-            ,
+            },
             check: function (nums, sizenos) {
                 let params = new URLSearchParams();
                 params.append("nums", nums);

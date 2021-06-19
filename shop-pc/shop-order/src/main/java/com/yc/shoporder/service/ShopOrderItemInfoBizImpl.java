@@ -28,7 +28,7 @@ public class ShopOrderItemInfoBizImpl implements IShopOrderItemInfoBiz {
 
     @Override
     public int addOrderItemInfo(List<OrderItemInfo> orderItemInfoList) {
-        return 0;
+        return shopOrderItemInfoMapper.addOrderItemInfo(orderItemInfoList);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class ShopOrderItemInfoBizImpl implements IShopOrderItemInfoBiz {
 
     @Override
     public List<OrderItemInfo> checkStatus(OrderItemInfo orderItemInfo) {
-        orderItemInfo.setStatus(OrderInfoPayStatusEnum.NOPAY.getCode());
         OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setStatus(OrderInfoPayStatusEnum.NOPAY.getCode());
         orderInfo.setBuyWay(OrderInfoBuyWayEnum.ONLINEPAY.getMessage());
         orderItemInfo.setOrderInfo(orderInfo);
         return shopOrderItemInfoMapper.findByMulti(orderItemInfo);

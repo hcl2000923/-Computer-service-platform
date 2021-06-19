@@ -8,10 +8,12 @@ import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
 import com.yc.util.Encrypt;
 import com.yc.util.MailUtils;
 import com.yc.vo.Page;
+import com.yc.vo.Signal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -75,14 +77,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         }
         return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
     }
-
-    @Override
-    public int updateMoneyPointByMno(MemberInfo memberInfo) {
-        if (memberInfo == null) {
-            return 0;
-        }
-        return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
-    }
+    
 
     @Override
     public Integer getMemberinfoCount(MemberInfo memberInfo) {
@@ -112,4 +107,19 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         });
     }
 
+    @Override
+    public Integer addPoint(MemberInfo memberInfo, BigDecimal point) {
+        Signal signal = new Signal();
+        signal.setSymbols("+");
+        shopMemberinfoMapper.updatePoint(signal, memberInfo, point);
+        return null;
+    }
+
+    @Override
+    public Integer subPoint(MemberInfo memberInfo, BigDecimal point) {
+        Signal signal = new Signal();
+        signal.setSymbols("-");
+        shopMemberinfoMapper.updatePoint(signal, memberInfo, point);
+        return null;
+    }
 }

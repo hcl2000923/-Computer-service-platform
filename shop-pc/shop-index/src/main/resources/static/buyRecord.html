@@ -180,16 +180,16 @@
                     });
             },
             calculate: function () {
-                this.order.forEach((item, index) => {
+                this.order.forEach((item) => {
                     let total = 0;
-                    item.orderItemInfoList.forEach((item, index) => {
+                    item.orderItemInfoList.forEach((item) => {
                         total += item.money;
                     });
                     this.totals.push(total);
                 });
             },
-            buy: function (index) {
-                location.href = 'payply.html#' + this.order[index].ono + "&" + this.totals[index];
+            buy: function (item, index) {
+                location.href = 'payply.html#' + item + "&" + this.totals[index];
             }
         }
     });

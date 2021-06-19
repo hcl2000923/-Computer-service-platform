@@ -65,21 +65,24 @@ public class OrderController {
     }
 
     @PostMapping("add")
-    public Result add(OrderInfo orderInfo, @SessionAttribute MemberInfo loginUser, @SessionAttribute List<CartInfo> cartInfos, String descr, HttpSession session) {
+    public Result add(OrderInfo orderInfo, @SessionAttribute MemberInfo loginUser, @SessionAttribute List<CartInfo> cartInfos, String descr, HttpSession session) throws BizException {
         String orderid = UUID.randomUUID().toString();
         orderInfo.setOno(orderid);
 
         OrderItemInfo orderItemInfo = new OrderItemInfo();
         orderItemInfo.setMemberInfo(loginUser);
         List<OrderItemInfo> list = iShopOrderItemInfoBiz.checkStatus(orderItemInfo);
-        if (list.isEmpty() || list == null) {
-            return Result.failure("请先取消或者支付--》》未支付的在线订单！", "buyRecord.html");
+        if (!list.isEmpty()) {
+            return Result.failure("请先取消或者支付-->>未支付的在线订单！", "buyRecord.html");
         }
-        if (cartInfos.isEmpty() || list == null) {
+        if (cartInfos.isEmpty()) {
             return Result.failure("请选中购物车的商品！", "shopcar.html");
         }
-        boolean flag = iShopOrderInfoBiz.genOrder(orderInfo, cartInfos, descr, loginUser);
-        return null;
+        boolean flag = iShopOrderInfoBiz.genOrder(orderInfo, cartInfos, descr, loginUser, session);
+        if (flag == true) {
+            return Result.success("下单成功！", orderid);
+        } else {
+            return Result.failure("下单异常！", "index.html");
+        }
     }
-
 }

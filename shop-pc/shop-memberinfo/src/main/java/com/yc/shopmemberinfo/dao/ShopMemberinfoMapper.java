@@ -1,7 +1,9 @@
 package com.yc.shopmemberinfo.dao;
 
 import com.yc.bean.MemberInfo;
+import com.yc.vo.Signal;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,4 +31,5 @@ public interface ShopMemberinfoMapper {
     //分页查询
     List<MemberInfo> findAllAndPage(MemberInfo memberInfo);
 
+    Integer updatePoint(Signal signal, MemberInfo memberInfo, BigDecimal point);
 }

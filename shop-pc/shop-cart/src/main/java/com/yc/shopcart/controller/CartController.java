@@ -5,10 +5,7 @@ import com.yc.bean.CartInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.shopcart.service.IShopCartBiz;
 import com.yc.vo.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -73,19 +70,19 @@ public class CartController {
         if (cnos == null || cnos.length == 0) {
             return Result.failure("下单未选中商品！", null);
         }
-        session.setAttribute("cnos", cnos);
-        return Result.success("cnos保存到session成功！", null);
+        List<CartInfo> cartInfos = iShopCartBiz.selectByCnos(cnos);
+        session.setAttribute("cartInfos", cartInfos);
+        return Result.success("cartInfos集合保存到session成功！", null);
     }
 
     @GetMapping("find")
-    public Result find(@SessionAttribute(required = false) MemberInfo loginUser, @SessionAttribute(required = false) Integer[] cnos) {
+    public Result find(@SessionAttribute(required = false) MemberInfo loginUser, @SessionAttribute(required = false) List<CartInfo> cartInfos) {
         if (loginUser == null) {
             return Result.failure("用户未登录,请先登录!", null);
         }
-        if (cnos == null || cnos.length == 0) {
+        if (cartInfos == null || cartInfos.isEmpty()) {
             return Result.failure("下单未选中商品！", null);
         }
-        List<CartInfo> cartInfos = iShopCartBiz.selectByCnos(cnos);
         Map map = new HashMap();
         map.put("loginUser", loginUser);
         map.put("cartInfos", cartInfos);
@@ -107,7 +104,20 @@ public class CartController {
         return Result.success("删除选中购物车成功！", null);
     }
 
-    public String Fallback() {
-        return "不好意思，服务器正忙！";
+    @RequestMapping("deleteCart")
+    public Result deleteCart(@RequestParam Integer[] cnos, @RequestBody MemberInfo loginUser) {
+        int delete = iShopCartBiz.deleteByCnos(cnos);
+        if (delete > 0) {
+            CartInfo cart = new CartInfo();
+            cart.setMemberInfo(loginUser);
+            List<CartInfo> list = iShopCartBiz.findThreeTable(cart);
+            return Result.success("删除选中购物车成功！", list);
+        } else {
+            return Result.failure("无商品提交购买！", null);
+        }
+    }
+
+    public Result Fallback() {
+        return Result.failure("不好意思，服务器正忙！", null);
     }
 }

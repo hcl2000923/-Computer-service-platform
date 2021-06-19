@@ -5,6 +5,7 @@ import com.yc.bean.MemberInfo;
 import com.yc.bean.OrderInfo;
 import com.yc.exception.BizException;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface IShopOrderInfoBiz {
@@ -40,5 +41,6 @@ public interface IShopOrderInfoBiz {
      */
     List<OrderInfo> findByMno(Integer mno);
 
-    boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser);
+    boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser, HttpSession session) throws BizException;
+
 }

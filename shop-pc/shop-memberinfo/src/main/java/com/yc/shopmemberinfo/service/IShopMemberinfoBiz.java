@@ -5,6 +5,7 @@ import com.yc.bean.MemberInfo;
 import com.yc.exception.BizException;
 import com.yc.vo.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface IShopMemberinfoBiz {
     //登录操作
-    public MemberInfo login(MemberInfo memberInfo) throws BizException;
+    MemberInfo login(MemberInfo memberInfo) throws BizException;
 
     //添加
     int addMemberInfo(MemberInfo memberInfo) throws BizException;
@@ -29,9 +30,6 @@ public interface IShopMemberinfoBiz {
     //更新状态
     int updateStatusByMno(MemberInfo memberInfo);
 
-    //更新积分
-    int updateMoneyPointByMno(MemberInfo memberInfo);
-
     //查询条数
     @Deprecated
     Integer getMemberinfoCount(MemberInfo memberInfo);
@@ -43,4 +41,8 @@ public interface IShopMemberinfoBiz {
     PageInfo<MemberInfo> findByPage(MemberInfo memberInfo, Page page);
 
     void sendMail(MemberInfo memberInfo, String emailValid);
+
+    Integer addPoint(MemberInfo memberInfo, BigDecimal point);
+
+    Integer subPoint(MemberInfo memberInfo, BigDecimal point);
 }

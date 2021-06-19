@@ -6,13 +6,14 @@ import com.yc.bean.OrderInfo;
 import com.yc.bean.OrderItemInfo;
 import com.yc.exception.BizException;
 import com.yc.shoporder.controller.CartInfoAction;
-import com.yc.shoporder.controller.GoodDetailAction;
-import com.yc.shoporder.controller.GoodInfoAction;
+import com.yc.shoporder.controller.MemberInfoAction;
 import com.yc.shoporder.dao.ShopOrderInfoMapper;
+import com.yc.vo.Result;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +26,20 @@ import java.util.List;
  */
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = {Exception.class, BizException.class})
 public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
     @Resource
     private ShopOrderInfoMapper shopOrderInfoMapper;
     @Resource
+    IShopOrderItemInfoBiz iShopOrderItemInfoBiz;
+
+    @Resource
     private CartInfoAction cartInfoAction;
+    //    @Resource
+    //    private GoodAction goodAction;
+
     @Resource
-    private GoodDetailAction goodDetailAction;
-    @Resource
-    private GoodInfoAction goodInfoAction;
+    private MemberInfoAction memberInfoAction;
 
     @Override
     public int addOrderInfo(OrderInfo orderInfo) {
@@ -61,9 +66,12 @@ public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
     }
 
     @Override
-    public boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser) {
+    public boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser, HttpSession session) throws BizException {
         List<OrderItemInfo> items = new ArrayList<>();
-        cartInfos.forEach((item) -> {
+        Integer[] cnos = new Integer[cartInfos.size()];
+        //1.删除购物车中
+        for (int i = 0; i < cartInfos.size(); i++) {
+            CartInfo item = cartInfos.get(i);
             OrderItemInfo orderItemInfo = new OrderItemInfo();
             orderItemInfo.setMemberInfo(loginUser);
             orderItemInfo.setOrderInfo(orderInfo);
@@ -72,13 +80,24 @@ public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
             orderItemInfo.setNum(item.getNum());
             orderItemInfo.setDescr(descr);
             items.add(orderItemInfo);
-        });
-        shopOrderInfoMapper.addOrderInfo(orderInfo);
+//            //4.库存Balance减num
+//            goodAction.deleteBalance(item.getGoodDetail().getSizeno(), item.getNum());
+//            //5.销量加num=+num
+//            goodAction.addSellingNum(item.getGoodDetail().getGoodInfo().getGno(), item.getNum());
+            cnos[i] = item.getCno();
+        }
+        int flag1 = shopOrderInfoMapper.addOrderInfo(orderInfo);
         //1.删除购物车中
+        Result res = cartInfoAction.deleteCart(cnos, loginUser);
         //2.订单详情表中插入多条
-        //3.增加会员积分
-        //4.库存减num
-        //5.销量加num=+num
-        return false;
+        int flag2 = iShopOrderItemInfoBiz.addOrderItemInfo(items);
+        if (flag1 > 0 && res.getCode() == 1 && flag2 > 0) {
+            session.removeAttribute("cartInfos");
+            List<CartInfo> list = (List<CartInfo>) res.getData();
+            loginUser.setCartInfoList(list);
+            return true;
+        } else {
+            throw new BizException("下定出现异常！！！");
+        }
     }
 }
