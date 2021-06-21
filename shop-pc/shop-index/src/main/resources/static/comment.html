@@ -54,7 +54,7 @@
 <div class="w1200">
     <div class="position"><a href="index.html">首页</a> > <a href="javascript:void(0)">评论</a></div>
 
-    <div class="shopcar" style="height: 600px;">
+    <div class="shopcar" id="comment-body" style="height: 600px;">
         <ul>
             <li>商品图片</li>
             <li>商品名</li>
@@ -75,15 +75,14 @@
         </textarea><br/>
         <b>图片：</b><input id="pics" type="file" name="pic" multiple="multiple"/>
         <b style="font-family: '宋体';font-size: 25px;color: green;">
-            <input type="radio" value="1" name="comment" checked="checked"/>好评&nbsp;&nbsp;<input type="radio"
-                                                                                                 value="2"
-                                                                                                 name="comment"/>中评&nbsp;&nbsp;<input
+            <input type="radio" value="1" name="comment" checked="checked"/>好评&nbsp;&nbsp;
+            <input type="radio" value="2" name="comment"/>中评&nbsp;&nbsp;<input
                 type="radio" value="3" name="comment"/>差评</b>
         <table style="margin-top: 50px" width="100%" border="0" cellspacing="0" cellpadding="0" class="go_tb">
             <tr>
                 <td width="20%"><a href="product.html" class="go_buy">继续购物</a></td>
                 <td width="63%">&nbsp;</td>
-                <td width="17%" align="right"><a href="javascript:void(0)" onclick="add()" class="code">提 交</a></td>
+                <td width="17%" align="right"><a href="javascript:void(0)" @click="add()" class="code">提 交</a></td>
             </tr>
         </table>
         <div class="clear"></div>
@@ -108,42 +107,20 @@
     </ul>
 </div>
 <script type="text/javascript" src="js/ajaxfileupload.js"></script>
-<!--<script type="text/javascript">
-    let yc_login = new Vue({
-        el: "#yc_login",//对应div的id,即这个vue的作用域
+<script type="text/javascript">
+    let commentVue = new Vue({
+        el: "#comment-body",//对应div的id,即这个vue的作用域
         data: {
-            onlogin: false,
-            outlogin: true,
-            user: {},
-            carts: {},
-            goodsCount: 0,
             good: {}
         },
-        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-            var hash = decodeURI(location.hash);
+        created: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
+            let hash = decodeURI(location.hash);
             if ('' == hash || hash.indexOf('#') > 0) {
                 location.href = 'index.html';//没有按规定格式访问则回到首页
             }
             hash = hash.replace('#', '');
-            axios({
-                url: 'member.action?op=check',
-                method: 'get'
-            }).then(result => {
-                if (result.data.member) {//说明登录了
-                    this.onlogin = true;
-                    this.outlogin = false;
-                    this.user = result.data.member;
-                    if (result.data.carts) {
-                        this.carts = result.data.carts;
-                        this.goodsCount = result.data.carts.length;
-                    }
-                } else {
-                    this.onlogin = false;
-                    this.outlogin = true;
-                    alert('请先登录。。。');
-                    location.href = 'login.html';
-                }
-            });
+            alert('请先登录。。。' + hash);
+            location.href = 'login.html';
             axios({
                 url: 'goodDetailServlet.action?op=findBySizeno',
                 method: 'get',
@@ -157,48 +134,29 @@
             });
         },
         methods: {
-            out: function () {
-                axios({url: 'member.action?op=out', method: 'get'})
-                    .then(result => {
-                        let data = result.data;
-                        if (data == 1) {
-                            location.href = 'login.html';
-                        } else {
-                            alert('退出失败！！');
-                            return;
+            add: function () {
+                let type = $('input[name="comment"]').val();
+                let word = $('textarea').val();
+                $.ajaxFileUpload({
+                    url: 'shop-comment/add',
+                    secureuri: false,
+                    fileElementId: 'pics',
+                    dataType: 'json',
+                    data: {
+                        type: type,
+                        word: word,
+                        gno: this.good.gno,
+                        sizeno: this.good.sizeno
+                    },
+                    success: function (data) {
+                        if (data > 0) {
+                            alert('评价成功！')
                         }
-                    });
-            },
+                    }
+                });
+            }
         }
     });
-
-    function add() {
-        //获取所有元素值
-        var type = $('input[name="comment"]').val();
-        var word = $('textarea').val();
-        var gno = yc_login.$data.good.gno;
-        var sizeno = yc_login.$data.good.sizeno;
-        var mno = yc_login.$data.user.mno;
-        $.ajaxFileUpload({
-            url: 'commemtServlet.action',
-            secureuri: false,
-            fileElementId: 'pics',
-            dataType: 'json',
-            data: {
-                type: type,
-                word: word,
-                gno: gno,
-                sizeno: sizeno,
-                mno: mno
-            },
-            success: function (data) {
-                if (data > 0) {
-                    alert('评价成功！')
-                }
-            }
-        });
-    }
-
-</script>-->
+</script>
 </body>
 </html>

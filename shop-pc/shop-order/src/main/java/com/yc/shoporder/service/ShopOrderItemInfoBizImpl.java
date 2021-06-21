@@ -1,7 +1,18 @@
 package com.yc.shoporder.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.yc.bean.OrderInfo;
+import com.yc.bean.OrderItemInfo;
+import com.yc.enums.OrderInfoBuyWayEnum;
+import com.yc.enums.OrderInfoPayStatusEnum;
+import com.yc.shoporder.dao.ShopOrderItemInfoMapper;
+import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: shop-pc
@@ -11,7 +22,44 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ShopOrderItemInfoBizImpl {
+public class ShopOrderItemInfoBizImpl implements IShopOrderItemInfoBiz {
+    @Resource
+    ShopOrderItemInfoMapper shopOrderItemInfoMapper;
 
+    @Override
+    public int addOrderItemInfo(List<OrderItemInfo> orderItemInfoList) {
+        return shopOrderItemInfoMapper.addOrderItemInfo(orderItemInfoList);
+    }
 
+    @Override
+    public int update(OrderItemInfo orderItemInfo) {
+        return 0;
+    }
+
+    @Override
+    public int delete(List<OrderItemInfo> orderItemInfoList) {
+        return 0;
+    }
+
+    @Override
+    public List<OrderItemInfo> findByMulti(OrderItemInfo orderItemInfo) {
+        return shopOrderItemInfoMapper.findByMulti(orderItemInfo);
+    }
+
+    @Override
+    public List<OrderItemInfo> checkStatus(OrderItemInfo orderItemInfo) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setStatus(OrderInfoPayStatusEnum.NOPAY.getCode());
+        orderInfo.setBuyWay(OrderInfoBuyWayEnum.ONLINEPAY.getMessage());
+        orderItemInfo.setOrderInfo(orderInfo);
+        return shopOrderItemInfoMapper.findByMulti(orderItemInfo);
+    }
+
+    @Override
+    public PageInfo<OrderItemInfo> findByMultiAndPage(OrderItemInfo orderItemInfo, Page page) {
+        PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        List<OrderItemInfo> list = shopOrderItemInfoMapper.findByMulti(orderItemInfo);
+        PageInfo<OrderItemInfo> p = new PageInfo<>(list);
+        return p;
+    }
 }

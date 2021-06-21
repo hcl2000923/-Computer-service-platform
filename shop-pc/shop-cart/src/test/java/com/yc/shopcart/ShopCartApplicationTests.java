@@ -67,7 +67,7 @@ class ShopCartApplicationTests {
 
     @Test
     void findByCnos() {
-        Integer[] i = new Integer[]{48, 49};
+        Integer[] i = new Integer[]{63, 65};
         List<CartInfo> list = shopCartMapper.selectByCnos(i);
         System.out.println(list);
     }

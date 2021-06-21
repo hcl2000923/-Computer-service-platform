@@ -6,10 +6,12 @@ import com.yc.bean.MemberInfo;
 import com.yc.shopmemberinfo.dao.ShopMemberinfoMapper;
 import com.yc.shopmemberinfo.service.IShopMemberinfoBiz;
 import com.yc.vo.Page;
+import com.yc.vo.Signal;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 @SpringBootTest
@@ -85,4 +87,12 @@ class ShopMemberinfoApplicationTests {
         System.out.println(byPage);
     }
 
+    @Test
+    void updatePoint1() {
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setMno(11);
+        Signal signal = new Signal();
+        signal.setSymbols("+");
+        System.out.println(shopMemberinfo.updatePoint(signal, memberInfo, new BigDecimal(100)));
+    }
 }

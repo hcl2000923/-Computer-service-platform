@@ -123,5 +123,7 @@
             <include refid="if-and"></include>
         </where>
     </select>
-
+    <update id="updatePoint">
+        update memberinfo set moneyPoint=moneyPoint ${signal.symbols} #{point} where mno=#{memberInfo.mno}
+    </update>
 </mapper>

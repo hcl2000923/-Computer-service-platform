@@ -4,7 +4,7 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shoporder.dao.ShopOrderInfoMapper">
     <cache/>
-
+    <cache-ref namespace="com.yc.shoporder.dao.ShopOrderItemInfoMapper"/>
     <!--新增在线支付-->
     <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="ono">
         insert into orderinfo values(#{ono},#{receiver},2,'在线支付',#{detailAddr},#{tel},#{addr},#{pCode},now())
