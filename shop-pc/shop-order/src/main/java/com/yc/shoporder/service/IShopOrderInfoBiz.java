@@ -43,4 +43,8 @@ public interface IShopOrderInfoBiz {
 
     boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser, HttpSession session) throws BizException;
 
+    Integer buyByCash(OrderInfo orderInfo);
+
+    List<OrderInfo> find(OrderInfo orderInfo, Integer mno);
+    
 }

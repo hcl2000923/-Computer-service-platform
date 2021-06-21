@@ -4,7 +4,6 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shoporder.dao.ShopOrderItemInfoMapper">
     <cache/>
-
     <!--新增订单详情表-->
     <insert id="addOrderItemInfo" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="itemno">
         insert into orderiteminfo values
@@ -118,4 +117,8 @@
         </association>
     </resultMap>
 
+    <!--通过ono查找mno-->
+    <select id="findMnoByOno" resultType="Integer" parameterType="String">
+        select DISTINCT(mno) from orderiteminfo where ono=#{ono}
+    </select>
 </mapper>

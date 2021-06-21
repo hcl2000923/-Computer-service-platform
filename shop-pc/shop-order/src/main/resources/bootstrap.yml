@@ -20,3 +20,5 @@ pagehelper:
   reasonable: true # 支持通过 Mapper 接口参数来传递分页参数
   supportMethodsArguments: true
   params: count=countSql
+
+user: 2236347582@qq.com

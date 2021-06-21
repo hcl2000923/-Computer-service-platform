@@ -24,4 +24,5 @@ public class ShopMemberinfoApplication {
     public ExecutorService executorService() {
         return Executors.newFixedThreadPool(10);
     }
+    
 }

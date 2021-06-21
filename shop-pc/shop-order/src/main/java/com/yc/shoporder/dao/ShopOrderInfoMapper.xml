@@ -4,7 +4,6 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shoporder.dao.ShopOrderInfoMapper">
     <cache/>
-    <cache-ref namespace="com.yc.shoporder.dao.ShopOrderItemInfoMapper"/>
     <!--新增在线支付-->
     <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="ono">
         insert into orderinfo values(#{ono},#{receiver},2,'在线支付',#{detailAddr},#{tel},#{addr},#{pCode},now())
@@ -26,6 +25,21 @@
             ono=#{ono}
         </where>
     </update>
+    <select id="find" resultType="OrderInfo">
+        select * from orderinfo
+        <where>
+            ono in (select ono from orderiteminfo where mno=#{mno})
+            <if test="orderInfo.ono!=null">
+                and ono=#{orderInfo.ono}
+            </if>
+            <if test="orderInfo.status!=null">
+                and status=#{orderInfo.status}
+            </if>
+            <if test="orderInfo.buyWay!=null">
+                and buyWay=#{orderInfo.buyWay}
+            </if>
+        </where>
+    </select>
     <!--一对多链表映射查询，可分页-->
     <select id="findOneToMany" resultMap="OrderInfoAndOrderItemInfo">
         select orderinfo.ono oiono,receiver,orderinfo.status oistatus,buyWay,detailAddr,tel,addr,pCode,odate,

@@ -50,5 +50,4 @@ public class MemberInfo implements Serializable {
     //1.代表正常用户2.代表冻结用户
     private Integer status;
     private List<CartInfo> cartInfoList;
-    private List<OrderItemInfo> orderItemInfoList;
 }

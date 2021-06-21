@@ -4,6 +4,7 @@ import com.yc.bean.*;
 import com.yc.shoporder.dao.ShopOrderInfoMapper;
 import com.yc.shoporder.dao.ShopOrderItemInfoMapper;
 import com.yc.shoporder.service.IShopOrderInfoBiz;
+import com.yc.shoporder.service.IShopOrderItemInfoBiz;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +23,38 @@ class ShopOrderApplicationTests {
     ShopOrderInfoMapper shopOrderInfoMapper;
     @Resource
     IShopOrderInfoBiz iShopOrderInfoBiz;
-
+    @Resource
+    IShopOrderItemInfoBiz iShopOrderItemInfoBiz;
 
     @Test
     void contextLoads() {
+        OrderInfo o = new OrderInfo();
+        o.setOno("83ae71ca-3894-48aa-918e-ab7ff415d1ab");
+        int f = iShopOrderInfoBiz.buyByCash(o);
+        System.out.println(f);
 
+//        MailUtils.sendMail("2236347582@qq.com", "订单号：", "新订单请及时查收");
     }
+
+    @Test
+    void finds() {
+        OrderInfo o = new OrderInfo();
+        o.setOno("42379975-f8c6-4245-ad36-ed5b991945f8");
+        o.setBuyWay("在线支付");
+        o.setStatus(3);
+        List<OrderInfo> op = iShopOrderInfoBiz.find(o, 11);
+        System.out.println(op);
+
+//        MailUtils.sendMail("2236347582@qq.com", "订单号：", "新订单请及时查收");
+    }
+
+//    @Test
+//    @Transactional
+//    void findMnoByOno() throws BizException {
+//        OrderInfo o = new OrderInfo();
+//        o.setOno("202105181442182414");
+//        System.out.println(iShopOrderItemInfoBiz.findMnoByOno(o));
+//    }
 
     @Test
     @Transactional
@@ -48,7 +75,7 @@ class ShopOrderApplicationTests {
     @Transactional
     void update() {
         OrderInfo orderInfo = new OrderInfo();
-        orderInfo.setOno("83ae71ca-3894-48aa-918e-ab7ff415d1ab");
+        orderInfo.setOno("e6dbb265-7b88-4dbb-b90c-bd25813af5c5");
         orderInfo.setStatus(1);
         shopOrderInfoMapper.update(orderInfo);
     }

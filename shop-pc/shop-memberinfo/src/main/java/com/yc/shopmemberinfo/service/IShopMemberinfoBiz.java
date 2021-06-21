@@ -5,7 +5,6 @@ import com.yc.bean.MemberInfo;
 import com.yc.exception.BizException;
 import com.yc.vo.Page;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public interface IShopMemberinfoBiz {
 
     void sendMail(MemberInfo memberInfo, String emailValid);
 
-    Integer addPoint(MemberInfo memberInfo, BigDecimal point);
+    Integer addPoint(MemberInfo memberInfo, Integer point);
 
-    Integer subPoint(MemberInfo memberInfo, BigDecimal point);
+    Integer subPoint(MemberInfo memberInfo, Integer point);
 }

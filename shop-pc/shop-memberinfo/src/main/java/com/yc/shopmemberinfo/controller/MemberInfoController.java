@@ -59,6 +59,18 @@ public class MemberInfoController {
         }
     }
 
+    @PostMapping("addPoint")
+    public Result addPoint(@RequestParam Integer mno, @RequestParam Integer moneyPoint) {
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setMno(mno);
+        Integer i = iShopMemberinfoBiz.addPoint(memberInfo, moneyPoint);
+        if (i > 0) {
+            return Result.success("用户积分添加成功！", null);
+        } else {
+            return Result.failure("用户积分添加失败！", null);
+        }
+    }
+
     @PostMapping("emailValid")
     public Result emailValid(@Valid MemberInfo memberInfo, Errors errors, HttpSession session) {
         if (errors.hasFieldErrors("nickName") || errors.hasFieldErrors("email")) {

@@ -45,4 +45,6 @@ public interface ShopOrderInfoMapper {
      */
     List<OrderInfo> findByMno(Integer mno);
 
+
+    List<OrderInfo> find(OrderInfo orderInfo, Integer mno);
 }

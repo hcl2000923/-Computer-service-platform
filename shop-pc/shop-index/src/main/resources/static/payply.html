@@ -35,7 +35,7 @@
 <div class="w1200">
     <div class="position"><a href="index.html">首页</a> > <a href="member.html">会员中心</a>
 
-        <div class="payply">
+        <div class="payply" id="payply-body">
             <div class="pay_lc"><span class="sp01">我的购物车</span><span class="sp02">填写提交信息表单</span><span
                     class="sp03">在线支付</span>
             </div>
@@ -44,18 +44,20 @@
             <dl>
                 <dt><span>请选择您的支付方式</span></dt>
                 <dd>
-                    <div class="title"><input type="radio" name="payway" value="1" checked="checked"/>在线支付</div>
+                    <div class="title"><input type="radio" name="payway" value="1" checked="checked" v-model="payway"/>在线支付
+                    </div>
                     <div class="card">
                         <p>银行或第三方支付机构</p>
                         <ul>
-                            <li><input type="radio" value="1" checked="checked" name="pay" id="zfb"/><label
+                            <li><input type="radio" value="1" checked="checked" name="pay" id="zfb"
+                                       v-model="pay"/><label
                                     for="zfb"><img src="images/ico15.jpg"/></label></li>
-                            <li><input type="radio" value="2" name="pay" id="wx"/><label for="wx"><img
+                            <li><input type="radio" value="2" name="pay" id="wx" v-model="pay"/><label for="wx"><img
                                     src="images/ico16.jpg"/></label></li>
                         </ul>
                         <div class="clear"></div>
                     </div>
-                    <div class="title"><input type="radio" name="payway" value="2"/>货到付款</div>
+                    <div class="title"><input type="radio" name="payway" value="2" v-model="payway"/>货到付款</div>
                 </dd>
                 <a style="margin-top: 25px;margin-left: 960px;display:block;border-radius:5px;text-decoration: none;padding: 12px 55px;color: #fff;font-weight: bold;background: #e83426;font-size: 16px;outline: none;"
                    href="javascript:void(0)" @click="buy()">付款</a>
@@ -82,91 +84,57 @@
         <li><a href="#" class="a04"></a></li>
     </ul>
 </div>
-<!--<script type="text/javascript">-->
-<!--    let yc_login = new Vue({-->
-<!--        el: "#yc_login",//对应div的id,即这个vue的作用域-->
-<!--        data: {-->
-<!--            onlogin: false,-->
-<!--            outlogin: true,-->
-<!--            user: {},-->
-<!--            carts: [],-->
-<!--            goodsCount: 0,-->
-<!--            ono: "",-->
-<!--            money: 0-->
-<!--        },-->
-<!--        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成-->
-<!--            var hash = decodeURI(location.hash);-->
-<!--            if ('' == hash || hash.indexOf('#') > 0) {-->
-<!--                location.href = 'index.html';//没有按规定格式访问则回到首页-->
-<!--            }-->
-<!--            hash = hash.replace('#', '');-->
-<!--            var str = hash.split("&");-->
-<!--            this.ono = str[0];-->
-<!--            this.money = str[1];-->
-<!--            axios({-->
-<!--                url: 'member.action?op=check',-->
-<!--                method: 'get'-->
-<!--            }).then(result => {-->
-<!--                if (result.data.member) {//说明登录了-->
-<!--                    this.onlogin = true;-->
-<!--                    this.outlogin = false;-->
-<!--                    this.user = result.data.member;-->
-<!--                    if (result.data.carts) {-->
-<!--                        this.carts = result.data.carts;-->
-<!--                        this.goodsCount = result.data.carts.length;-->
-<!--                    }-->
-<!--                } else {-->
-<!--                    this.onlogin = false;-->
-<!--                    this.outlogin = true;-->
-<!--                    alert('请先登录。。。');-->
-<!--                    location.href = 'login.html';-->
-<!--                }-->
-<!--            });-->
-<!--        },-->
-<!--        methods: {-->
-<!--            out: function () {-->
-<!--                axios({url: 'member.action?op=out', method: 'get'})-->
-<!--                    .then(result => {-->
-<!--                        let data = result.data;-->
-<!--                        if (data == 1) {-->
-<!--                            location.href = 'login.html';-->
-<!--                        } else {-->
-<!--                            alert('退出失败！！');-->
-<!--                            return;-->
-<!--                        }-->
-<!--                    });-->
-<!--            },-->
-<!--            buy: function () {-->
-<!--                var way = $('input[name="payway"]').val();-->
-<!--                var pay;-->
-<!--                if (way == 1) {-->
-<!--                    pay = $('input[name="pay"]').val();-->
-<!--                    if (pay == 1) {-->
-<!--                        location.href = 'ali.action?op=pay&account1=' + this.money + "&ono=" + this.ono;-->
-<!--                        return;-->
-<!--                    } else {-->
-<!--                        alert("本网站暂未实现其他支付功能，请选择支付宝支付！");-->
-<!--                    }-->
-<!--                } else {-->
-<!--                    axios({-->
-<!--                        url: 'order.action?op=buy',-->
-<!--                        method: 'get',-->
-<!--                        params: {ono: this.ono}-->
-<!--                    }).then(result => {-->
-<!--                        let data = result.data;-->
-<!--                        if (data > 0) {-->
-<!--                            alert("好的，我们尽快为您发货，请您到时候支付现金拿取快递");-->
-<!--                            location.href = "index.html";-->
-<!--                            return;-->
-<!--                        } else {-->
-<!--                            alert('订单失败！！');-->
-<!--                            return;-->
-<!--                        }-->
-<!--                    });-->
-<!--                }-->
-<!--            }-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
+<script type="text/javascript">
+    let payplyVue = new Vue({
+        el: "#payply-body",//对应div的id,即这个vue的作用域
+        data: {
+            ono: "",
+            money: 0,
+            payway: 1,
+            pay: 1
+        },
+        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
+            let hash = decodeURI(location.hash);
+            if ('' == hash || hash.indexOf('#') > 0) {
+                location.href = 'index.html';//没有按规定格式访问则回到首页
+            }
+            hash = hash.replace('#', '');
+            var str = hash.split("&");
+            this.ono = str[0];
+            this.money = str[1];
+            axios.get('shop-memberinfo/getLoginUser').then(result => {
+                if (result.data.code == 1) {//说明登录了
+                    return;
+                } else {
+                    alert('请先登录。。。');
+                    location.href = 'login.html';
+                }
+            });
+        },
+        methods: {
+            buy: function () {
+                if (this.payway == 1) {
+                    if (this.pay == 1) {
+                        location.href = "shop-index/alipay/pay/" + this.ono + "/" + this.money;
+                    } else {
+                        alert("本网站暂未实现其他支付功能，请选择支付宝支付！");
+                    }
+                } else {
+                    let params = new URLSearchParams();
+                    params.append("ono", this.ono);
+                    axios.post('shop-order/buy', params).then(result => {
+                        if (result.data.code == 1) {
+                            alert("好的，我们尽快为您发货，请您到时候支付现金拿取快递");
+                            location.href = "index.html";
+                        } else {
+                            alert(result.data.msg);
+                            location.href = "index.html";
+                        }
+                    });
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.yc.shoporder.service;
 
 import com.github.pagehelper.PageInfo;
+import com.yc.bean.OrderInfo;
 import com.yc.bean.OrderItemInfo;
+import com.yc.exception.BizException;
 import com.yc.vo.Page;
 
 import java.util.List;
@@ -23,4 +25,6 @@ public interface IShopOrderItemInfoBiz {
 
     //分页
     PageInfo<OrderItemInfo> findByMultiAndPage(OrderItemInfo orderItemInfo, Page page);
+
+    Integer findMnoByOno(OrderInfo o) throws BizException;
 }

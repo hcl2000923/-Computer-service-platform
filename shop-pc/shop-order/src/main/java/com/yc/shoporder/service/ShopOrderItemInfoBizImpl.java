@@ -6,6 +6,7 @@ import com.yc.bean.OrderInfo;
 import com.yc.bean.OrderItemInfo;
 import com.yc.enums.OrderInfoBuyWayEnum;
 import com.yc.enums.OrderInfoPayStatusEnum;
+import com.yc.exception.BizException;
 import com.yc.shoporder.dao.ShopOrderItemInfoMapper;
 import com.yc.vo.Page;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,14 @@ public class ShopOrderItemInfoBizImpl implements IShopOrderItemInfoBiz {
         List<OrderItemInfo> list = shopOrderItemInfoMapper.findByMulti(orderItemInfo);
         PageInfo<OrderItemInfo> p = new PageInfo<>(list);
         return p;
+    }
+
+    @Override
+    public Integer findMnoByOno(OrderInfo o) throws BizException {
+        Integer mno = shopOrderItemInfoMapper.findMnoByOno(o.getOno());
+        if (mno == null) {
+            throw new BizException("订单号未能找到与之对应的用户id");
+        }
+        return mno;
     }
 }

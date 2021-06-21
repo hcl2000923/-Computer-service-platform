@@ -4,7 +4,6 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopmemberinfo.dao.ShopMemberinfoMapper">
     <cache/>
-
     <sql id="if-and">
         <if test="mno!=null">
             mno=#{mno}
@@ -47,10 +46,6 @@
     </select>
     <resultMap id="MemberAndOrder" type="MemberInfo">
         <result property="mno" column="mno"/>
-        <collection property="orderItemInfoList"
-                    javaType="ArrayList" ofType="OrderItemInfo"
-                    column="mno" select="getOrderiteminfo" fetchType="eager">
-        </collection>
         <collection property="cartInfoList"
                     javaType="ArrayList" ofType="CartInfo"
                     column="mno" select="getCartinfo" fetchType="eager">

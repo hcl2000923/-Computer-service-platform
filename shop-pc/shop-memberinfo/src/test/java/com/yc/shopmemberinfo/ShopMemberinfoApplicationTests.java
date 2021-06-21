@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.List;
 
 @SpringBootTest
@@ -93,6 +92,6 @@ class ShopMemberinfoApplicationTests {
         memberInfo.setMno(11);
         Signal signal = new Signal();
         signal.setSymbols("+");
-        System.out.println(shopMemberinfo.updatePoint(signal, memberInfo, new BigDecimal(100)));
+        System.out.println(shopMemberinfo.updatePoint(signal, memberInfo, 100));
     }
 }

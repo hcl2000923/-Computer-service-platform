@@ -4,11 +4,14 @@ import com.yc.bean.CartInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.bean.OrderInfo;
 import com.yc.bean.OrderItemInfo;
+import com.yc.enums.OrderInfoBuyWayEnum;
 import com.yc.exception.BizException;
 import com.yc.shoporder.controller.CartInfoAction;
 import com.yc.shoporder.controller.MemberInfoAction;
 import com.yc.shoporder.dao.ShopOrderInfoMapper;
+import com.yc.util.MailUtils;
 import com.yc.vo.Result;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @program: shop-pc
@@ -29,6 +33,9 @@ import java.util.List;
 @Transactional(rollbackFor = {Exception.class, BizException.class})
 public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
     @Resource
+    ExecutorService executorService;
+
+    @Resource
     private ShopOrderInfoMapper shopOrderInfoMapper;
     @Resource
     IShopOrderItemInfoBiz iShopOrderItemInfoBiz;
@@ -40,6 +47,9 @@ public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
 
     @Resource
     private MemberInfoAction memberInfoAction;
+
+    @Value("${user}")
+    private String user;
 
     @Override
     public int addOrderInfo(OrderInfo orderInfo) {
@@ -99,5 +109,23 @@ public class ShopOrderInfoBizImpl implements IShopOrderInfoBiz {
         } else {
             throw new BizException("下定出现异常！！！");
         }
+    }
+
+
+    @Override
+    public Integer buyByCash(OrderInfo orderInfo) {
+        orderInfo.setBuyWay(OrderInfoBuyWayEnum.CASH.getMessage());
+        int flag = shopOrderInfoMapper.update(orderInfo);
+        if (flag == 1) {
+            executorService.execute(() -> {
+                MailUtils.sendMail(user, "订单号：" + orderInfo.getOno(), "新订单请及时查收");
+            });
+        }
+        return flag;
+    }
+
+    @Override
+    public List<OrderInfo> find(OrderInfo orderInfo, Integer mno) {
+        return shopOrderInfoMapper.find(orderInfo, mno);
     }
 }

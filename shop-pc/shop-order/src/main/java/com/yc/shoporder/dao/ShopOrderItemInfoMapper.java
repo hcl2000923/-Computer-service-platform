@@ -25,4 +25,7 @@ public interface ShopOrderItemInfoMapper {
     //分页or不分页
     List<OrderItemInfo> findByMulti(OrderItemInfo orderItemInfo);
 
+    //根据ono查询唯一mno
+    Integer findMnoByOno(String ono);
+
 }

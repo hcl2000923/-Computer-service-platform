@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -77,7 +76,7 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
         }
         return shopMemberinfoMapper.updateByMnoOrNickName(memberInfo);
     }
-    
+
 
     @Override
     public Integer getMemberinfoCount(MemberInfo memberInfo) {
@@ -108,18 +107,18 @@ public class ShopMemberinfoBizImpl implements IShopMemberinfoBiz {
     }
 
     @Override
-    public Integer addPoint(MemberInfo memberInfo, BigDecimal point) {
+    public Integer addPoint(MemberInfo memberInfo, Integer point) {
         Signal signal = new Signal();
         signal.setSymbols("+");
-        shopMemberinfoMapper.updatePoint(signal, memberInfo, point);
-        return null;
+        Integer t = shopMemberinfoMapper.updatePoint(signal, memberInfo, point);
+        return t;
     }
 
     @Override
-    public Integer subPoint(MemberInfo memberInfo, BigDecimal point) {
+    public Integer subPoint(MemberInfo memberInfo, Integer point) {
         Signal signal = new Signal();
         signal.setSymbols("-");
-        shopMemberinfoMapper.updatePoint(signal, memberInfo, point);
-        return null;
+        Integer t = shopMemberinfoMapper.updatePoint(signal, memberInfo, point);
+        return t;
     }
 }

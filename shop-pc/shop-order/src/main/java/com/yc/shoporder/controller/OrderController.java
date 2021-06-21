@@ -4,15 +4,13 @@ import com.yc.bean.CartInfo;
 import com.yc.bean.MemberInfo;
 import com.yc.bean.OrderInfo;
 import com.yc.bean.OrderItemInfo;
+import com.yc.enums.OrderInfoBuyWayEnum;
 import com.yc.enums.OrderInfoPayStatusEnum;
 import com.yc.exception.BizException;
 import com.yc.shoporder.service.IShopOrderInfoBiz;
 import com.yc.shoporder.service.IShopOrderItemInfoBiz;
 import com.yc.vo.Result;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -84,5 +82,55 @@ public class OrderController {
         } else {
             return Result.failure("下单异常！", "index.html");
         }
+    }
+
+    //线下购买
+    @PostMapping("buy")
+    public Result buy(OrderInfo orderInfo, @SessionAttribute MemberInfo loginUser) {
+        //判断合法型
+        //未支付--在线
+        //     --不在线xx
+        OrderInfo o = new OrderInfo();
+        o.setOno(orderInfo.getOno());
+        o.setStatus(OrderInfoPayStatusEnum.NOPAY.getCode());
+        o.setBuyWay(OrderInfoBuyWayEnum.ONLINEPAY.getMessage());
+        List<OrderInfo> list = iShopOrderInfoBiz.find(o, loginUser.getMno());
+        if (list.isEmpty()) {
+            //未找到，停手
+            return Result.failure("未找到与您对应的订单", null);
+        }
+        int flag = iShopOrderInfoBiz.buyByCash(orderInfo);
+        if (flag == 1) {
+            return Result.success("下单成功！", null);
+        } else {
+            return Result.failure("下单失败！", null);
+        }
+    }
+
+    @PostMapping("confirmOrder")
+    public Result confirmOrder(@RequestParam String ono) {
+        OrderInfo o = new OrderInfo();
+        o.setOno(ono);
+        o.setStatus(OrderInfoPayStatusEnum.PAY.getCode());
+        try {
+            iShopOrderInfoBiz.update(o);
+            Integer mno = iShopOrderItemInfoBiz.findMnoByOno(o);
+            return Result.success("用户成功购买！", mno);
+        } catch (BizException e) {
+            return Result.failure(e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("checkExist")
+    public Result checkExist(@RequestParam String ono, @RequestParam Integer mno) {
+        OrderInfo o = new OrderInfo();
+        o.setOno(ono);
+        o.setStatus(OrderInfoPayStatusEnum.NOPAY.getCode());
+        o.setBuyWay(OrderInfoBuyWayEnum.ONLINEPAY.getMessage());
+        List<OrderInfo> list = iShopOrderInfoBiz.find(o, mno);
+        if (list.isEmpty()) {
+            return Result.failure("未找到与您对应的订单", null);
+        }
+        return Result.success("该用户确有未支付订单！", list.get(0));
     }
 }
