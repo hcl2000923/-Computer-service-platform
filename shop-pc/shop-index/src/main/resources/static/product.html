@@ -43,52 +43,106 @@
     </div>
 </div>
 
-<div class="w1200">
-    <div class="position"><a href="index.html">首页</a> > <a href="product.html">笔记本分类</a></div>
+<div class="w1200" id="infoview">
+    <div class="position"><a href="index.html">首页</a> > <a href="product.html">服务分类</a></div>
 
     <div class="c_nav">
         <div class="item"><span>品牌分类：</span>
-            <p><a href="javascript:void(0)" v-for="type in types" @click="addTno(type.tno)">{{type.tname}}</a></p>
+            <p>
+                <a href="javascript:void(0)" v-for="Type in Types" >
+                    {{Type.tname}}
+                </a>
+            </p>
             <div class="clear"></div>
         </div>
     </div>
 
-    <div class="order"><a id="a0001" href="javascript:void(0)" @click="pointSort()" class="cur">综合排序</a><a id="a0002"
-                                                                                                           href="javascript:void(0)"
-                                                                                                           @click="sellSort()">销量排序</a><span><font>共{{total}}件商品  <strong><b>{{page}}</b>/{{Math.ceil(total/rows)}}</strong></font><a
-            href="javascript:void(0)" @click="go()">></a><a href="javascript:void(0)" @click="back()"><</a></span>
-        <div class="clear"></div>
-    </div>
+<!--    <div class="order"><a id="a0001" href="javascript:void(0)" @click="pointSort()" class="cur">综合排序</a><a id="a0002"-->
+<!--                                                                                                           href="javascript:void(0)"-->
+<!--                                                                                                           @click="sellSort()">销量排序</a><span><font>共{{total}}件商品  <strong><b>{{page}}</b>/{{Math.ceil(total/rows)}}</strong></font><a-->
+<!--            href="javascript:void(0)" @click="go()">></a><a href="javascript:void(0)" @click="back()"><</a></span>-->
+<!--        <div class="clear"></div>-->
+<!--    </div>-->
 
     <div class="pro_cont">
-        <div style="margin-right: 10px;" class="item" v-for="(item,index) in goods">
+        <div style="margin-right: 10px;" class="item" v-for="(item,index) in Infos">
             <dl>
-                <dt><img :src="item.showPic"/></dt>
+                <dt><img :src="item.goodDetail.showPic"/></dt>
                 <dd>
-                    <img v-for="(detail,index1) in details" :src="detail.showPic" v-if="detail.gno==item.gno"/>
+                    <img v-for="(detail,index1) in Details" :src="detail.showPic" v-if="detail.goodInfo.gno==item.gno"/>
                 </dd>
             </dl>
-            <p class="p01"><font>￥</font>{{item.price}}</p>
-            <p class="p02"><a :href="'product_show.html#'+item.sizeno"><b style="font-size: 15px;">{{item.gname}}
-                {{item.size}}</b></a></p>
-            <p style="margin-top: 25px;margin-bottom: 0px;" class="p03"><span
-                    class="sp01">月销量：<b>{{item.sellNum}}</b></span><span>评价：<strong>{{item.wordNum}}</strong></span></p>
+            <p class="p01"><font>￥</font>{{item.goodDetail.price}}</p>
+            <p class="p02"><a :href="'product_show.html#'+item.goodDetail.sizeno"><b style="font-size: 15px;">{{item.gname}} {{item.goodDetail.size}}</b></a></p>
+            <p style="margin-top: 25px;margin-bottom: 0px;" class="p03"><span class="sp01">月销量：<b>{{item.sellNum}}</b></span><span>评价：<strong>0</strong></span></p>
         </div>
         <div class="clear"></div>
     </div>
 
 
-    <div class="page">
-        <a href="javascript:void(0)" class="pre" @click="back()">上一页</a>
-        <div v-for="i in Math.ceil(total/rows)" style="display: inline-block;">
-            <a href="javascript:void(0)" class="on" @click="update(i)" v-if="i==page">{{i}}</a>
-            <a href="javascript:void(0)" @click="update(i)" v-else>{{i}}</a>
-        </div>
-        <a href="javascript:void(0)" class="next" @click="go()">下一页></a>
-        共{{Math.ceil(total/rows)}}页 到第<input id="pnum" type="text" value="1"/>页 <a href="javascript:void(0)" class="sub"
-                                                                                   @click="goto1()">确定</a>
-    </div>
+<!--    <div class="page">-->
+<!--        <a href="javascript:void(0)" class="pre" @click="back()">上一页</a>-->
+<!--        <div v-for="i in Math.ceil(total/rows)" style="display: inline-block;">-->
+<!--            <a href="javascript:void(0)" class="on" @click="update(i)" v-if="i==page">{{i}}</a>-->
+<!--            <a href="javascript:void(0)" @click="update(i)" v-else>{{i}}</a>-->
+<!--        </div>-->
+<!--        <a href="javascript:void(0)" class="next" @click="go()">下一页></a>-->
+<!--        共{{Math.ceil(total/rows)}}页 到第<input id="pnum" type="text" value="1"/>页 <a href="javascript:void(0)" class="sub"-->
+<!--                                                                                   @click="goto1()">确定</a>-->
+<!--    </div>-->
 </div>
+
+<script>
+    let infoview = new Vue({
+        el: "#infoview",
+        data: {
+            Infos:[],
+            Details: [],
+            Types: []
+        },
+        created() {
+            var tnos=location.href; //取得整个地址栏
+            var num=tnos.indexOf("?");
+            tnos=tnos.substr(num+1); //取得所有参数
+            let array=tnos.split("=")[1].split(",");
+            let params = new URLSearchParams();
+            params.append("tnos", array);
+            axios.post("shop-goodr/getInfo",params).then(result => {
+                if (result.data.code==1) {
+                    // result.data.data.forEach((item, index) => {
+                    //     tnos.push(item.tno);
+                    // });
+                    this.Infos=result.data.data;
+                }
+            });
+            axios.post("shop-goodr/getDetail").then(result => {
+                if (result.data.code==1) {
+                    this.Details=result.data.data;
+                }
+            });
+            axios.post("shop-goodr/findGoodType").then(result => {
+                if (result.data.code==1) {
+                    this.Types=result.data.data;
+                }
+            });
+        },
+        methods: {
+            out: function () {
+                axios({url: 'shop-menberinfo/logout', method: 'get'})
+                    .then(result => {
+                        let data = result.data;
+                        if (data == 1) {
+                            location.href = 'product.html';
+                        } else {
+                            alert('退出失败！！');
+                            return;
+                        }
+                    });
+            },
+
+        }
+    });
+</script>
 <!--footer-->
 <div id="footer-body">
     <footer-body></footer-body>
@@ -104,6 +158,9 @@
         <li><a href="shopcar.html" class="a01"></a></li>
     </ul>
 </div>
+<script>
+
+</script>
 <!--<script>
     let yc_login = new Vue({
         el: "#yc_login",//对应div的id,即这个vue的作用域

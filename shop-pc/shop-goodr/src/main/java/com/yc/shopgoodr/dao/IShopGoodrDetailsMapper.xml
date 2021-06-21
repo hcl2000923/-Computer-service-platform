@@ -23,7 +23,7 @@
                 </association>
             </association>
         </resultMap>
-    <select id="findByPage2" resultMap="addDetail">
+    <select id="findAllDetail" resultMap="addDetail">
         select gd.gno gno,gname,tno,sellNum,point,pics,sizeno,size,balance,intro,showPic,price
         from goodinfo gi inner join gooddetail gd on gi.gno=gd.gno
         <where>
@@ -50,7 +50,13 @@
             <if test="balance!=null">
                 and balance <![CDATA[ < ]]> #{balance}
             </if>
-            order by sizeno desc
         </where>
+        order by sizeno desc
     </select>
+<!--    <resultMap id="AllDetail" type="GoodDetail">-->
+<!--        <id property="sizeno" column="sizeno"/>-->
+<!--    </resultMap>-->
+<!--    <select id="findAllDetail" resultMap="AllDetail">-->
+<!--        select * from gooddetail-->
+<!--    </select>-->
 </mapper>

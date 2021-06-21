@@ -26,4 +26,6 @@ public interface IShopGoodrInfoService {
      * @return
      */
     public List<GoodDetail> finds();
+
+    public List<GoodInfo> findGoodInfoByTno(Integer tno);
 }

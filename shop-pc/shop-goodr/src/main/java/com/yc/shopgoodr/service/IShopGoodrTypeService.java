@@ -20,4 +20,6 @@ public interface IShopGoodrTypeService {
 
     public List<GoodType> findType(GoodType goodType);
 
+    public List<GoodType> findType();
+
 }

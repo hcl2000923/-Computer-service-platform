@@ -22,5 +22,4 @@ public class GoodType implements Serializable {
     private String tname;
     private String pic;
     private Integer status;
-    private List<GoodInfo> goodInfoList;
 }

@@ -37,4 +37,13 @@ public class IShopGoodrInfoServiceImpl implements IShopGoodrInfoService {
         return iShopGoodrInfoMapper.findShowSix();
     }
 
+    @Override
+    public List<GoodInfo> findGoodInfoByTno(Integer tno) {
+        GoodInfo goodInfo = new GoodInfo();
+        GoodType goodType = new GoodType();
+        goodType.setTno(tno);
+        goodInfo.setGoodType(goodType);
+        return iShopGoodrInfoMapper.findsByTno(goodInfo);
+    }
+
 }

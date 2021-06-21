@@ -11,10 +11,10 @@ public interface IShopGoodrDetailsMapper {
 
 
 
-    public List<GoodDetail> findByPage2(GoodDetail GoodDetail);
+    public List<GoodDetail> findAllDetail(GoodDetail GoodDetail);
 
 
-
+//    public List<GoodDetail> findAllDetail();
 
 
 }

@@ -27,8 +27,4 @@ public class GoodDetail implements Serializable {
     private String intro;
     private String showPic;
     private BigDecimal price;
-
-    private List<GoodType> goodTypeList;
-    private List<GoodInfo> goodInfoList;
-
 }

@@ -24,24 +24,29 @@ public class IShopGoodrDetailServiceImpl implements IShopGoodrDetailService  {
      * @param goodDetail
      * @return
      */
+//    @Override
+//    public List<GoodDetail> findBytrem(GoodDetail goodDetail) {
+//        return iShopGoodrDetailsMapper.findAllDetail(goodDetail);
+//    }
+//
+//    @Override
+//    public List<GoodDetail> findDetailAll() {
+//        return iShopGoodrDetailsMapper.findAllDetail();
+//    }
+
     @Override
-    public List<GoodDetail> findBytrem(GoodDetail goodDetail) {
-        return iShopGoodrDetailsMapper.findByPage2(goodDetail);
+    public List<GoodDetail> findDetailAll(GoodDetail goodDetail) {
+        return iShopGoodrDetailsMapper.findAllDetail(goodDetail);
     }
 
-    /**
-     * 分页
-     * @param goodDetail
-     * @param page
-     * @return
-     */
-    @Override
-    public PageInfo<GoodDetail> findByPage(GoodDetail goodDetail, Page page) {
-        PageHelper.startPage(page.getPageNum(), page.getPageSize());// startPage()方法后面紧跟的是要分页的查询语句
-        List<GoodDetail> list = iShopGoodrDetailsMapper.findByPage2(goodDetail);
-        PageInfo<GoodDetail> p = new PageInfo<>(list);
-        return p;
-    }
+
+//    @Override
+//    public PageInfo<GoodDetail> findByPage(GoodDetail goodDetail, Page page) {
+//        PageHelper.startPage(page.getPageNum(), page.getPageSize());// startPage()方法后面紧跟的是要分页的查询语句
+//        List<GoodDetail> list = iShopGoodrDetailsMapper.findByPage2(goodDetail);
+//        PageInfo<GoodDetail> p = new PageInfo<>(list);
+//        return p;
+//    }
 
     @Override
     public String check(String[] nums, String[] sizenos) {
@@ -54,7 +59,7 @@ public class IShopGoodrDetailServiceImpl implements IShopGoodrDetailService  {
         GoodDetail dvo=new GoodDetail();
         for(int i=0;i<sizenos.length;i++) {
             dvo.setSizeno(Integer.parseInt(sizenos[i]));
-            List<GoodDetail> list=iShopGoodrDetailsMapper.findByPage2(dvo);
+            List<GoodDetail> list=iShopGoodrDetailsMapper.findAllDetail(dvo);
             GoodDetail t=list.get(0);
             Integer balance=t.getBalance();
             if(balance<Integer.parseInt(nums[i])) {

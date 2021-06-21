@@ -11,5 +11,6 @@ public interface IShopGoodrTypeMapper {
     //服务名称类型查询
     public List<GoodType> findByTrem(GoodType goodType);
 
+    public List<GoodType> findDiv();
 
 }

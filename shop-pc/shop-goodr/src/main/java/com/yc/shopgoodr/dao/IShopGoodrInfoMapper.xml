@@ -32,16 +32,19 @@
         <association property="goodType" fetchType="lazy" javaType="GoodType">
             <id column="tno" property="tno"/>
             <result property="tno" column="tno"/>
+            <result property="tname" column="tname"/>
+            <result property="pic" column="pic"/>
+            <result property="status" column="status"/>
         </association>
     </resultMap>
 <select id="findByTrem" parameterType="GoodInfo" resultMap="findByTremResult">
-    select gno,gname,tno,sellNum,point,pics from goodinfo
+    select gno,gname,sellNum,goodtype.*,point,pics from goodinfo INNER JOIN goodtype ON goodtype.tno = goodinfo.tno
     <where>
         <if test="gno!=null">
             gno=#{gno}
         </if>
         <if test="goodType!=null">
-            and tno=#{goodType.tno}
+            and goodType.tno=#{goodType.tno}
         </if>
         <if test="gname!=null">
             and gname=#{gname}
@@ -56,7 +59,12 @@
     </where>
 </select>
     <resultMap id="findSix" type="GoodDetail">
-
+        <result property="sizeno" column="sizeno"/>
+        <result property="size" column="size"/>
+        <result property="balance" column="balance"/>
+        <result property="intro" column="intro"/>
+        <result property="showPic" column="showPic"/>
+        <result property="price" column="price"/>
         <association property="goodInfo" fetchType="lazy" javaType="GoodInfo">
             <id column="gno" property="gno"/>
             <result property="gname" column="gname"/>
@@ -80,6 +88,36 @@
         select count(*) from comments left join gooddetail on comments.sizeno=gooddetail.sizeno
         <where>
             gooddetail.gno=#{goodInfo.gno}
+        </where>
+    </select>
+
+    <resultMap id="Infos" type="GoodInfo">
+        <id property="gno" column="gno"/>
+        <result property="gno" column="gno"/>
+        <result property="gname" column="gname"/>
+        <result property="sellNum" column="sellNum"/>
+        <result property="point" column="point"/>
+        <result property="pics" column="pics"/>
+        <association property="goodType" fetchType="lazy" javaType="GoodType">
+            <id column="tno" property="tno"/>
+            <result property="tno" column="tno"/>
+        </association>
+        <association property="goodDetail" fetchType="lazy" javaType="GoodDetail">
+            <id column="sizeno" property="sizeno"/>
+            <result property="sizeno" column="sizeno"/>
+            <result property="size" column="size"/>
+            <result property="balance" column="balance"/>
+            <result property="intro" column="intro"/>
+            <result property="showPic" column="showPic"/>
+            <result property="price" column="price"/>
+        </association>
+    </resultMap>
+    <select id="findsByTno" resultMap="Infos">
+        select gd.gno,gname,tno,sellNum,point,pics,sizeno,size,balance,intro,showPic,price from goodinfo gi inner join gooddetail gd inner join (select MIN(sizeno) min from gooddetail GROUP BY gno) cc on gi.gno=gd.gno and cc.min=gd.sizeno
+        <where>
+            <if test="goodType!=null">
+                 tno=#{goodType.tno}
+            </if>
         </where>
     </select>
 
