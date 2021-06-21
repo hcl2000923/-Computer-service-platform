@@ -8,30 +8,32 @@
 <!--    模糊查询-->
         <resultMap type="GoodType" id="GoodTypeGoodInfo">
             <id property="tno" column="tno"/>
-            <!-- association：配置的一对一属性 -->
-            <!-- property：名字
-                 javaType：类型
-             -->
-            <collection property="goodInfoList" javaType="ArrayList" ofType="GoodInfo" column="tno" select="QueryGoodInfo">
-                <id property="tno" column="tno"/>
-            </collection>
         </resultMap>
     <select id="findByTrem" resultMap="GoodTypeGoodInfo" parameterType="GoodType" >
         select * from goodtype
         <where>
-            <choose>
-                <when test="tname!=null">
-                    tname like #{tname}
-                </when>
-                <otherwise>
-                    <if test="tno!=null">
-                        tno=#{tno}
-                    </if>
-                    <if test="status">
-                        status=#{status}
-                    </if>
-                </otherwise>
-            </choose>
+<!--            <choose>-->
+<!--                <when test="tname!=null">-->
+<!--                    tname like #{tname}-->
+<!--                </when>-->
+<!--                <otherwise>-->
+<!--                    <if test="tno!=null">-->
+<!--                        tno=#{tno}-->
+<!--                    </if>-->
+<!--                    <if test="status">-->
+<!--                        status=#{status}-->
+<!--                    </if>-->
+<!--                </otherwise>-->
+<!--            </choose>-->
+            <if test="tname!=null">
+                tname like #{tname}
+            </if>
         </where>
+    </select>
+    <resultMap id="findDivResult" type="GoodType">
+
+    </resultMap>
+    <select id="findDiv" resultMap="findDivResult">
+       select * from goodtype where 1=1 limit 10
     </select>
 </mapper>

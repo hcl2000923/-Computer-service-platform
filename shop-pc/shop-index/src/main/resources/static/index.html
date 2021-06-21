@@ -40,12 +40,20 @@
 <div class="head">
     <div class="w1200">
         <div class="logo"><a href="#"></a></div>
-        <div class="search">
+        <div class="search" id="search-body">
             <form action="#" class="form">
                 <input type="text" name="keyword" class="txt" placeholder="输入商品关键字"/>
-                <input type="button" value="搜索" class="sub" @click="find()"/>
+                <input type="button" value="搜索" class="sub" @click="find()" onclick='location.href' />
             </form>
         </div>
+        <script>
+            let searchVue=new Vue({
+                el:"#search-body",
+                data:{
+
+                }
+            });
+        </script>
         <div class="s_r">
             <dl>
                 <dt><a href="shopcar.html">购物车<p></p></a></dt>
@@ -61,8 +69,7 @@
         <div class="item" id="nav"><a href="#" class="nav">全部商品分类</a>
             <div class="nav_son" style="min-height: 85px;">
                 <ul v-for="value in types">
-                    <li class="li01"><a :href="'product.html#tnos='+value.tno" v-if="value.status==1">{{ value.tname
-                        }}</a></li>
+                    <li class="li01"><a :href="'product.html#tnos='+value.tno" v-if="value.status==1">{{ value.tname }}</a></li>
                 </ul>
             </div>
         </div>
@@ -176,25 +183,27 @@
 
     <a name="a02"></a>
     <!--jm_type-->
-    <div class="idx02" v-for="(type,index) in types" v-if="type.status==1">
-        <dl>
-            <dt>{{ type.tname }}</dt>
-            <dd style="padding-left: 0px;">
-                <div style="padding: 0;width:599px;" class="item big">
-                    <img style="right: 0px;" :src="type.pic" height="280px" width="599px"/>
-                </div>
-                <div v-for="good in goodVOs" v-if="good.tno==type.tno">
-                    <div class="item">
-                        <a :href="'product_show.html#'+good.sizeno"
-                           class="title">{{good.gname}}&nbsp;{{good.size}}</a>
-                        <p><font>￥</font>{{good.price}}.<font>00</font></p>
-                        <a href="javascript:void(0)" @click="add(good.sizeno)" class="buy"></a>
-                        <img :src="good.showPic" height="185px" width="150px"/>
+    <div id="jm_type">
+        <div class="idx02" v-for="(type,index) in types" v-if="type.status==1">
+            <dl>
+                <dt>{{ type.tname }}</dt>
+                <dd style="padding-left: 0px;">
+                    <div style="padding: 0;width:599px;" class="item big">
+                        <img style="right: 0px;" :src="type.pic" height="280px" width="599px"/>
                     </div>
-                </div>
-                <div class="clear"></div>
-            </dd>
-        </dl>
+                    <div v-for="good in goodVOs" v-if="good.goodInfo.goodType.tno==type.tno">
+                        <div class="item">
+                            <a :href="'product_show.html#'+good.sizeno"
+                               class="title">{{good.goodInfo.gname}}&nbsp;{{good.goodInfo.size}}</a>
+                            <p><font>￥</font>{{good.price}}.<font>00</font></p>
+                            <a href="javascript:void(0)" @click="add(good.sizeno)" class="buy"></a>
+                            <img :src="good.showPic" height="185px" width="150px"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </dd>
+            </dl>
+        </div>
     </div>
 </div>
 
@@ -383,118 +392,60 @@
 
     //--><!]]>
 </script>
-<!--<script type="text/javascript">
-    let yc_login = new Vue({
-        el: "#jm_top",//对应div的id,即这个vue的作用域
-        data: {
-            onlogin: false,
-            outlogin: true,
-            user: {},
-            carts: [],//{}
-            goodsCount: 0
-        },
-        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-            axios({
-                url: 'member.action?op=check',
-                method: 'get'
-            }).then(result => {
-                if (result.data.member) {//说明登录了
-                    this.onlogin = true;
-                    this.outlogin = false;
-
-                    this.user = result.data.member;
-
-                    if (result.data.carts) {
-                        this.carts = result.data.carts;
-                        this.goodsCount = result.data.carts.length;
-                    }
-                } else {
-                    this.onlogin = false;
-                    this.outlogin = true;
-                }
-            });
-        },
-        methods: {
-            out: function () {
-                axios({url: 'member.action?op=out', method: 'get'})
-                    .then(result => {
-                        let data = result.data;
-                        if (data == 1) {
-                            location.href = 'login.html';
-                        } else {
-                            alert('退出失败！！');
-                            return;
-                        }
-                    });
-            },
-            find: function () {
+<script type="text/javascript">
+        function find() {
                 var keyword = $.trim($('input[name="keyword"]').val());
                 let tnos = new Array();
-                axios({
-                    url: 'GoodTypeServlet.action?op=findTno',
-                    method: 'get',
-                    params: {
-                        gname: keyword
-                    }
-                }).then(result => {
-                    if (result.data) {
-                        result.data.forEach((item, index) => {
+                let params = new URLSearchParams();
+                params.append("tname", "%"+keyword+"%");
+                axios.post("shop-goodr/findGoodType",params).then(result => {
+                    if (result.data.code==1) {
+                        result.data.data.forEach((item, index) => {
                             tnos.push(item.tno);
                         });
                     }
-                    let str = qs.stringify({tnos: tnos});
-                    location.href = "product.html#" + str;
+                    // let str = qs.stringify({tnos: tnos});
+                    let permission = tnos.join(",");
+                    location.href = "product.html?tnos=" + permission;
                 });
             }
-        }
-    });
     let yc_menu = new Vue({
-        el: "#jm_menu",//对应div的id,即这个vue的作用域
+        el: "#jm_menu",
         data: {
-            types: {}
+            types: []
         },
-        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-            axios({
-                url: 'GoodTypeServlet.action?op=find',
-                method: 'get',
-                params: {}
-            }).then(result => (this.types = result.data))
-                .catch(function (error) { // 请求失败处理
-                    console.log(error);
-                });
+        created() {
+            axios.post("shop-goodr/findDiv").then(res => {
+                this.types = res.data.data;
+            });
         }
     });
     let jm_type = new Vue({
-        el: "#jm_type",//对应div的id,即这个vue的作用域
+        el: "#jm_type",
         data: {
-            types: {},
-            goodVOs: {}
+            types: [],
+            goodVOs: []
         },
-        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
-
-            axios({
-                url: 'GoodTypeServlet.action?op=find',
-                method: 'get',
-                params: {}
-            }).then(result => (this.types = result.data))
-                .catch(function (error) { // 请求失败处理
-                    console.log(error);
-
-                });
-            axios({
-                url: 'goodInfoServlet.action?op=finds',
-                method: 'get',
-                params: {}
-            }).then(result => {
-                if (result.data) {
-                    this.goodVOs = result.data;
+        created() {
+            axios.post("shop-goodr/findGoodType").then(res => {
+                if(res.data.code==1){
+                    this.types = res.data.data;
                 }
+            }).catch(error=>{
+                alert(error);
+            });
+            axios.post("shop-goodr/findsSixInfo").then(res => {
+                if(res.data.code==1) {
+                    this.goodVOs = res.data.data;
+                }
+            }).catch(error=>{
+                alert(error);
             });
         },
         methods: {
             add: function (sizeno) {
                 axios({
-                    url: 'cart.action?op=add',
+                    url: 'shop-cart/addCartInfo',
                     method: 'get',
                     params: {sizeno: sizeno}
                 }).then(result => { // 请求失败处理
@@ -512,7 +463,7 @@
 
     function buy(x) {
         axios({
-            url: 'cart.action?op=add',
+            url: 'shop-cart/addCartInfo',
             method: 'get',
             params: {sizeno: x}
         }).then(result => { // 请求失败处理
@@ -526,6 +477,6 @@
             }
         });
     }
-</script>-->
+</script>
 </body>
 </html>

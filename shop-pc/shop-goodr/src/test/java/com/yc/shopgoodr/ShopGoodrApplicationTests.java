@@ -7,6 +7,7 @@ import com.yc.shopgoodr.dao.IShopGoodrDetailsMapper;
 import com.yc.shopgoodr.dao.IShopGoodrInfoMapper;
 import com.yc.shopgoodr.dao.IShopGoodrTypeMapper;
 import com.yc.shopgoodr.service.IShopGoodrDetailService;
+import com.yc.shopgoodr.service.IShopGoodrInfoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -28,6 +29,10 @@ class ShopGoodrApplicationTests {
 
 	@Resource
 	private IShopGoodrDetailService iShopGoodrDetailService;
+
+
+	@Resource
+	private IShopGoodrInfoService iShopGoodrInfoService;
 	@Test
 	void contextLoads() {
 	}
@@ -36,8 +41,8 @@ class ShopGoodrApplicationTests {
 	@Test
 	void TestFindByTrem(){
 		GoodType GoodType = new GoodType();
-//		GoodType.setTname("电脑维修");
-//		GoodType.setPic("1c44b1eb7acciuohbngbfui.png");
+		GoodType.setTname("电脑维修");
+		GoodType.setPic("1c44b1eb7acciuohbngbfui.png");
 		GoodType.setTno(1);
 		List<GoodType> byTrem = iShopGoodrTypeMapper.findByTrem(GoodType);
 		for (GoodType goodType:byTrem){
@@ -98,8 +103,8 @@ class ShopGoodrApplicationTests {
 		GoodDetail goodDetail = new GoodDetail();
 //		GoodInfo goodInfo = new GoodInfo();
 //		goodDetail.setSizeno(1);
-		goodDetail.setSizeno(1);
-		List<GoodDetail> byPage = iShopGoodrDetailsMapper.findByPage2(goodDetail);
+//		goodDetail.setSizeno(1);
+		List<GoodDetail> byPage = iShopGoodrDetailsMapper.findAllDetail(goodDetail);
 		System.out.println(byPage);
 	}
 
@@ -111,5 +116,37 @@ class ShopGoodrApplicationTests {
 		System.out.println(check);
 	}
 
+
+	@Test
+	void testFindDiv(){
+		List<GoodType> div = iShopGoodrTypeMapper.findDiv();
+		for (GoodType goodType:div){
+			System.out.println(goodType);
+		}
+	}
+
+	@Test
+	void testFindGoodInfoByTno(){
+		Integer integer = new Integer(1);
+		List<GoodInfo> goodInfoByTno = iShopGoodrInfoService.findGoodInfoByTno(integer);
+		for (GoodInfo goodInfo:goodInfoByTno){
+			System.out.println(goodInfo);
+		}
+	}
+
+
+	@Test
+	void testfindsByTno(){
+		GoodInfo goodInfo = new GoodInfo();
+//		goodInfo.setGno(1);
+		GoodType goodType = new GoodType();
+		goodType.setTno(1);
+		goodInfo.setGoodType(goodType);
+//		goodInfo.setGname("电脑维修");
+		List<GoodInfo> byTrem = iShopGoodrInfoMapper.findsByTno(goodInfo);
+		for(GoodInfo goodInfo1:byTrem){
+			System.out.println(goodInfo1);
+		}
+	}
 
 }

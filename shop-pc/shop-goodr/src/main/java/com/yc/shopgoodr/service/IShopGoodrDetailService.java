@@ -15,16 +15,18 @@ public interface IShopGoodrDetailService {
      * @param goodDetail
      * @return
      */
-    public List<GoodDetail> findBytrem(GoodDetail goodDetail);
+//    public List<GoodDetail> findBytrem(GoodDetail goodDetail);
 
 
+
+    public List<GoodDetail> findDetailAll(GoodDetail goodDetail);
     /**
      * 分页
      * @param goodDetail
      * @param page
      * @return
      */
-    public PageInfo<GoodDetail> findByPage(GoodDetail goodDetail, Page page);
+//    public PageInfo<GoodDetail> findByPage(GoodDetail goodDetail, Page page);
 
     /**
      * 验证库存剩余

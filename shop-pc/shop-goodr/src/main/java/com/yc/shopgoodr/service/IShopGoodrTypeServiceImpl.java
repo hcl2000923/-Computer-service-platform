@@ -30,4 +30,9 @@ public class IShopGoodrTypeServiceImpl implements IShopGoodrTypeService {
     public List<GoodType> findType(GoodType goodType) {
         return iShopGoodrTypeMapper.findByTrem(goodType);
     }
+
+    @Override
+    public List<GoodType> findType() {
+        return iShopGoodrTypeMapper.findDiv();
+    }
 }

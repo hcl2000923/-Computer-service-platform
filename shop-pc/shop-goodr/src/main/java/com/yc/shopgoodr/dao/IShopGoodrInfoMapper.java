@@ -19,4 +19,7 @@ public interface IShopGoodrInfoMapper {
 
     //评论总数
     public int getCommentsTotal(GoodDetail goodDetail);
+
+
+    public List<GoodInfo> findsByTno(GoodInfo t);
 }

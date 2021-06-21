@@ -22,10 +22,10 @@ public class GoodInfo implements Serializable {
     private String gname;
 
     private GoodType goodType;
-
+    private GoodDetail goodDetail;
     private Integer sellNum;
     private Integer point;
     private String pics;
-
-    private List<GoodDetail> goodDetailList;
+    private Integer WordNum;
+    List<GoodDetail> goodDetails;
 }
