@@ -1,7 +1,7 @@
 server:
   port: 80
 ribbon:
-  ConnectTimeout: 60000 # 连接超时时间(ms)
+  ConnectTimeout: 3000 # 连接超时时间(ms)
   ReadTimeout: 60000 # 通信超时时间(ms)
 #  OkToRetryOnAllOperations: true # 是否对所有操作重试
 #  MaxAutoRetriesNextServer: 2 # 同一服务不同实例的重试次数
