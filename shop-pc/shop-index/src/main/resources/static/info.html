@@ -183,8 +183,7 @@
                     });
                     this.orderInfo.receiver = this.user.nickName;
                     this.orderInfo.tel = this.user.tel;
-                    let strs = new Array();
-                    strs = this.user.addr.split("-");
+                    let strs = this.user.addr.split("-");
                     this.detail = strs[2];
                     for (let k = 0; k < this.provs.length; k++) {
                         if (this.provs[k] == strs[0]) {
@@ -212,16 +211,14 @@
                 }
                 let sizenos = new Array();
                 this.buyCarts.forEach((item) => {
-                    sizenos.push(item.sizeno);
+                    sizenos.push(item.goodDetail.sizeno);
                 });
                 let nums = new Array();
                 this.buyCarts.forEach((item) => {
                     nums.push(item.num);
                 });
-                // this.check(nums, sizenos);
-                this.putOrder();
-            }
-            ,
+                this.check(nums, sizenos);
+            },
             putOrder: function () {
                 //发送请求
                 this.orderInfo.addr = this.provs[this.i] + "-" + this.cities[this.i][this.j] + "-" + this.detail;

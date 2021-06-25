@@ -1,5 +1,6 @@
 package com.yc.bean;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,19 +17,19 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Comments implements Serializable {
     private static final long serialVersionUID = -6110117701936217180L;
     private Integer commentno;
-
-    private GoodDetail goodDetail;//sizeno;
-
-    private MemberInfo memberInfo;//mno;
-
+    //sizeno;
+    private GoodDetail goodDetail;
+    //mno;
+    private MemberInfo memberInfo;
     private String word;
     private Integer type;
     private String pic;
     private Date date;
-
-    private GoodInfo goodInfo;//gno;
+    //gno;
+    private GoodInfo goodInfo;
 
 }

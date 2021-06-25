@@ -1,6 +1,10 @@
 package com.yc.shopindex.controller;
 
+import com.yc.vo.Result;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @program: shop-book
@@ -10,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class IndexAction {
-//    @Resource
-//    private ICrBookBookAction bookBookAction;
-//
-//    @GetMapping("queryByPage")
-//    public Result queryByPage(CrShow crShow) {
-//        return bookBookAction.queryByPage(crShow);
-//    }
-//
-//    @GetMapping("queryByPage1")
-//    public Result queryByPage1(CrShow1 crShow1) {
-//        return bookBookAction.queryByPage1(crShow1);
-//    }
+    @Resource
+    private GoodrAction goodrAction;
+
+    @PostMapping("findAllType")
+    public Result findAllType() {
+        return goodrAction.findAllType();
+    }
+
+    @PostMapping("findsSixInfo")
+    public Result findsSixInfo() {
+        return goodrAction.findsSixInfo();
+    }
 
 }

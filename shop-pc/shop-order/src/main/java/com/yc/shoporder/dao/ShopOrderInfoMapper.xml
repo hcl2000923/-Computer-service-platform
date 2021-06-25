@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shoporder.dao.ShopOrderInfoMapper">
-    <cache/>
+    <cache type="org.mybatis.caches.redis.RedisCache"/>
     <!--新增在线支付-->
     <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="ono">
         insert into orderinfo values(#{ono},#{receiver},2,'在线支付',#{detailAddr},#{tel},#{addr},#{pCode},now())
@@ -25,7 +25,7 @@
             ono=#{ono}
         </where>
     </update>
-    <select id="find" resultType="OrderInfo">
+    <select id="find" resultType="OrderInfo" useCache="false">
         select * from orderinfo
         <where>
             ono in (select ono from orderiteminfo where mno=#{mno})
@@ -41,7 +41,7 @@
         </where>
     </select>
     <!--一对多链表映射查询，可分页-->
-    <select id="findOneToMany" resultMap="OrderInfoAndOrderItemInfo">
+    <select id="findOneToMany" resultMap="OrderInfoAndOrderItemInfo" useCache="false">
         select orderinfo.ono oiono,receiver,orderinfo.status oistatus,buyWay,detailAddr,tel,addr,pCode,odate,
         itemno,mno,orderiteminfo.ono oiiono,sizeno,money,num,descr,orderiteminfo.status
         oiistatus,sdate,rdate,updateStatus
@@ -108,7 +108,7 @@
             </association>
         </collection>
     </resultMap>
-    <select id="getGoodInfo" resultType="GoodInfo">
+    <select id="getGoodInfo" resultType="GoodInfo" useCache="false">
         select * from goodinfo
         <where>
             gno = #{gno}
@@ -119,14 +119,14 @@
                      select="getGoodInfo" fetchType="eager">
         </association>
     </resultMap>
-    <select id="getGoodDetail" resultMap="GoodDetailAndGoodInfo">
+    <select id="getGoodDetail" resultMap="GoodDetailAndGoodInfo" useCache="false">
         select * from gooddetail
         <where>
             sizeno = #{sizeno}
         </where>
     </select>
     <!--通过mno查找goodInfo-->
-    <select id="findByMno" resultType="OrderInfo" parameterType="Integer">
+    <select id="findByMno" resultType="OrderInfo" parameterType="Integer" useCache="false">
         select * from orderinfo where ono in (select ono from orderiteminfo where mno=#{mno})
     </select>
 </mapper>

@@ -1,12 +1,14 @@
 package com.yc.exception;
 
+import java.io.Serializable;
+
 /**
  * @program: shop-book
  * @description:自定义异常
  * @author: 作者
  * @create: 2021-05-19 19:16
  */
-public class BizException extends Exception {
+public class BizException extends Exception implements Serializable {
     private static final long serialVersionUID = 1530195490183092437L;
 
     public BizException() {

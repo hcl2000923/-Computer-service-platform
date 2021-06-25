@@ -1,5 +1,6 @@
 package com.yc.bean;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberInfo implements Serializable {
     private static final long serialVersionUID = 1694487819363528333L;
     private Integer mno;

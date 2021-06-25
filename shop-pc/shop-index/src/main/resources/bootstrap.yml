@@ -1,8 +1,4 @@
 spring:
-  #  mvc:
-  #    view:
-  #      prefix: /WEB-INF/
-  #      suffix: .jsp
   application:
     name: shop-index
   cloud:
@@ -10,9 +6,9 @@ spring:
       uri: http://localhost:8888
       label: master
 #开启降级
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    enabled: true
 
 #tomcat.virtual.path: /**
 #basePath: D:/shopping

@@ -30,8 +30,6 @@ public class CommentController {
 
     @Resource
     private IShopCommentBiz iShopCommentBiz;
-//    @Resource
-//    private GoodDetailAction goodDetailAction;
 
     @PostMapping("add")
     public Result add(HttpServletRequest req, @SessionAttribute MemberInfo loginUser, Comments comments, GoodDetail goodDetail, GoodInfo goodInfo) {
@@ -57,18 +55,9 @@ public class CommentController {
     }
 
     @PostMapping("findCommentByType")
-    public Result findCommentByType(GoodDetail goodDetail, Integer pageSize, Integer pageNum) {
+    public Result findCommentByType(GoodInfo goodInfo, Page page) {
         List<PageInfo> commentList = new ArrayList();
-        //远程调用
-//        Result res = goodDetailAction.findGnoBySizeno(goodDetail);
-//        GoodInfo goodInfo = (GoodInfo) res.getData();
 
-        //模拟数据测试
-        GoodInfo goodInfo = new GoodInfo();
-        goodInfo.setGno(2);
-        //
-
-        Page page = new Page(pageSize, pageNum);
         Comments comments = new Comments();
         comments.setGoodInfo(goodInfo);
         PageInfo<Comments> all = iShopCommentBiz.findByPage(comments, page);

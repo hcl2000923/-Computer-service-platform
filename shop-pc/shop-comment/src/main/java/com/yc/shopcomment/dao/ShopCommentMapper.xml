@@ -17,8 +17,9 @@
     <!--*****注意这是新的多对一的连表查询方式，链表分页多条件查询-->
     <!--结果查询-->
     <select id="findGoodInfoAndCommentsAllAndPage" resultMap="CommentsAndGoodInfo">
-        SELECT commentno,sizeno,mno,word,type,pic,date,comments.gno gno,gname from comments left join goodinfo
-        on goodinfo.gno=comments.gno
+        SELECT commentno,comments.sizeno sizeno,size,mno,word,type,pic,date,comments.gno gno,gname from comments left
+        join goodinfo on goodinfo.gno=comments.gno left
+        join gooddetail on comments.sizeno=gooddetail.sizeno
         <where>
             <if test="commentno!=null">
                 commentno=#{commentno}
@@ -49,6 +50,7 @@
 
         <association property="goodDetail" javaType="GoodDetail" fetchType="eager">
             <id column="sizeno" property="sizeno"/>
+            <result column="size" property="size"/>
         </association>
         <association property="memberInfo" javaType="MemberInfo" fetchType="eager">
             <id column="mno" property="mno"/>

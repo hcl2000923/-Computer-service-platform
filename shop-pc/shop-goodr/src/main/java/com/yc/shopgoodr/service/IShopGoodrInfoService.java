@@ -3,29 +3,21 @@ package com.yc.shopgoodr.service;
 import com.github.pagehelper.PageInfo;
 import com.yc.bean.GoodDetail;
 import com.yc.bean.GoodInfo;
+import com.yc.vo.GoodInfoVO;
 import com.yc.vo.Page;
+import com.yc.vo.Signal;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface IShopGoodrInfoService {
-
-
-
-    /**
-     * 查所有加分页
-     * @param goodInfo
-     * @param page
-     * @return
-     */
-    public PageInfo<GoodInfo> findByPage(GoodInfo goodInfo, Page page);
-
     /**
      * 查前六个
+     *
      * @return
      */
-    public List<GoodDetail> finds();
+    List<GoodDetail> finds();
 
-    public List<GoodInfo> findGoodInfoByTno(Integer tno);
+    PageInfo<GoodInfo> findByMultiAndPage(GoodInfo goodInfo, Integer[] tnos, Page page, Signal signal);
+
+    GoodInfoVO findOneByGno(GoodInfo goodInfo);
 }

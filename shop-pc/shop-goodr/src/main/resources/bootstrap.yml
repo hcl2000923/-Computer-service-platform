@@ -5,6 +5,15 @@ spring:
     config:
       uri: http://localhost:8888
       label: master
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/db_onlineshopping?serverTimezone=GMT%2B8
+    username: root
+    password: 232328
+    hikari:
+      max-lifetime: 1765000
+      maximumPoolSize: 15
+
 logging:
   level:
     com.yc.shopgoodr.dao: trace

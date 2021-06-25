@@ -56,6 +56,7 @@ public class OrderController {
         orderInfo.setStatus(OrderInfoPayStatusEnum.CANCEL.getCode());
         try {
             iShopOrderInfoBiz.update(orderInfo);
+            iShopOrderInfoBiz.downSellNumAndAddBalance(orderInfo);
             return Result.success("取消订单成功", null);
         } catch (BizException e) {
             return Result.failure(e.getMessage(), null);
@@ -113,7 +114,7 @@ public class OrderController {
         o.setOno(ono);
         o.setStatus(OrderInfoPayStatusEnum.PAY.getCode());
         try {
-            iShopOrderInfoBiz.update(o);
+            iShopOrderInfoBiz.confirmOrder(o);
             Integer mno = iShopOrderItemInfoBiz.findMnoByOno(o);
             return Result.success("用户成功购买！", mno);
         } catch (BizException e) {

@@ -9,13 +9,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface IShopOrderInfoBiz {
-    /**
-     * 新增orderinfo
-     *
-     * @param orderInfo
-     * @return
-     */
-    int addOrderInfo(OrderInfo orderInfo);
 
     /**
      * 更新操作
@@ -41,10 +34,37 @@ public interface IShopOrderInfoBiz {
      */
     List<OrderInfo> findByMno(Integer mno);
 
+    /**
+     * 下定单，一系列事务操作
+     *
+     * @param orderInfo
+     * @param cartInfos
+     * @param descr
+     * @param loginUser
+     * @param session
+     * @return
+     * @throws BizException
+     */
     boolean genOrder(OrderInfo orderInfo, List<CartInfo> cartInfos, String descr, MemberInfo loginUser, HttpSession session) throws BizException;
 
+    /**
+     * 线下购买
+     *
+     * @param orderInfo
+     * @return
+     */
     Integer buyByCash(OrderInfo orderInfo);
 
+    /**
+     * 根绝mno查找订单
+     *
+     * @param orderInfo
+     * @param mno
+     * @return
+     */
     List<OrderInfo> find(OrderInfo orderInfo, Integer mno);
-    
+
+    Boolean downSellNumAndAddBalance(OrderInfo orderInfo) throws BizException;
+
+    Integer confirmOrder(OrderInfo o) throws BizException;
 }

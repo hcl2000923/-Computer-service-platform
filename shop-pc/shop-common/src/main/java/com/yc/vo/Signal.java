@@ -19,6 +19,6 @@ public class Signal implements Serializable {
     private static final long serialVersionUID = -4089341972333621968L;
     //排序字段类型
     private String sort;
-    //符号 +  -
+    //符号 +  - 或 asc  desc
     private String symbols;
 }

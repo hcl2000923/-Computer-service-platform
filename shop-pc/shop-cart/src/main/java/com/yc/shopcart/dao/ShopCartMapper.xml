@@ -4,11 +4,21 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopcart.dao.ShopCartMapper">
     <!--二级缓存-->
-    <cache/>
+    <cache type="org.mybatis.caches.redis.RedisCache"/>
 
     <!--新增评论-->
     <insert id="addCartInfo" parameterType="CartInfo" useGeneratedKeys="true" keyProperty="cno">
-        insert into cartinfo values(null,#{goodDetail.sizeno},#{memberInfo.mno},1)
+        insert into cartinfo values
+        <choose>
+            <when test="num!=null">
+                (null,#{goodDetail.sizeno},#{memberInfo.mno},#{num})
+            </when>
+            <otherwise>
+                (null,#{goodDetail.sizeno},#{memberInfo.mno},1)
+            </otherwise>
+        </choose>
+
+
     </insert>
     <!--动态choose的sql语句-->
     <delete id="delete" parameterType="CartInfo">

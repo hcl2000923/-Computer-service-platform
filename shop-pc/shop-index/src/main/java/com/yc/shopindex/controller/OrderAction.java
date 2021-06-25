@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface OrderAction {
 
     @PostMapping("checkExist")
-    public Result checkExist(@RequestParam String ono, @RequestParam Integer mno);
+    Result checkExist(@RequestParam String ono, @RequestParam Integer mno);
 
     @PostMapping("confirmOrder")
-    public Result confirmOrder(@RequestParam String ono);
+    Result confirmOrder(@RequestParam String ono);
 
 }

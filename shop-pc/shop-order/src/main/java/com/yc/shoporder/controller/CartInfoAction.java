@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "shop-cart")
 public interface CartInfoAction {
     @PostMapping("deleteCart")
-    public Result deleteCart(@RequestParam Integer[] cnos, @RequestBody MemberInfo loginUser);
+    Result deleteCart(@RequestParam Integer[] cnos, @RequestBody MemberInfo loginUser);
 }

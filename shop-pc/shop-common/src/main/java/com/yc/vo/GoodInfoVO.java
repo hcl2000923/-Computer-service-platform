@@ -1,6 +1,8 @@
-package com.yc.bean;
+package com.yc.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.yc.bean.Comments;
+import com.yc.bean.GoodType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GoodInfo implements Serializable {
+public class GoodInfoVO implements Serializable {
     private static final long serialVersionUID = -4575392408879121675L;
     private Integer gno;
     private String gname;
@@ -26,9 +28,9 @@ public class GoodInfo implements Serializable {
     private GoodType goodType;
     private Integer sellNum;
     private Integer point;
-    private String pics;
+    private String[] pics;
 
-    private List<GoodDetail> goodDetailList;
+    private List<GoodDetailVO> goodDetailVOList;
     private List<Comments> commentsList;
 
 }

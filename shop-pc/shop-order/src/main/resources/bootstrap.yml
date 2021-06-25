@@ -5,6 +5,12 @@ spring:
     config:
       uri: http://localhost:8888
       label: master
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 60000
+spring.cloud.loadbalancer.retry.enabled: true
+ribbon.ReadTimeout: 60000
+ribbon.ConnectTimeout: 3000
+
 mybatis:
   type-aliases-package: com.yc.bean
   mapperLocations: classpath:mapper/*.xml

@@ -42,17 +42,6 @@
             <version>3.4.27.ALL</version>
         </dependency>
 
-        <!-- 用于编译jsp    springboot tomcat jsp 支持开启-->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-        </dependency>
-        <!--jstl的支持,c标签-->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

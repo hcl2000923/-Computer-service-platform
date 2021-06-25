@@ -31,7 +31,6 @@
 <div id="login-body">
     <login-body></login-body>
 </div>
-
 <script>
     let loginVue = new Vue({
         el: "#login-body"
@@ -40,20 +39,13 @@
 <div class="head">
     <div class="w1200">
         <div class="logo"><a href="#"></a></div>
-        <div class="search" id="search-body">
+        <div class="search">
             <form action="#" class="form">
                 <input type="text" name="keyword" class="txt" placeholder="输入商品关键字"/>
-                <input type="button" value="搜索" class="sub" @click="find()" onclick='location.href' />
+                <input type="button" value="搜索" class="sub" onclick="find()"/>
             </form>
         </div>
-        <script>
-            let searchVue=new Vue({
-                el:"#search-body",
-                data:{
 
-                }
-            });
-        </script>
         <div class="s_r">
             <dl>
                 <dt><a href="shopcar.html">购物车<p></p></a></dt>
@@ -63,127 +55,128 @@
         <div class="clear"></div>
     </div>
 </div>
-
-<div class="menu" id="jm_menu">
-    <div class="w1200">
-        <div class="item" id="nav"><a href="#" class="nav">全部商品分类</a>
-            <div class="nav_son" style="min-height: 85px;">
-                <ul v-for="value in types">
-                    <li class="li01"><a :href="'product.html#tnos='+value.tno" v-if="value.status==1">{{ value.tname }}</a></li>
-                </ul>
+<div id="index-body">
+    <div class="menu">
+        <div class="w1200">
+            <div class="item" id="nav"><a href="#" class="nav" onclick="find()">全部商品分类</a>
+                <div class="nav_son" style="min-height: 85px;">
+                    <ul>
+                        <li class="li01" v-for="value in types" v-if="value.status==1">
+                            <a :href="'product.html#tnos='+value.tno">{{ value.tname}}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    $(document).ready(function (e) {
+    <script type="text/javascript">
+        $(document).ready(function (e) {
 
-        $('#slider li').eq(0).show();
-        var lenThumb = $('#slider li').length;
-        for (var i = 1; i <= lenThumb; i++) {
-            $('#num').append('<span>' + i + '</span>');
-        }
-        $('#num span').eq(0).addClass('on');
-        var len = $('#num span').length;
-        var index = 0;
-
-        $('#num span').click(function () {
-            index = $('#num span').index(this);
-            picShow(index);
-        });
-        var playPic = setInterval(function () {
-            picShow(index);
-            index++;
-            if (index == len) {
-                index = 0
+            $('#slider li').eq(0).show();
+            var lenThumb = $('#slider li').length;
+            for (var i = 1; i <= lenThumb; i++) {
+                $('#num').append('<span>' + i + '</span>');
             }
-        }, 3000);
+            $('#num span').eq(0).addClass('on');
+            var len = $('#num span').length;
+            var index = 0;
 
-        function picShow(i) {
-            $('#slider li').eq(i).stop(true, true).fadeIn().siblings().fadeOut();
-            $('#num > span').eq(i).addClass('on').siblings().removeClass('on');
-        }
+            $('#num span').click(function () {
+                index = $('#num span').index(this);
+                picShow(index);
+            });
+            var playPic = setInterval(function () {
+                picShow(index);
+                index++;
+                if (index == len) {
+                    index = 0
+                }
+            }, 3000);
 
-    });
-</script>
-<div class="banner">
-    <ul id="slider">
-        <li style="background:url(images/home/banner.jpg) no-repeat center;height:100%;width:100%;"><a href="#"></a>
-        </li>
-        <li style="background:url(images/home/banner1.jpg) no-repeat center;height:100%;width:100%;"><a
-                href="#"></a>
-        </li>
-        <li style="background:url(images/home/banner2.jpg) no-repeat center;height:100%;width:100%;"><a
-                href="#"></a>
-        </li>
-    </ul>
+            function picShow(i) {
+                $('#slider li').eq(i).stop(true, true).fadeIn().siblings().fadeOut();
+                $('#num > span').eq(i).addClass('on').siblings().removeClass('on');
+            }
 
-    <div class="w_auto">
-        <div class="clearfix"></div>
-        <div id="num" class="point"></div>
-    </div>
-</div>
+        });
+    </script>
+    <div class="banner">
+        <ul id="slider">
+            <li style="background:url(images/home/banner.jpg) no-repeat center;height:100%;width:100%;"><a href="#"></a>
+            </li>
+            <li style="background:url(images/home/banner1.jpg) no-repeat center;height:100%;width:100%;"><a
+                    href="#"></a>
+            </li>
+            <li style="background:url(images/home/banner2.jpg) no-repeat center;height:100%;width:100%;"><a
+                    href="#"></a>
+            </li>
+        </ul>
 
-<div class="w1201">
-    <a name="a01"></a>
-    <div class="idx01">
-        <div class="rollBox">
-            <dl>
-                <dt><b>限时抢购</b><span>让生活精彩不停</span>
-                    <p><img onMouseDown="ISL_GoDown()" onMouseUp="ISL_StopDown()" onMouseOut="ISL_StopDown()"
-                            class="img1" src="images/home/ico13.jpg" width="23" height="23"/>
-                        <img onmousedown="ISL_GoUp()" onMouseUp="ISL_StopUp()" onMouseOut="ISL_StopUp()"
-                             class="img2"
-                             src="images/home/ico14.jpg" width="23" height="23"/></p></dt>
-                <dd>
-                    <div class="Cont" id="ISL_Cont">
-                        <div class="ScrCont">
-                            <div id="List1">
-                                <!-- 图片列表 begin -->
-                                <ul>
-                                    <li class="pic">
-                                        <p class="p01">电脑维修</p>
-                                        <p class="p02">
-                                            <font>￥</font><b style="font-size:20px;">20元上门费</b><br/>
-                                            <span>24小时内上门服务<br/>tel:15151031612</span>
-                                            <a href="javascript:void(0)" class="buy" onclick="buy(1)">立即预约 ></a>
-                                        </p>
-                                        <img height="185px" width="150px" src="images/img/img.png"/>
-                                    </li>
-                                    <li class="pic">
-                                        <p class="p01">数据恢复</p>
-                                        <p class="p02">
-                                            <font>￥</font><b style="font-size:20px;">30元上门费</b><br/>
-                                            <span>12小时内上门服务<br/>tel:15413541554</span>
-                                            <a href="javascript:void(0)" class="buy" onclick="buy(2)">立即预约 ></a>
-                                        </p>
-                                        <img height="185px" width="150px" src="images/img/img3.png"/>
-                                    </li>
-                                    <li class="pic">
-                                        <p class="p01">系统重装</p>
-                                        <p class="p02">
-                                            <font>￥</font><b style="font-size:20px;">10元上门费</b><br/>
-                                            <span>48小时内上门服务<br/>tel:15616516516</span>
-                                            <a href="javascript:void(0)" class="buy" onclick="buy(3)">立即预约 ></a>
-                                        </p>
-                                        <img src="images/img/img2.png" height="185px" width="150px"/>
-                                    </li>
-                                </ul>
-
-                                <!-- 图片列表 end -->
-                            </div>
-                            <div id="List2"></div>
-                        </div>
-                    </div>
-                </dd>
-            </dl>
+        <div class="w_auto">
+            <div class="clearfix"></div>
+            <div id="num" class="point"></div>
         </div>
     </div>
 
-    <a name="a02"></a>
-    <!--jm_type-->
-    <div id="jm_type">
+    <div class="w1201">
+        <a name="a01"></a>
+        <div class="idx01">
+            <div class="rollBox">
+                <dl>
+                    <dt><b>限时抢购</b><span>让生活精彩不停</span>
+                        <p><img onMouseDown="ISL_GoDown()" onMouseUp="ISL_StopDown()" onMouseOut="ISL_StopDown()"
+                                class="img1" src="images/home/ico13.jpg" width="23" height="23"/>
+                            <img onmousedown="ISL_GoUp()" onMouseUp="ISL_StopUp()" onMouseOut="ISL_StopUp()"
+                                 class="img2"
+                                 src="images/home/ico14.jpg" width="23" height="23"/></p></dt>
+                    <dd>
+                        <div class="Cont" id="ISL_Cont">
+                            <div class="ScrCont">
+                                <div id="List1">
+                                    <!-- 图片列表 begin -->
+                                    <ul>
+                                        <li class="pic">
+                                            <p class="p01">电脑维修</p>
+                                            <p class="p02">
+                                                <font>￥</font><b style="font-size:20px;">20元上门费</b><br/>
+                                                <span>24小时内上门服务<br/>tel:15151031612</span>
+                                                <a href="javascript:void(0)" class="buy" onclick="buy(1)">立即预约 ></a>
+                                            </p>
+                                            <img height="185px" width="150px" src="images/img/img.png"/>
+                                        </li>
+                                        <li class="pic">
+                                            <p class="p01">数据恢复</p>
+                                            <p class="p02">
+                                                <font>￥</font><b style="font-size:20px;">30元上门费</b><br/>
+                                                <span>12小时内上门服务<br/>tel:15413541554</span>
+                                                <a href="javascript:void(0)" class="buy" onclick="buy(2)">立即预约 ></a>
+                                            </p>
+                                            <img height="185px" width="150px" src="images/img/img3.png"/>
+                                        </li>
+                                        <li class="pic">
+                                            <p class="p01">系统重装</p>
+                                            <p class="p02">
+                                                <font>￥</font><b style="font-size:20px;">10元上门费</b><br/>
+                                                <span>48小时内上门服务<br/>tel:15616516516</span>
+                                                <a href="javascript:void(0)" class="buy" onclick="buy(3)">立即预约 ></a>
+                                            </p>
+                                            <img src="images/img/img2.png" height="185px" width="150px"/>
+                                        </li>
+                                    </ul>
+
+                                    <!-- 图片列表 end -->
+                                </div>
+                                <div id="List2"></div>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <a name="a02"></a>
+
         <div class="idx02" v-for="(type,index) in types" v-if="type.status==1">
             <dl>
                 <dt>{{ type.tname }}</dt>
@@ -193,8 +186,8 @@
                     </div>
                     <div v-for="good in goodVOs" v-if="good.goodInfo.goodType.tno==type.tno">
                         <div class="item">
-                            <a :href="'product_show.html#'+good.sizeno"
-                               class="title">{{good.goodInfo.gname}}&nbsp;{{good.goodInfo.size}}</a>
+                            <a :href="'product_show.html#'+good.goodInfo.gno"
+                               class="title">{{good.goodInfo.gname}}&nbsp;{{good.size}}</a>
                             <p><font>￥</font>{{good.price}}.<font>00</font></p>
                             <a href="javascript:void(0)" @click="add(good.sizeno)" class="buy"></a>
                             <img :src="good.showPic" height="185px" width="150px"/>
@@ -206,8 +199,6 @@
         </div>
     </div>
 </div>
-
-
 <!--footer-->
 <div id="footer-body">
     <footer-body></footer-body>
@@ -217,7 +208,6 @@
         el: "#footer-body"
     });
 </script>
-
 <!--float_right-->
 <div class="float">
     <ul>
@@ -393,90 +383,59 @@
     //--><!]]>
 </script>
 <script type="text/javascript">
-        function find() {
-                var keyword = $.trim($('input[name="keyword"]').val());
-                let tnos = new Array();
-                let params = new URLSearchParams();
-                params.append("tname", "%"+keyword+"%");
-                axios.post("shop-goodr/findGoodType",params).then(result => {
-                    if (result.data.code==1) {
-                        result.data.data.forEach((item, index) => {
-                            tnos.push(item.tno);
-                        });
-                    }
-                    // let str = qs.stringify({tnos: tnos});
-                    let permission = tnos.join(",");
-                    location.href = "product.html?tnos=" + permission;
-                });
+    function find() {
+        let keyword = $.trim($('input[name="keyword"]').val());
+        let tnos = new Array();
+        let params = new URLSearchParams();
+        params.append("tname", keyword);
+        axios.post("shop-goodr/findGoodType", params).then(result => {
+            if (result.data.code == 1) {
+                tnos = result.data.data;
+                let str_tnos = tnos.join(",");
+                location.href = "product.html?tnos=" + str_tnos;
             }
-    let yc_menu = new Vue({
-        el: "#jm_menu",
-        data: {
-            types: []
-        },
-        created() {
-            axios.post("shop-goodr/findDiv").then(res => {
-                this.types = res.data.data;
-            });
-        }
-    });
-    let jm_type = new Vue({
-        el: "#jm_type",
+        }).catch(error => {
+            alert(error);
+        });
+    }
+
+    let indexVue = new Vue({
+        el: "#index-body",
         data: {
             types: [],
             goodVOs: []
         },
-        created() {
-            axios.post("shop-goodr/findGoodType").then(res => {
-                if(res.data.code==1){
+        created: function () {
+            window.buy = this.add;
+            axios.post("findAllType").then(res => {
+                if (res.data.code == 1) {
                     this.types = res.data.data;
                 }
-            }).catch(error=>{
+            }).catch(error => {
                 alert(error);
             });
-            axios.post("shop-goodr/findsSixInfo").then(res => {
-                if(res.data.code==1) {
+            axios.post("findsSixInfo").then(res => {
+                if (res.data.code == 1) {
                     this.goodVOs = res.data.data;
                 }
-            }).catch(error=>{
+            }).catch(error => {
                 alert(error);
             });
         },
         methods: {
             add: function (sizeno) {
-                axios({
-                    url: 'shop-cart/addCartInfo',
-                    method: 'get',
-                    params: {sizeno: sizeno}
-                }).then(result => { // 请求失败处理
-                    if (result.data == 1) {
+                let params = new URLSearchParams();
+                params.append("sizeno", sizeno);
+                axios.post('shop-cart/addCart', params).then(result => { // 请求失败处理
+                    if (result.data.code == 1) {
                         alert('添加成功！');
-                    } else if (result.data == 2) {
-                        alert('购物车已有数据，请到购物车中自行添加！');
                     } else {
-                        alert('您可能未登录，添加失败！');
+                        alert(result.data.msg);
                     }
                 });
             }
         }
     });
-
-    function buy(x) {
-        axios({
-            url: 'shop-cart/addCartInfo',
-            method: 'get',
-            params: {sizeno: x}
-        }).then(result => { // 请求失败处理
-            if (result.data == 1) {
-                alert('添加成功！');
-                location.href = "index.html";
-            } else if (result.data == 2) {
-                alert('购物车已有数据，请到购物车中自行添加！');
-            } else {
-                alert('添加失败！');
-            }
-        });
-    }
 </script>
 </body>
 </html>

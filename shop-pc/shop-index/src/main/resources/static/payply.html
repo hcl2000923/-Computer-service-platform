@@ -18,9 +18,13 @@
     <login-body></login-body>
 </div>
 <script>
-    let loginVue = new Vue({
+    import
+        let
+
+    loginVue = new Vue({
         el: "#login-body"
     });
+    console.log(loginVue.$children[0].loginUser);
 </script>
 
 <div class="head" id="head-body">
@@ -93,7 +97,7 @@
             payway: 1,
             pay: 1
         },
-        mounted: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
+        created: function () {//数据挂载之前，相当于jquery中的$(function(){}),页面加载完成
             let hash = decodeURI(location.hash);
             if ('' == hash || hash.indexOf('#') > 0) {
                 location.href = 'index.html';//没有按规定格式访问则回到首页

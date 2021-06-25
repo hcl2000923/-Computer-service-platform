@@ -6,16 +6,23 @@ public interface IShopGoodInfoService {
 
     /**
      * 添加商品
+     *
      * @param goodInfo
      * @return
      */
-    public int add(GoodInfo goodInfo);
+    Integer add(GoodInfo goodInfo);
 
 
     /**
      * 修改评分
+     *
      * @param goodInfo
      * @return
      */
-    public int updatePoint(GoodInfo goodInfo);
+    Integer updatePoint(GoodInfo goodInfo);
+
+    //修改销售量
+    Integer addSellingNum(GoodInfo goodInfo);
+
+    Integer downSellingNum(GoodInfo goodInfo);
 }

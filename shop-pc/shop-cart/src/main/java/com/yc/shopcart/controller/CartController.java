@@ -119,12 +119,11 @@ public class CartController {
     }
 
     @PostMapping("addCart")
-    public Result addCart(@SessionAttribute(required = false) MemberInfo loginUser, GoodDetail goodDetail) {
+    public Result addCart(@SessionAttribute(required = false) MemberInfo loginUser, GoodDetail goodDetail, CartInfo cartInfo) {
         if (loginUser == null) {
             return Result.failure("用户未登录,请先登录!", null);
         }
         //先判断他购物车中有没有该商品
-        CartInfo cartInfo = new CartInfo();
         cartInfo.setGoodDetail(goodDetail);
         cartInfo.setMemberInfo(loginUser);
         List<CartInfo> list = iShopCartBiz.findThreeTable(cartInfo);
@@ -134,6 +133,10 @@ public class CartController {
         //购物车没有-》添加购物车
         int flag = iShopCartBiz.addCartInfo(cartInfo);
         if (flag == 1) {
+            CartInfo cart = new CartInfo();
+            cart.setMemberInfo(loginUser);
+            List<CartInfo> li = iShopCartBiz.findThreeTable(cart);
+            loginUser.setCartInfoList(li);
             return Result.success("添加购物车成功！", null);
         } else {
             return Result.failure("添加购物车异常！", null);

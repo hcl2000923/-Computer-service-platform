@@ -3,34 +3,34 @@
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopgood.dao.IShopGoodDetailMapper">
-<!--添加商品详情-->
+    <!--添加商品详情-->
     <cache/>
-<insert id="addGoodDetail" parameterType="GoodDetail" useGeneratedKeys="true" keyProperty="sizeno" >
-    insert into gooddetail values(null,#{goodInfo.gno},#{size},#{balance},#{intro},#{showPic},#{price})
-</insert>
-
-<update id="update" parameterType="GoodDetail">
-    update gooddetail
-    <set>
-        <if test="balance!=null">
-            balance=#{balance},
-        </if>
-        <if test="price!=null">
-            price=#{price},
-        </if>
-        <if test="intro!=null">
-            intro=#{intro},
-        </if>
-        <if test="showPic!=null">
-            showPic=#{showPic},
-        </if>
-    </set>
-    <where>
+    <insert id="addGoodDetail" parameterType="GoodDetail" useGeneratedKeys="true" keyProperty="sizeno">
+        insert into gooddetail values(null,#{goodInfo.gno},#{size},#{balance},#{intro},#{showPic},#{price})
+    </insert>
+    <update id="update" parameterType="GoodDetail">
+        update gooddetail
+        <set>
+            <if test="balance!=null">
+                balance=#{balance},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="intro!=null">
+                intro=#{intro},
+            </if>
+            <if test="showPic!=null">
+                showPic=#{showPic},
+            </if>
+        </set>
+        <where>
             sizeno=#{sizeno}
-    </where>
-</update>
-
-
-
+        </where>
+    </update>
+    <!--减少库存-->
+    <update id="updateBalance">
+        update gooddetail set balance=balance${signal.symbols}#{goodDetail.balance} where sizeno=#{goodDetail.sizeno}
+    </update>
 
 </mapper>

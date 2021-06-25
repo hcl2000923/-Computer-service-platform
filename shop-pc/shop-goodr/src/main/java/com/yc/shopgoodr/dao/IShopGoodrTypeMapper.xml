@@ -3,37 +3,38 @@
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopgoodr.dao.IShopGoodrTypeMapper">
-<!--添加商品详情-->
+    <!--添加商品详情-->
     <cache/>
-<!--    模糊查询-->
-        <resultMap type="GoodType" id="GoodTypeGoodInfo">
-            <id property="tno" column="tno"/>
-        </resultMap>
-    <select id="findByTrem" resultMap="GoodTypeGoodInfo" parameterType="GoodType" >
-        select * from goodtype
+    <!-- hcl模糊查询-->
+    <select id="findByLikeTrem" resultType="Integer">
+        select tno from goodtype
         <where>
-<!--            <choose>-->
-<!--                <when test="tname!=null">-->
-<!--                    tname like #{tname}-->
-<!--                </when>-->
-<!--                <otherwise>-->
-<!--                    <if test="tno!=null">-->
-<!--                        tno=#{tno}-->
-<!--                    </if>-->
-<!--                    <if test="status">-->
-<!--                        status=#{status}-->
-<!--                    </if>-->
-<!--                </otherwise>-->
-<!--            </choose>-->
             <if test="tname!=null">
                 tname like #{tname}
             </if>
         </where>
     </select>
-    <resultMap id="findDivResult" type="GoodType">
-
-    </resultMap>
-    <select id="findDiv" resultMap="findDivResult">
-       select * from goodtype where 1=1 limit 10
+    <!--查询所有类型-->
+    <select id="findAllType" resultType="GoodType">
+       select * from goodtype
     </select>
+    <!--查询tnos集合-->
+    <select id="findAllByTnos" resultMap="GoodTypeAndGoodInfo">
+        select * from goodtype where tno in
+        <foreach collection="array" item="tno" open="(" close=")" separator=",">
+            #{tno}
+        </foreach>
+    </select>
+    <resultMap id="GoodTypeAndGoodInfo" type="GoodType">
+        <id column="tno" property="tno"/>
+        <collection property="goodInfoList" javaType="ArrayList" ofType="GoodInfo" column="tno" select="getGoodInfo"
+                    fetchType="eager"/>
+    </resultMap>
+    <select id="getGoodInfo" resultType="GoodInfo">
+        select * from goodinfo
+        <where>
+            tno=#{tno}
+        </where>
+    </select>
+
 </mapper>

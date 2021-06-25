@@ -1,28 +1,28 @@
 package com.yc.shopgood.dao;
 
 
-import com.yc.bean.GoodDetail;
 import com.yc.bean.GoodInfo;
-
-import java.util.List;
+import com.yc.vo.Signal;
 
 public interface IShopGoodInfoMapper {
 
     /**
      * 商品添加
+     *
      * @param goodInfo
      * @return
      */
-    public int addGoodInfo(GoodInfo goodInfo);
+    Integer addGoodInfo(GoodInfo goodInfo);
 
 
     /**
      * 商品信息修改
+     *
      * @param goodInfo
      * @return
      */
-    public int update(GoodInfo goodInfo);
+    Integer update(GoodInfo goodInfo);
 
-
+    Integer updateSellNum(GoodInfo goodInfo, Signal signal);
 
 }

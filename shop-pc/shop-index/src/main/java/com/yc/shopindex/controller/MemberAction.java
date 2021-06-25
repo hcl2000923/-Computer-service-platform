@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MemberAction {
 
     @PostMapping("addPoint")
-    public Result addPoint(@RequestParam Integer mno, @RequestParam Integer moneyPoint);
+    Result addPoint(@RequestParam Integer mno, @RequestParam Integer moneyPoint);
 
 }

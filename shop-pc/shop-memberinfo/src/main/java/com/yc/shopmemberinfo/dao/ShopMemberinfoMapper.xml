@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopmemberinfo.dao.ShopMemberinfoMapper">
-    <cache/>
+    <cache type="org.mybatis.caches.redis.Red"/>
     <sql id="if-and">
         <if test="mno!=null">
             mno=#{mno}
@@ -26,7 +26,7 @@
     </sql>
 
     <!--嵌套查询-->
-    <select id="selectByUidAndPwd" resultMap="MemberAndOrder">
+    <select id="selectByUidAndPwd" resultMap="MemberAndCart">
         select * from memberinfo
         <where>
             nickname=#{nickName} and pwd=#{pwd}
@@ -44,7 +44,7 @@
             mno = #{mno}
         </where>
     </select>
-    <resultMap id="MemberAndOrder" type="MemberInfo">
+    <resultMap id="MemberAndCart" type="MemberInfo">
         <result property="mno" column="mno"/>
         <collection property="cartInfoList"
                     javaType="ArrayList" ofType="CartInfo"

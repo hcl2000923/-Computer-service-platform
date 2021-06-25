@@ -9,8 +9,10 @@ public interface IShopGoodrTypeMapper {
 
 
     //服务名称类型查询
-    public List<GoodType> findByTrem(GoodType goodType);
+    Integer[] findByLikeTrem(GoodType goodType);
 
-    public List<GoodType> findDiv();
+    List<GoodType> findAllType();
+
+    List<GoodType> findAllByTnos(Integer[] tnos);
 
 }

@@ -1,14 +1,18 @@
 package com.yc.shoporder.controller;
 
+import com.yc.bean.GoodDetail;
 import com.yc.vo.Result;
+import feign.Param;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @FeignClient(value = "shop-good")
 public interface GoodAction {
-    @PostMapping("deleteBalance")
-    public Result deleteBalance(Integer sizeno, Integer balance);
+    @PostMapping("addSellNumAndDownBalance")
+    Result addSellNumAndDownBalance(@Param(value = "goodDetails") List<GoodDetail> goodDetails);
 
-    @PostMapping("addSellingNum")
-    public Result addSellingNum(Integer gno, Integer sellNum);
+    @PostMapping("downSellNumAndAddBalance")
+    Result downSellNumAndAddBalance(@Param(value = "goodDetails") List<GoodDetail> goodDetails);
 }
