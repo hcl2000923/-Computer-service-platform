@@ -23,7 +23,7 @@ public class FileUploadUtil {
     /**
      * 文件上传
      */
-    public static <T> T parseRequest(HttpServletRequest request, Class<T> cls) throws Exception {
+    public static String parseRequest(HttpServletRequest request) throws Exception {
         //Create a factory for disk-based file items
         DiskFileItemFactory factory = new DiskFileItemFactory();
         //Create a new file upload handler
@@ -32,39 +32,13 @@ public class FileUploadUtil {
         //解析请求对象
         //Parse the request
         List<FileItem> items = upload.parseRequest(request);
-        StringBuffer sb = new StringBuffer();
-        //创建T对象
-        T t = cls.newInstance();
-        int i = 1;
-        Method[] methods = cls.getDeclaredMethods();
+//        StringBuffer sb = new StringBuffer();
+//        int i = 1;
         //循环文件项
-        for (FileItem item : items) {
+        if (!items.isEmpty()) {
+            FileItem item=items.get(0);
             if (item.isFormField()) {
-                //获取表单元素的name值
-                String name = item.getFieldName();
-                //获取表单元素的value值
-                String value = item.getString(CHARSET);
-                for (Method m : methods) {
-                    if (("set" + name).equalsIgnoreCase(m.getName())) {
-                        String type = m.getParameterTypes()[0].getName();
-                        if ("java.lang.Integer".equals(type) || "int".equals(type)) {
-                            m.invoke(t, Integer.parseInt(value));//数据库的字段名要和对象属性field一致
-                        } else if ("java.lang.Double".equals(type)) {
-                            m.invoke(t, Double.parseDouble(value));
-                        } else if ("java.lang.Float".equals(type)) {
-                            m.invoke(t, Float.parseFloat(value));
-                        } else if ("java.lang.Long".equals(type)) {
-                            m.invoke(t, Long.parseLong(value));
-                        } else if ("java.lang.String".equals(type)) {
-                            m.invoke(t, value);
-                        } else {
-
-                        }
-                        break;
-                    }
-
-                }
-                System.out.println(name + "=" + value);
+                return null;
             } else {
                 String fieldName = item.getFieldName();//获取表单的Name属性值
                 //获取文件名称
@@ -88,19 +62,21 @@ public class FileUploadUtil {
                 item.write(file);
                 //获取存储后的文件路径  如何处理  存储到image_path
                 String image_path = IMAGEPATH + fileName;
-                if (i == 1) {
-                    sb.append(image_path);
-                } else {
-                    sb.append(";" + image_path);
-                }
-                i++;
-                for (Method m : methods) {
-                    if (("set" + fieldName).equalsIgnoreCase(m.getName())) {
-                        m.invoke(t, sb.toString());
-                    }
-                }
+//                if (i == 1) {
+//                sb.append(image_path);
+//                } else {
+//                    sb.append(";" + image_path);
+//                }
+//                i++;
+//                for (Method m : methods) {
+//                    if (("set" + fieldName).equalsIgnoreCase(m.getName())) {
+//                        m.invoke(t, sb.toString());
+//                    }
+//                }
+                return image_path;
             }
+        }else {
+            return null;
         }
-        return t;
     }
 }

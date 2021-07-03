@@ -136,7 +136,7 @@
                 let params = new URLSearchParams();
                 params.append("type", type);
                 params.append("word", word);
-                params.append("gno", this.good.gno);
+                params.append("gno", this.good.goodInfo.gno);
                 params.append("sizeno", this.good.sizeno);
                 params.append("pic", this.url);
                 axios.post("shop-comment/add", params).then(res => {
@@ -149,9 +149,10 @@
             },
             updatePic: function () {
                 $.ajaxFileUpload({
-                    url: 'shop-file/memberUpload',
+                    url: 'shop-file/upload',
                     secureuri: false,
                     fileElementId: 'pics',
+                    dataType:'json',
                     success: function (res) {
                         if (res.code == 1) {
                             commentVue.$data.url = res.data;

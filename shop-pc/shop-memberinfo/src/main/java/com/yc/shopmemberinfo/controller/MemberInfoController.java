@@ -216,9 +216,10 @@ public class MemberInfoController {
     }
 
     @PostMapping("updatePhoto")
-    public Result updatePhoto(MemberInfo memberInfo) {
+    public Result updatePhoto(MemberInfo memberInfo,@SessionAttribute MemberInfo loginUser) {
         try {
             int t = iShopMemberinfoBiz.updateAllByMno(memberInfo);
+            loginUser.setPhoto(memberInfo.getPhoto());
             return Result.success("添加成功!", null);
         } catch (BizException e) {
             return Result.failure("添加失败!", e.getMessage());

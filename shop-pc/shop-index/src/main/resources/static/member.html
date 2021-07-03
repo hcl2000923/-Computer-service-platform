@@ -218,9 +218,10 @@
             },
             goHead: function () {
                 $.ajaxFileUpload({
-                    url: 'shop-file/memberUpload',
+                    url: 'shop-file/upload',
                     secureuri: false,
                     fileElementId: 'pics',
+                    dataType:'json',
                     success: function (res) {
                         if (res.code == 1) {
                             alert(res.msg);
