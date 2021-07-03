@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -32,7 +33,9 @@ public class OrderItemInfo implements Serializable {
     private Integer num;
     private String descr;
     private Integer status;
+    @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private Date sdate;
+    @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private Date rdate;
     private Integer updateStatus;
 }

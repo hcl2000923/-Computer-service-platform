@@ -1,6 +1,7 @@
 package com.yc.shopgoodr.service;
 
 import com.yc.bean.GoodDetail;
+import com.yc.exception.BizException;
 import com.yc.shopgoodr.dao.IShopGoodrDetailsMapper;
 import com.yc.vo.Result;
 import com.yc.vo.Signal;
@@ -41,4 +42,14 @@ public class IShopGoodrDetailServiceImpl implements IShopGoodrDetailService {
         }
         return Result.success("库存数量充足！", null);
     }
+
+    @Override
+    public Result findBySizeno(GoodDetail goodDetail) throws BizException {
+        List<GoodDetail> allDetail = iShopGoodrDetailsMapper.findAllDetail(goodDetail, null);
+        if (allDetail.isEmpty()) {
+            throw new BizException("查询评论异常！");
+        }
+        return Result.success("查询成功！", allDetail.get(0));
+    }
+
 }
