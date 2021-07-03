@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class Comments implements Serializable {
     private String word;
     private Integer type;
     private String pic;
+    @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private Date date;
     //gno;
     private GoodInfo goodInfo;

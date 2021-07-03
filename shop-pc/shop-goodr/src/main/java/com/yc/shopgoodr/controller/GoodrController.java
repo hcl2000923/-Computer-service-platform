@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.yc.bean.GoodDetail;
 import com.yc.bean.GoodInfo;
 import com.yc.bean.GoodType;
+import com.yc.exception.BizException;
 import com.yc.shopgoodr.service.IShopGoodrDetailService;
 import com.yc.shopgoodr.service.IShopGoodrInfoService;
 import com.yc.shopgoodr.service.IShopGoodrTypeService;
@@ -57,6 +58,15 @@ public class GoodrController {
     public Result getInfo(GoodInfo goodInfo, Integer[] tnos, Page page, Signal signal) {
         PageInfo<GoodInfo> pageInfo = iShopGoodrInfoService.findByMultiAndPage(goodInfo, tnos, page, signal);
         return Result.success("success", pageInfo);
+    }
+
+    @PostMapping("findBySizeno")
+    public Result findBySizeno(GoodDetail goodDetail) {
+        try {
+            return iShopGoodrDetailService.findBySizeno(goodDetail);
+        } catch (BizException e) {
+            return Result.failure(e.getMessage(), null);
+        }
     }
 
     @PostMapping("findGoodInfoByGno")

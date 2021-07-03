@@ -9,10 +9,8 @@ import com.yc.shopcomment.service.IShopCommentBiz;
 import com.yc.vo.Page;
 import com.yc.vo.Result;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -46,12 +44,6 @@ public class CommentController {
         } else {
             return Result.failure("添加评价失败", null);
         }
-    }
-
-    @PostMapping("upload")
-    public Result upload(@RequestPart("file") MultipartFile file) {
-        System.out.println(file.getOriginalFilename() + "---" + file.getResource() + "--" + file.getSize());
-        return Result.success("success", file);
     }
 
     @PostMapping("findCommentByType")

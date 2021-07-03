@@ -12,3 +12,5 @@ feign:
 
 #tomcat.virtual.path: /**
 #basePath: D:/shopping
+swagger:
+  enabled: true
