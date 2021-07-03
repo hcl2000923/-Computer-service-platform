@@ -122,6 +122,12 @@ public class OrderController {
         }
     }
 
+    /**
+     * 检查未支付订单
+     * @param ono
+     * @param mno
+     * @return
+     */
     @PostMapping("checkExist")
     public Result checkExist(@RequestParam String ono, @RequestParam Integer mno) {
         OrderInfo o = new OrderInfo();

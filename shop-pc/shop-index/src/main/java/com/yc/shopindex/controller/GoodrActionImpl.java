@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @program: shop-pc
- * @description:
+ * @description:服务降级
  * @author: 作者
  * @create: 2021-06-22 19:06
  */

@@ -5,7 +5,11 @@ spring:
     config:
       uri: http://localhost:8888
       label: master
-
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_onlineshopping?useUnicode=true&serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: 123
 mybatis:
   type-aliases-package: com.yc.bean
   mapperLocations: classpath:mapper/*.xml

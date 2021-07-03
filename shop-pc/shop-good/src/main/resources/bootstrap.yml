@@ -7,9 +7,9 @@ spring:
       label: master
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/db_onlineshopping?serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/db_onlineshopping?useUnicode=true&serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=utf-8
     username: root
-    password: 232328
+    password: 123
     hikari:
       max-lifetime: 1765000
       maximumPoolSize: 15

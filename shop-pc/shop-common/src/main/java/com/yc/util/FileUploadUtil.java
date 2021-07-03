@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public class FileUploadUtil {
     private static final String IMAGEPATH = "D:/shopping/shopping_images/";
-    private static final String PATH = "../shopping_images/";
+//    private static final String PATH = "../shopping_images/";
     private static final String CHARSET = "UTF-8";
 
     /**
@@ -87,7 +87,7 @@ public class FileUploadUtil {
                 //将文件对象写到磁盘中
                 item.write(file);
                 //获取存储后的文件路径  如何处理  存储到image_path
-                String image_path = PATH + fileName;
+                String image_path = IMAGEPATH + fileName;
                 if (i == 1) {
                     sb.append(image_path);
                 } else {

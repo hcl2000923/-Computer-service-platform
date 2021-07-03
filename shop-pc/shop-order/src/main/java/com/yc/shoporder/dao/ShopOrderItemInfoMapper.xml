@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Happer 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shoporder.dao.ShopOrderItemInfoMapper">
-    <cache type="org.mybatis.caches.redis.RedisCache"/>
+<!--    <cache type="org.mybatis.caches.redis.RedisCache"/>-->
     <!--新增订单详情表-->
     <insert id="addOrderItemInfo" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="itemno">
         insert into orderiteminfo values

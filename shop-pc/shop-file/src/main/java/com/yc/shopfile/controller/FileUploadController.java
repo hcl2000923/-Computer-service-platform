@@ -2,11 +2,15 @@ package com.yc.shopfile.controller;
 
 import com.yc.bean.*;
 import com.yc.util.FileUploadUtil;
+import com.yc.shopfile.utils.FastDFSClient;
+import com.yc.shopfile.utils.FileUtils;
 import com.yc.vo.Result;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -14,21 +18,19 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class FileUploadController {
-
     @Resource
-    IMemberInfoAction iMemberInfoAction;
+    FastDFSClient fastDFSClient;
+    @Value("${fastDFS}")
+    String fastDFS;
 
     @PostMapping("memberUpload")
     @Transactional(rollbackFor = Exception.class)
     public Result memberinfoPhoto(HttpServletRequest req, @SessionAttribute MemberInfo loginUser) throws Exception {
-        MemberInfo memberInfo = null;
-        memberInfo = FileUploadUtil.parseRequest(req, MemberInfo.class);
-        //远程调用update头像
-        Result result = iMemberInfoAction.updatePhoto(memberInfo);
-        if (result.getCode() == 1) {
-            loginUser.setPhoto(memberInfo.getPhoto());
-        }
-        return result;
+        MemberInfo memberInfo = FileUploadUtil.parseRequest(req, MemberInfo.class);
+        String photo =memberInfo.getPhoto();
+        MultipartFile multipartFile= FileUtils.fileToMultipart(photo);
+        String url=fastDFSClient.uploadBase64(multipartFile);
+        return Result.success("上传成功！",fastDFS+url);
     }
 
     @Transactional

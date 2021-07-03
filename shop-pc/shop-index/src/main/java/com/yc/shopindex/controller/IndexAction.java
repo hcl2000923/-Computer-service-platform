@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 
 /**
  * @program: shop-book
- * @description:
+ * @description:门户远程调用goodr中的两个方法
  * @author: 作者
  * @create: 2021-05-22 16:09
  */

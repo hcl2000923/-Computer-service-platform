@@ -4,7 +4,7 @@
 <!--namespace 命名空间==》接口完全限定名==》和接口进行绑定-->
 <mapper namespace="com.yc.shopcart.dao.ShopCartMapper">
     <!--二级缓存-->
-    <cache type="org.mybatis.caches.redis.RedisCache"/>
+<!--    <cache type="org.mybatis.caches.redis.RedisCache"/>-->
 
     <!--新增评论-->
     <insert id="addCartInfo" parameterType="CartInfo" useGeneratedKeys="true" keyProperty="cno">

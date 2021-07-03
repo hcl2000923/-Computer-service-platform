@@ -59,6 +59,12 @@ public class MemberInfoController {
         }
     }
 
+    /**
+     * 添加用户积分
+     * @param mno
+     * @param moneyPoint
+     * @return
+     */
     @PostMapping("addPoint")
     public Result addPoint(@RequestParam Integer mno, @RequestParam Integer moneyPoint) {
         MemberInfo memberInfo = new MemberInfo();
@@ -192,7 +198,6 @@ public class MemberInfoController {
             return Result.failure(e.getMessage(), errors.getAllErrors());
         }
     }
-
     @PostMapping("updatePwd")
     public Result updatePwd(String pwd, String pwd1, HttpSession session) {
         try {
@@ -211,13 +216,12 @@ public class MemberInfoController {
     }
 
     @PostMapping("updatePhoto")
-    @Transactional
-    public Result updatePhoto(@RequestBody MemberInfo memberInfo) throws BizException {
-        int t = iShopMemberinfoBiz.updateAllByMno(memberInfo);
-        if (t == 1) {
+    public Result updatePhoto(MemberInfo memberInfo) {
+        try {
+            int t = iShopMemberinfoBiz.updateAllByMno(memberInfo);
             return Result.success("添加成功!", null);
-        } else {
-            return Result.failure("添加失败!", null);
+        } catch (BizException e) {
+            return Result.failure("添加失败!", e.getMessage());
         }
     }
 }
